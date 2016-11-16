@@ -1,0 +1,18 @@
+{
+  "name": "tween",
+  "version": "0.0.1",
+  "description": "Javascript tweening engine.",
+  "author": {
+    "name": "nuintun",
+    "email": "nuintun@qq.com"
+  },
+  "homepage": "https://nuintun.github.io/tween",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nuintun/tween.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^0.36.3"
+  }
+}
