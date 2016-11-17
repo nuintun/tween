@@ -51,39 +51,10 @@ function triggerEvents(list, args, context) {
 
   if (list) {
     var i = 0;
-    var a1 = args[0];
-    var a2 = args[1];
-    var a3 = args[2];
     var l = list.length;
 
-    // call is faster than apply, optimize less than 3 argu
-    // http://blog.csdn.net/zhengyinhui100/article/details/7837127
-    switch (args.length) {
-      case 0:
-        for (; i < l; i += 2) {
-          pass = list[i].call(list[i + 1] || context) !== false && pass;
-        }
-        break;
-      case 1:
-        for (; i < l; i += 2) {
-          pass = list[i].call(list[i + 1] || context, a1) !== false && pass;
-        }
-        break;
-      case 2:
-        for (; i < l; i += 2) {
-          pass = list[i].call(list[i + 1] || context, a1, a2) !== false && pass;
-        }
-        break;
-      case 3:
-        for (; i < l; i += 2) {
-          pass = list[i].call(list[i + 1] || context, a1, a2, a3) !== false && pass;
-        }
-        break;
-      default:
-        for (; i < l; i += 2) {
-          pass = list[i].apply(list[i + 1] || context, args) !== false && pass;
-        }
-        break;
+    for (; i < l; i += 2) {
+      pass = Utils.Apply(list[i], list[i + 1] || context, args) !== false && pass;
     }
   }
 

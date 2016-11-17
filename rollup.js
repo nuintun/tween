@@ -6,7 +6,7 @@ rollup.rollup({
   legacy: true,
   entry: 'src/tween.js'
 }).then(function(bundle) {
-  const dest = 'dest/tween.js';
+  const dest = 'dist/tween.js';
 
   bundle.write({
     dest: dest,

@@ -51,6 +51,62 @@
     }
   }
 
+  // IsFinite
+  var IsFinite = Number.isFinite || isFinite;
+
+  /** 
+   * IsNatural
+   * @param {any} number
+   */
+  function IsNatural(number) {
+    return IsType(number, 'Number') && IsFinite(number) && number >= 0;
+  }
+
+  /**
+   * Apply
+   * @param  {Function} fn
+   * @param  {Any} context
+   * @param  {Array} args
+   * call is faster than apply, optimize less than 6 args
+   * https://github.com/micro-js/apply
+   * http://blog.csdn.net/zhengyinhui100/article/details/7837127
+   */
+
+  function Apply(fn, context, args) {
+    switch (args.length) {
+      case 1:
+        return fn.call(context, args[0]);
+      case 2:
+        return fn.call(context, args[0], args[1]);
+      case 3:
+        return fn.call(context, args[0], args[1], args[2]);
+      case 4:
+        return fn.call(context, args[0], args[1], args[2], args[3]);
+      case 5:
+        return fn.call(context, args[0], args[1], args[2], args[3], args[4]);
+      case 6:
+        return fn.call(context, args[0], args[1], args[2], args[3], args[4], args[5]);
+      default:
+        return fn.apply(context, args);
+    }
+  }
+
+  /**
+   * Each
+   * @param {any} array
+   * @param {any} iterator
+   * @param {any} context
+   */
+  function Each(array, iterator, context) {
+    if (arguments.length < 3) {
+      context = array;
+    }
+
+    for (var i = 0, length = array.length; i < length; i++) {
+      Apply(iterator, array, [array[i], i, array]);
+    }
+  }
+
   // Include a performance.now polyfill
   var now;
 
@@ -170,39 +226,10 @@
 
     if (list) {
       var i = 0;
-      var a1 = args[0];
-      var a2 = args[1];
-      var a3 = args[2];
       var l = list.length;
 
-      // call is faster than apply, optimize less than 3 argu
-      // http://blog.csdn.net/zhengyinhui100/article/details/7837127
-      switch (args.length) {
-        case 0:
-          for (; i < l; i += 2) {
-            pass = list[i].call(list[i + 1] || context) !== false && pass;
-          }
-          break;
-        case 1:
-          for (; i < l; i += 2) {
-            pass = list[i].call(list[i + 1] || context, a1) !== false && pass;
-          }
-          break;
-        case 2:
-          for (; i < l; i += 2) {
-            pass = list[i].call(list[i + 1] || context, a1, a2) !== false && pass;
-          }
-          break;
-        case 3:
-          for (; i < l; i += 2) {
-            pass = list[i].call(list[i + 1] || context, a1, a2, a3) !== false && pass;
-          }
-          break;
-        default:
-          for (; i < l; i += 2) {
-            pass = list[i].apply(list[i + 1] || context, args) !== false && pass;
-          }
-          break;
+      for (; i < l; i += 2) {
+        pass = Apply(list[i], list[i + 1] || context, args) !== false && pass;
       }
     }
 
@@ -689,7 +716,7 @@
     context.__valuesStartRepeat = {};
     context.__duration = 1000;
     context.__repeat = 0;
-    context.__repeatDelayTime;
+    context.__repeatDelayTime = null;
     context.__yoyo = false;
     context.__isPlaying = false;
     context.__reversed = false;
@@ -698,7 +725,7 @@
     context.__easingFunction = Easing.Linear.None;
     context.__interpolationFunction = Interpolation.Linear;
     context.__chainedTweens = [];
-    context.__onStartCallbackFired = false;
+    context.__startEventFired = false;
 
     // Set all starting values present on the target object
     for (var field in object) {
@@ -713,6 +740,12 @@
   Tween.now = now;
   Tween.Easing = Easing;
   Tween.Interpolation = Interpolation;
+
+  Each(['add', 'remove', 'update', 'getAll', 'removeAll'], function(method) {
+    Tween[method] = function() {
+      Apply(queue[method], queue, arguments);
+    };
+  });
 
   Inherits(Tween, Events, {
     to: function(properties, duration) {
@@ -732,7 +765,7 @@
       queue.add(context);
 
       context.__isPlaying = true;
-      context.__onStartCallbackFired = false;
+      context.__startEventFired = false;
       context.__startTime = time !== undefined ? time : now();
       context.__startTime += context.__delayTime;
 
@@ -796,24 +829,32 @@
       return context;
     },
     stopChainedTweens: function() {
-      var chainedTweens = this.__chainedTweens;
-
-      for (var i = 0, numChainedTweens = chainedTweens.length; i < numChainedTweens; i++) {
-        chainedTweens[i].stop();
-      }
+      Each(this.__chainedTweens, function(tween) {
+        tween.stop();
+      });
     },
     delay: function(amount) {
-      this.__delayTime = amount;
+      if (IsNatural(amount)) {
+        this.__delayTime = amount;
+      }
 
       return this;
     },
     repeat: function(times) {
-      this.__repeat = times;
+      if (IsNatural(times)) {
+        this.__repeat = times;
+      }
 
       return this;
     },
     repeatDelay: function(amount) {
-      this.__repeatDelayTime = amount;
+      var context = this;
+
+      if (IsNatural(amount)) {
+        context.__repeatDelayTime = amount;
+      } else if (amount === false) {
+        context.__repeatDelayTime = null;
+      }
 
       return this;
     },
@@ -849,10 +890,10 @@
 
       var object = context.__object;
 
-      if (context.__onStartCallbackFired === false) {
+      if (context.__startEventFired === false) {
         context.emitWith('start', object, object);
 
-        context.__onStartCallbackFired = true;
+        context.__startEventFired = true;
       }
 
       elapsed = (time - context.__startTime) / context.__duration;
@@ -923,7 +964,7 @@
             context.__reversed = !context.__reversed;
           }
 
-          if (context.__repeatDelayTime !== undefined) {
+          if (context.__repeatDelayTime !== null) {
             context.__startTime = time + context.__repeatDelayTime;
           } else {
             context.__startTime = time + context.__delayTime;
@@ -933,13 +974,11 @@
         } else {
           context.emitWith('complete', object, object);
 
-          var chainedTweens = context.__chainedTweens;
-
-          for (var i = 0, numChainedTweens = chainedTweens.length; i < numChainedTweens; i++) {
+          Each(context.__chainedTweens, function(tween) {
             // Make the chained tweens start exactly at the time they should,
             // even if the `update()` method was called way past the duration of the tween
-            chainedTweens[i].start(context.__startTime + context.__duration);
-          }
+            tween.start(context.__startTime + context.__duration);
+          });
 
           return false;
         }

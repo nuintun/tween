@@ -16,7 +16,7 @@ export default function Tween(object) {
   context.__valuesStartRepeat = {};
   context.__duration = 1000;
   context.__repeat = 0;
-  context.__repeatDelayTime;
+  context.__repeatDelayTime = null;
   context.__yoyo = false;
   context.__isPlaying = false;
   context.__reversed = false;
@@ -25,7 +25,7 @@ export default function Tween(object) {
   context.__easingFunction = Easing.Linear.None;
   context.__interpolationFunction = Interpolation.Linear;
   context.__chainedTweens = [];
-  context.__onStartCallbackFired = false;
+  context.__startEventFired = false;
 
   // Set all starting values present on the target object
   for (var field in object) {
@@ -40,6 +40,12 @@ Tween.update = function(time, preserve) {
 Tween.now = now;
 Tween.Easing = Easing;
 Tween.Interpolation = Interpolation;
+
+Utils.Each(['add', 'remove', 'update', 'getAll', 'removeAll'], function(method) {
+  Tween[method] = function() {
+    Utils.Apply(queue[method], queue, arguments);
+  };
+});
 
 Utils.Inherits(Tween, Events, {
   to: function(properties, duration) {
@@ -59,7 +65,7 @@ Utils.Inherits(Tween, Events, {
     queue.add(context);
 
     context.__isPlaying = true;
-    context.__onStartCallbackFired = false;
+    context.__startEventFired = false;
     context.__startTime = time !== undefined ? time : now();
     context.__startTime += context.__delayTime;
 
@@ -123,24 +129,32 @@ Utils.Inherits(Tween, Events, {
     return context;
   },
   stopChainedTweens: function() {
-    var chainedTweens = this.__chainedTweens;
-
-    for (var i = 0, numChainedTweens = chainedTweens.length; i < numChainedTweens; i++) {
-      chainedTweens[i].stop();
-    }
+    Utils.Each(this.__chainedTweens, function(tween) {
+      tween.stop();
+    });
   },
   delay: function(amount) {
-    this.__delayTime = amount;
+    if (Utils.IsNatural(amount)) {
+      this.__delayTime = amount;
+    }
 
     return this;
   },
   repeat: function(times) {
-    this.__repeat = times;
+    if (Utils.IsNatural(times)) {
+      this.__repeat = times;
+    }
 
     return this;
   },
   repeatDelay: function(amount) {
-    this.__repeatDelayTime = amount;
+    var context = this;
+
+    if (Utils.IsNatural(amount)) {
+      context.__repeatDelayTime = amount;
+    } else if (amount === false) {
+      context.__repeatDelayTime = null;
+    }
 
     return this;
   },
@@ -176,10 +190,10 @@ Utils.Inherits(Tween, Events, {
 
     var object = context.__object;
 
-    if (context.__onStartCallbackFired === false) {
+    if (context.__startEventFired === false) {
       context.emitWith('start', object, object);
 
-      context.__onStartCallbackFired = true;
+      context.__startEventFired = true;
     }
 
     elapsed = (time - context.__startTime) / context.__duration;
@@ -250,7 +264,7 @@ Utils.Inherits(Tween, Events, {
           context.__reversed = !context.__reversed;
         }
 
-        if (context.__repeatDelayTime !== undefined) {
+        if (context.__repeatDelayTime !== null) {
           context.__startTime = time + context.__repeatDelayTime;
         } else {
           context.__startTime = time + context.__delayTime;
@@ -260,13 +274,11 @@ Utils.Inherits(Tween, Events, {
       } else {
         context.emitWith('complete', object, object);
 
-        var chainedTweens = context.__chainedTweens;
-
-        for (var i = 0, numChainedTweens = chainedTweens.length; i < numChainedTweens; i++) {
+        Utils.Each(context.__chainedTweens, function(tween) {
           // Make the chained tweens start exactly at the time they should,
           // even if the `update()` method was called way past the duration of the tween
-          chainedTweens[i].start(context.__startTime + context.__duration);
-        }
+          tween.start(context.__startTime + context.__duration);
+        });
 
         return false;
       }
