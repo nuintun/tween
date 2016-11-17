@@ -107,6 +107,23 @@
     }
   }
 
+  /**
+   * object keys
+   * @param object
+   * @returns {Array}
+   */
+  var Keys = Object.keys ? Object.keys : function(object) {
+    var result = [];
+
+    for (var name in object) {
+      if (object.hasOwnProperty(name)) {
+        result.push(name);
+      }
+    }
+
+    return result;
+  };
+
   // Include a performance.now polyfill
   var now;
 
@@ -195,24 +212,6 @@
 
   // Regular expression used to split event strings
   var eventSplitter = /\s+/;
-
-  // helpers
-  /**
-   * object keys
-   * @param object
-   * @returns {Array}
-   */
-  var keys = Object.keys ? Object.keys : function(object) {
-    var result = [];
-
-    for (var name in object) {
-      if (object.hasOwnProperty(name)) {
-        result.push(name);
-      }
-    }
-
-    return result;
-  };
 
   /**
    * execute callbacks
@@ -305,7 +304,10 @@
    */
   Events.prototype.off = function(events, callback, context) {
     var that = this;
-    var cache, event, list, i;
+    var cache;
+    var event;
+    var list;
+    var i;
 
     // no events, or removing *all* events.
     if (!(cache = that.__events)) return that;
@@ -317,7 +319,7 @@
       return that;
     }
 
-    events = events ? events.split(eventSplitter) : keys(cache);
+    events = events ? events.split(eventSplitter) : Keys(cache);
 
     // loop through the callback list, splicing where appropriate.
     while (event = events.shift()) {

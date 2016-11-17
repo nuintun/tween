@@ -100,3 +100,20 @@ export function Each(array, iterator, context) {
     Apply(iterator, array, [array[i], i, array]);
   }
 }
+
+/**
+ * object keys
+ * @param object
+ * @returns {Array}
+ */
+export var Keys = Object.keys ? Object.keys : function(object) {
+  var result = [];
+
+  for (var name in object) {
+    if (object.hasOwnProperty(name)) {
+      result.push(name);
+    }
+  }
+
+  return result;
+};
