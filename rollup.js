@@ -4,10 +4,12 @@ const rollup = require('rollup');
 
 rollup.rollup({
   legacy: true,
-  entry: 'entry'
+  entry: 'src/index.js'
 }).then(function(bundle) {
+  const dest = 'dest/now.js';
+
   bundle.write({
-    dest: 'dest',
+    dest: dest,
     format: 'umd',
     indent: true,
     useStrict: true,
