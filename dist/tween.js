@@ -4,6 +4,57 @@
   (global.Tween = factory());
 }(this, (function () { 'use strict';
 
+  function Queue() {
+    this.__tweens = [];
+  }
+
+  Queue.prototype = {
+    items: function() {
+      return this.__tweens;
+    },
+    add: function(tween) {
+      var context = this;
+      var tweens = context.__tweens;
+
+      if (tweens.indexOf(tween) === -1) {
+        tweens.push(tween);
+      }
+    },
+    remove: function(tween) {
+      var context = this;
+
+      if (arguments.length === 0) {
+        context.__tweens = [];
+      } else {
+        var tweens = context.__tweens;
+        var i = tweens.indexOf(tween);
+
+        if (i !== -1) {
+          tweens.splice(i, 1);
+        }
+      }
+    },
+    update: function(time, preserve) {
+      var tweens = this.__tweens;
+
+      if (tweens.length === 0) {
+        return false;
+      }
+
+      var i = 0;
+
+      while (i < tweens.length) {
+        if (tweens[i].update(time) || preserve) {
+          i++;
+        } else {
+          tweens.splice(i, 1);
+        }
+      }
+
+      return true;
+    }
+  };
+
   var toString = Object.prototype.toString;
 
   /**
@@ -122,74 +173,6 @@
     }
 
     return result;
-  };
-
-  // Include a performance.now polyfill
-  var now;
-
-  if (window &&
-    window.performance &&
-    IsType(window.performance.now, 'Function')) {
-    // In a browser, use window.performance.now if it is available.
-    // This must be bound, because directly assigning this function
-    // leads to an invocation exception in Chrome.
-    now = function() {
-      return window.performance.now.call(window.performance);
-    };
-  } else if (IsType(Date.now, 'Function')) {
-    // Use Date.now if it is available.
-    now = Date.now;
-  } else {
-    // Otherwise, use 'new Date().getTime()'.
-    now = function() {
-      return new Date().getTime();
-    };
-  }
-
-  function Queue() {
-    this.__tweens = [];
-  }
-
-  Queue.prototype = {
-    getAll: function() {
-      return this.__tweens;
-    },
-    removeAll: function() {
-      this.__tweens = [];
-    },
-    add: function(tween) {
-      this.__tweens.push(tween);
-    },
-    remove: function(tween) {
-      var tweens = this.__tweens;
-
-      var i = tweens.indexOf(tween);
-
-      if (i !== -1) {
-        tweens.splice(i, 1);
-      }
-    },
-    update: function(time, preserve) {
-      var tweens = this.__tweens;
-
-      if (tweens.length === 0) {
-        return false;
-      }
-
-      var i = 0;
-
-      time = time !== undefined ? time : now();
-
-      while (i < tweens.length) {
-        if (tweens[i].update(time) || preserve) {
-          i++;
-        } else {
-          tweens.splice(i, 1);
-        }
-      }
-
-      return true;
-    }
   };
 
   /*!
@@ -415,6 +398,28 @@
 
     return this.emitWith(events, rest);
   };
+
+  // Include a performance.now polyfill
+  var now;
+
+  if (window &&
+    window.performance &&
+    IsType(window.performance.now, 'Function')) {
+    // In a browser, use window.performance.now if it is available.
+    // This must be bound, because directly assigning this function
+    // leads to an invocation exception in Chrome.
+    now = function() {
+      return window.performance.now.call(window.performance);
+    };
+  } else if (IsType(Date.now, 'Function')) {
+    // Use Date.now if it is available.
+    now = Date.now;
+  } else {
+    // Otherwise, use 'new Date().getTime()'.
+    now = function() {
+      return new Date().getTime();
+    };
+  }
 
   var Easing = {
     Linear: {
@@ -735,17 +740,13 @@
     }
   }
 
-  Tween.update = function(time, preserve) {
-    queue.update.call(queue, time, preserve);
-  };
-
   Tween.now = now;
   Tween.Easing = Easing;
   Tween.Interpolation = Interpolation;
 
-  Each(['add', 'remove', 'update', 'getAll', 'removeAll'], function(method) {
+  Each(['add', 'remove', 'update', 'items'], function(method) {
     Tween[method] = function() {
-      Apply(queue[method], queue, arguments);
+      return Apply(queue[method], queue, arguments);
     };
   });
 
@@ -753,7 +754,7 @@
     to: function(properties, duration) {
       var context = this;
 
-      if (duration !== undefined) {
+      if (IsNatural(duration)) {
         context.__duration = duration;
       }
 
@@ -768,7 +769,7 @@
 
       context.__isPlaying = true;
       context.__startEventFired = false;
-      context.__startTime = time !== undefined ? time : now();
+      context.__startTime = IsNatural(time) ? time : now();
       context.__startTime += context.__delayTime;
 
       var object = context.__object;
@@ -843,7 +844,7 @@
       return this;
     },
     repeat: function(times) {
-      if (IsNatural(times)) {
+      if (IsNatural(times) || times === Infinity) {
         this.__repeat = times;
       }
 
@@ -908,7 +909,7 @@
 
       for (property in valuesEnd) {
         // Don't update properties that do not exist in the source object
-        if (!valuesStart.hasOwnProperty(property)) {
+        if (valuesStart[property] === undefined) {
           continue;
         }
 
@@ -939,7 +940,7 @@
 
       if (elapsed === 1) {
         if (context.__repeat > 0) {
-          if (isFinite(context.__repeat)) {
+          if (IsFinite(context.__repeat)) {
             context.__repeat--;
           }
 

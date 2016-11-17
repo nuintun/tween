@@ -33,17 +33,13 @@ export default function Tween(object) {
   }
 }
 
-Tween.update = function(time, preserve) {
-  queue.update.call(queue, time, preserve);
-};
-
 Tween.now = now;
 Tween.Easing = Easing;
 Tween.Interpolation = Interpolation;
 
-Utils.Each(['add', 'remove', 'update', 'getAll', 'removeAll'], function(method) {
+Utils.Each(['add', 'remove', 'update', 'items'], function(method) {
   Tween[method] = function() {
-    Utils.Apply(queue[method], queue, arguments);
+    return Utils.Apply(queue[method], queue, arguments);
   };
 });
 
@@ -51,7 +47,7 @@ Utils.Inherits(Tween, Events, {
   to: function(properties, duration) {
     var context = this;
 
-    if (duration !== undefined) {
+    if (Utils.IsNatural(duration)) {
       context.__duration = duration;
     }
 
@@ -66,7 +62,7 @@ Utils.Inherits(Tween, Events, {
 
     context.__isPlaying = true;
     context.__startEventFired = false;
-    context.__startTime = time !== undefined ? time : now();
+    context.__startTime = Utils.IsNatural(time) ? time : now();
     context.__startTime += context.__delayTime;
 
     var object = context.__object;
@@ -141,7 +137,7 @@ Utils.Inherits(Tween, Events, {
     return this;
   },
   repeat: function(times) {
-    if (Utils.IsNatural(times)) {
+    if (Utils.IsNatural(times) || times === Infinity) {
       this.__repeat = times;
     }
 
@@ -206,7 +202,7 @@ Utils.Inherits(Tween, Events, {
 
     for (property in valuesEnd) {
       // Don't update properties that do not exist in the source object
-      if (!valuesStart.hasOwnProperty(property)) {
+      if (valuesStart[property] === undefined) {
         continue;
       }
 
@@ -237,7 +233,7 @@ Utils.Inherits(Tween, Events, {
 
     if (elapsed === 1) {
       if (context.__repeat > 0) {
-        if (isFinite(context.__repeat)) {
+        if (Utils.IsFinite(context.__repeat)) {
           context.__repeat--;
         }
 

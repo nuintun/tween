@@ -1,26 +1,31 @@
-import { now } from './now';
-
 export default function Queue() {
   this.__tweens = [];
 }
 
 Queue.prototype = {
-  getAll: function() {
+  items: function() {
     return this.__tweens;
   },
-  removeAll: function() {
-    this.__tweens = [];
-  },
   add: function(tween) {
-    this.__tweens.push(tween);
+    var context = this;
+    var tweens = context.__tweens;
+
+    if (tweens.indexOf(tween) === -1) {
+      tweens.push(tween);
+    }
   },
   remove: function(tween) {
-    var tweens = this.__tweens;
+    var context = this;
 
-    var i = tweens.indexOf(tween);
+    if (arguments.length === 0) {
+      context.__tweens = [];
+    } else {
+      var tweens = context.__tweens;
+      var i = tweens.indexOf(tween);
 
-    if (i !== -1) {
-      tweens.splice(i, 1);
+      if (i !== -1) {
+        tweens.splice(i, 1);
+      }
     }
   },
   update: function(time, preserve) {
@@ -31,8 +36,6 @@ Queue.prototype = {
     }
 
     var i = 0;
-
-    time = time !== undefined ? time : now();
 
     while (i < tweens.length) {
       if (tweens[i].update(time) || preserve) {
