@@ -11,8 +11,8 @@
       var tween = new Tween(coords)
         .easing(Tween.Easing.Bounce.Out)
         .to({ x: 100, y: 200 }, 1000)
-        .on('update', function(object, progress) {
-          console.log(~~object.x, ~~object.y, (~~(progress * 100)) + '%');
+        .on('update', function(coords, progress) {
+          console.log(~~coords.x, ~~coords.y, (~~(progress * 100)) + '%');
         })
         .start();
 
