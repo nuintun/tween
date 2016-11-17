@@ -4,9 +4,9 @@ const rollup = require('rollup');
 
 rollup.rollup({
   legacy: true,
-  entry: 'src/index.js'
+  entry: 'src/tween.js'
 }).then(function(bundle) {
-  const dest = 'dest/now.js';
+  const dest = 'dest/tween.js';
 
   bundle.write({
     dest: dest,

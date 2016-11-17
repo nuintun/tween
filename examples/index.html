@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>tween</title>
+    <script src="../dest/tween.js"></script>
+  </head>
+  <body>
+    <script>
+      var coords = { x: 0, y: 0 };
+      var tween = new Tween(coords)
+        .to({ x: 100, y: 100 }, 1000)
+        .on('update', function(object) {
+          console.log(object.x, object.y);
+        })
+        .start();
+
+      requestAnimationFrame(animate);
+
+      function animate(time) {
+        requestAnimationFrame(animate);
+        Tween.update(time);
+      }
+    </script>
+  </body>
+</html>

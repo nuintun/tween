@@ -1,19 +1,18 @@
 // Include a performance.now polyfill
-
-import { Interpolation } from './interpolation';
+import * as Utils from './utils';
 
 var now;
 
-if (window === undefined &&
-  window.performance !== undefined &&
-  Interpolation.Utils.IsType(window.performance.now, 'Function')) {
+if (window &&
+  window.performance &&
+  Utils.IsType(window.performance.now, 'Function')) {
   // In a browser, use window.performance.now if it is available.
   // This must be bound, because directly assigning this function
   // leads to an invocation exception in Chrome.
   now = function() {
-    window.performance.now.call(window.performance);
+    return window.performance.now.call(window.performance);
   }
-} else if (Date.now !== undefined) {
+} else if (Utils.IsType(Date.now, 'Function')) {
   // Use Date.now if it is available.
   now = Date.now;
 } else {
