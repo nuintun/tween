@@ -107,7 +107,10 @@ Utils.Inherits(Tween, Events, {
 
     context.__isPlaying = false;
 
-    context.emit('start', contest.__object);
+    var object = context.__object;
+
+    context.emitWith('start', object, object);
+
     context.stopChainedTweens();
 
     return context;
@@ -174,7 +177,7 @@ Utils.Inherits(Tween, Events, {
     var object = context.__object;
 
     if (context.__onStartCallbackFired === false) {
-      context.emit('start', context.__object);
+      context.emitWith('start', object, object);
 
       context.__onStartCallbackFired = true;
     }
@@ -216,7 +219,7 @@ Utils.Inherits(Tween, Events, {
       }
     }
 
-    context.emit('update', object, value);
+    context.emitWith('update', [object, value], object);
 
     if (elapsed === 1) {
       if (context.__repeat > 0) {
@@ -255,7 +258,7 @@ Utils.Inherits(Tween, Events, {
 
         return true;
       } else {
-        context.emit('complete', object);
+        context.emitWith('complete', object, object);
 
         var chainedTweens = context.__chainedTweens;
 

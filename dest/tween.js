@@ -321,42 +321,70 @@
    * (unless you're listening on `"all"`, which will cause your callback to
    * receive the true name of the event as the first argument).
    * @param events
+   * @param args
+   * @param context
    * @returns {*}
    */
-  Events.prototype.emit = function(events) {
-    var rest = [];
+  Events.prototype.emitWith = function(events, args, context) {
+    var cache;
     var that = this;
-    var returned = true;
-    var cache, event, all, list, i, len;
 
-    if (!(cache = that.__events)) return that;
+    if (!(cache = that.__events)) return this;
+
+    if (arguments.length < 3) {
+      context = that;
+    }
+
+    var event;
+    var all;
+    var list;
+    var returned = true;
 
     events = events.split(eventSplitter);
-
-    // fill up `rest` with the callback arguments.  Since we're only copying
-    // the tail of `arguments`, a loop is much faster than Array#slice.
-    for (i = 1, len = arguments.length; i < len; i++) {
-      rest[i - 1] = arguments[i];
-    }
+    args = IsType(args, 'Array') ? args : [args];
 
     // for each event, walk through the list of callbacks twice, first to
     // trigger the event, then to trigger any `"all"` callbacks.
     while (event = events.shift()) {
       // copy callback lists to prevent modification.
-      if (all = cache.all) all = all.slice();
+      if (all = cache.all) {
+        all = all.slice();
+      }
 
-      if (list = cache[event]) list = list.slice();
+      if (list = cache[event]) {
+        list = list.slice();
+      }
 
       // execute event callbacks except one named "all"
       if (event !== 'all') {
-        returned = triggerEvents(list, rest, that) && returned;
+        returned = triggerEvents(list, args, context) && returned;
       }
 
       // execute "all" callbacks.
-      returned = triggerEvents(all, [event].concat(rest), that) && returned;
+      returned = triggerEvents(all, [event].concat(args), context) && returned;
     }
 
     return returned;
+  };
+
+  /**
+   * emit one or many events, firing all bound callbacks. Callbacks are
+   * passed the same arguments as `trigger` is, apart from the event name
+   * (unless you're listening on `"all"`, which will cause your callback to
+   * receive the true name of the event as the first argument).
+   * @param events
+   * @returns {*}
+   */
+  Events.prototype.emit = function(events) {
+    var rest = [];
+
+    // fill up `rest` with the callback arguments.  Since we're only copying
+    // the tail of `arguments`, a loop is much faster than Array#slice.
+    for (var i = 1, len = arguments.length; i < len; i++) {
+      rest[i - 1] = arguments[i];
+    }
+
+    return this.emitWith(events, rest);
   };
 
   var Easing = {
@@ -752,7 +780,10 @@
 
       context.__isPlaying = false;
 
-      context.emit('start', contest.__object);
+      var object = context.__object;
+
+      context.emitWith('start', object, object);
+
       context.stopChainedTweens();
 
       return context;
@@ -819,7 +850,7 @@
       var object = context.__object;
 
       if (context.__onStartCallbackFired === false) {
-        context.emit('start', context.__object);
+        context.emitWith('start', object, object);
 
         context.__onStartCallbackFired = true;
       }
@@ -861,7 +892,7 @@
         }
       }
 
-      context.emit('update', object, value);
+      context.emitWith('update', [object, value], object);
 
       if (elapsed === 1) {
         if (context.__repeat > 0) {
@@ -900,7 +931,7 @@
 
           return true;
         } else {
-          context.emit('complete', object);
+          context.emitWith('complete', object, object);
 
           var chainedTweens = context.__chainedTweens;
 
