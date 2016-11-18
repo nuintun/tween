@@ -3,16 +3,30 @@
   <head>
     <meta charset="UTF-8">
     <title>tween</title>
+    <script src="./raf.js"></script>
     <script src="../dist/tween.js"></script>
+    <style>
+      #animation {
+        width: 200px;
+        height: 100px;
+        background: #f00;
+        margin: 0 auto;
+      }
+    </style>
   </head>
   <body>
+    <div id="animation"></div>
     <script>
-      var coords = { x: 0, y: 0 };
+      var animation = document.getElementById('animation');
+      var coords = { width: 200, height: 100 };
       var tween = new Tween(coords)
         .easing(Tween.Easing.Bounce.Out)
-        .to({ x: 100, y: 200 }, 1000)
+        .to({ width: 600, height: 300 }, 1000)
         .on('update', function(coords, progress) {
-          console.log(~~coords.x, ~~coords.y, (~~(progress * 100)) + '%');
+          console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
+
+          animation.style.width = coords.width + 'px';
+          animation.style.height = coords.height + 'px';
         })
         .start();
 
