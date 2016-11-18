@@ -25,30 +25,31 @@
       var up = new Tween({ width: 600, height: 300 })
         .easing(Tween.Easing.Bounce.Out)
         .to({ width: 200, height: 100 }, 1000)
+        .delay(1000)
         .on('update', function(coords, progress) {
           animation.style.width = coords.width + 'px';
           animation.style.height = coords.height + 'px';
 
-          console && console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
+          console && console.log('up: ', ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
         });
       var down = new Tween({ width: 200, height: 100 })
         .easing(Tween.Easing.Bounce.Out)
         .to({ width: 600, height: 300 }, 1000)
+        .chain(up)
         .on('update', function(coords, progress) {
           animation.style.width = coords.width + 'px';
           animation.style.height = coords.height + 'px';
 
-          console && console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
+          console && console.log('down: ', ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
         })
-        .chain(up)
         .start();
 
       function animate(time) {
         Tween.update(time);
-        requestAnimationFrame(animate);        
+        requestAnimationFrame(animate);
       }
 
-      requestAnimationFrame(animate);      
+      requestAnimationFrame(animate);
     </script>
   </body>
 </html>
