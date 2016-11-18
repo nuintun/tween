@@ -22,30 +22,29 @@
     <div id="animation"></div>
     <script>
       var animation = document.getElementById('animation');
-      var up = new Tween({ width: 600, height: 300 })
-        .easing(Tween.Easing.Bounce.Out)
-        .to({ width: 200, height: 100 }, 1000)
-        .delay(1000)
-        .on('update', function(coords, progress) {
-          animation.style.width = coords.width + 'px';
-          animation.style.height = coords.height + 'px';
-
-          console && console.log(
-            'Up:\n  width: %o\n  height: %o\n  progress: %o',
-            ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%'
-          );
-        });
-      var down = new Tween({ width: 200, height: 100 })
+      var tween = new Tween({ width: 200, height: 100 })
         .easing(Tween.Easing.Bounce.Out)
         .to({ width: 600, height: 300 }, 1000)
-        .chain(up)
+        .yoyo(true)
+        .delay(1000)
+        .repeat(Infinity)
         .on('update', function(coords, progress) {
           animation.style.width = coords.width + 'px';
           animation.style.height = coords.height + 'px';
 
+          var now = new Date();
+
           console && console.log(
-            'Down:\n  width: %o\n  height: %o\n  progress: %o',
-            ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
+            '%o-%o-%o %o:%o:%o:%o\n  width: %o\n  height: %o\n  progress: %o',
+            now.getFullYear(),
+            now.getMonth() + 1,
+            now.getDate(),
+            now.getHours(),
+            now.getMinutes(),
+            now.getSeconds(),
+            now.getMilliseconds(), ~~coords.width, ~~coords.height,
+            (~~(progress * 100)) + '%'
+          );
         })
         .start();
 
