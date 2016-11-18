@@ -117,3 +117,23 @@ export var Keys = Object.keys ? Object.keys : function(object) {
 
   return result;
 };
+
+/**
+ * ArrayIndexOf
+ * @param {any} array
+ * @param {any} item
+ * @returns
+ */
+export function ArrayIndexOf(array, item) {
+  if (array.indexOf) {
+    return array.indexOf.call(array, item);
+  }
+
+  for (var i = 0, length = array.length; i < length; i++) {
+    if (array[i] === item) {
+      return i;
+    }
+  }
+
+  return -1;
+}

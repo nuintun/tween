@@ -23,10 +23,10 @@
         .easing(Tween.Easing.Bounce.Out)
         .to({ width: 600, height: 300 }, 1000)
         .on('update', function(coords, progress) {
-          console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
-
           animation.style.width = coords.width + 'px';
           animation.style.height = coords.height + 'px';
+
+          console && console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');          
         })
         .start();
 

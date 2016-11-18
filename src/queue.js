@@ -1,3 +1,5 @@
+import * as Utils from './utils';
+
 export default function Queue() {
   this.__tweens = [];
 }
@@ -10,7 +12,7 @@ Queue.prototype = {
     var context = this;
     var tweens = context.__tweens;
 
-    if (tweens.indexOf(tween) === -1) {
+    if (Utils.ArrayIndexOf(tweens, tween) === -1) {
       tweens.push(tween);
     }
   },
@@ -21,7 +23,7 @@ Queue.prototype = {
       context.__tweens = [];
     } else {
       var tweens = context.__tweens;
-      var i = tweens.indexOf(tween);
+      var i = Utils.ArrayIndexOf(tweens, tween);
 
       if (i !== -1) {
         tweens.splice(i, 1);
