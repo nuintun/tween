@@ -44,7 +44,7 @@ rollup.rollup({
 
   fs.writeFileSync(min, result.code);
   console.log(`  Build ${ min } success!`);
-  fs.writeFileSync(src + '.map', result.map);
+  fs.writeFileSync(src + '.map', result.map.replace('"sources":["?"]', '"sources":["tween.js"]'));
   console.log(`  Build ${ src + '.map' } success!`);
 }).catch(function(error) {
   console.error(error);
