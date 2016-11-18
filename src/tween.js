@@ -225,9 +225,9 @@ Utils.Inherits(Tween, Events, {
       } else if (endType === '[object String]') {
         // Parses relative end values with start as base (e.g.: +10, -3)
         if (end.charAt(0) === '+' || end.charAt(0) === '-') {
-          end = start + parseFloat(end, 10);
+          end = start + end * 1.0;
         } else {
-          end = parseFloat(end, 10);
+          end *= 1.0;
         }
       }
 
