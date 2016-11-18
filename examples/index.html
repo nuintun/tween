@@ -44,12 +44,12 @@
         .chain(up)
         .start();
 
-      requestAnimationFrame(animate);
-
       function animate(time) {
-        requestAnimationFrame(animate);
         Tween.update(time);
+        requestAnimationFrame(animate);        
       }
+
+      requestAnimationFrame(animate);      
     </script>
   </body>
 </html>
