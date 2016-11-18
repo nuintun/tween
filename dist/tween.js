@@ -838,7 +838,7 @@
 
       var object = context.__object;
 
-      context.emitWith('start', object, object);
+      context.emitWith('stop', object, object);
 
       context.stopChainedTweens();
 
