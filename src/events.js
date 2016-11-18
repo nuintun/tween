@@ -2,12 +2,12 @@
  * Events
  * Version: 0.0.2
  * Date: 2016/11/18
- * https://github.com/Nuintun/tween
+ * https://github.com/nuintun/tween
  *
  * Original Author: https://github.com/aralejs/events
  *
  * This is licensed under the MIT License (MIT).
- * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+ * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
  */
 
 import * as Utils from './utils';

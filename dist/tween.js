@@ -8,10 +8,10 @@
    * Utils
    * Version: 0.0.1
    * Date: 2016/11/18
-   * https://github.com/Nuintun/tween
+   * https://github.com/nuintun/tween
    *
    * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
   var toString = Object.prototype.toString;
@@ -158,10 +158,10 @@
    * Queue
    * Version: 0.0.1
    * Date: 2016/11/18
-   * https://github.com/Nuintun/tween
+   * https://github.com/nuintun/tween
    *
    * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
   function Queue() {
@@ -219,12 +219,12 @@
    * Events
    * Version: 0.0.2
    * Date: 2016/11/18
-   * https://github.com/Nuintun/tween
+   * https://github.com/nuintun/tween
    *
    * Original Author: https://github.com/aralejs/events
    *
    * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
   // events
@@ -443,10 +443,10 @@
    * now
    * Version: 0.0.1
    * Date: 2016/11/18
-   * https://github.com/Nuintun/tween
+   * https://github.com/nuintun/tween
    *
    * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
   // Include a performance.now polyfill
@@ -475,10 +475,10 @@
    * Easing
    * Version: 0.0.1
    * Date: 2016/11/18
-   * https://github.com/Nuintun/tween
+   * https://github.com/nuintun/tween
    *
    * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
   var Easing = {
@@ -687,10 +687,10 @@
    * Interpolation
    * Version: 0.0.1
    * Date: 2016/11/18
-   * https://github.com/Nuintun/tween
+   * https://github.com/nuintun/tween
    *
    * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
   var Factorial = (function() {
@@ -786,10 +786,10 @@
    * Tween
    * Version: 0.0.1
    * Date: 2016/11/18
-   * https://github.com/Nuintun/tween
+   * https://github.com/nuintun/tween
    *
    * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
   var queue = new Queue();
