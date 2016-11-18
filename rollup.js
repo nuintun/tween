@@ -19,11 +19,9 @@ rollup.rollup({
     // no such file or directory
   }
 
-  if (stat) {
-    fs.rmdirSync('dist');
+  if (!stat) {
+    fs.mkdirSync('dist');
   }
-
-  fs.mkdirSync('dist');
 
   let result = bundle.generate({
     format: 'umd',
