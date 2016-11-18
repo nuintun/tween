@@ -30,7 +30,10 @@
           animation.style.width = coords.width + 'px';
           animation.style.height = coords.height + 'px';
 
-          console && console.log('up: ', ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
+          console && console.log(
+            'Up:\n  width: %o\n  height: %o\n  progress: %o',
+            ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%'
+          );
         });
       var down = new Tween({ width: 200, height: 100 })
         .easing(Tween.Easing.Bounce.Out)
@@ -40,7 +43,9 @@
           animation.style.width = coords.width + 'px';
           animation.style.height = coords.height + 'px';
 
-          console && console.log('down: ', ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
+          console && console.log(
+            'Down:\n  width: %o\n  height: %o\n  progress: %o',
+            ~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
         })
         .start();
 
