@@ -1,3 +1,13 @@
+/*!
+ * Tween
+ * Version: 0.0.1
+ * Date: 2016/11/18
+ * https://github.com/Nuintun/tween
+ *
+ * This is licensed under the MIT License (MIT).
+ * For details, see: https://github.com/Nuintun/tween/blob/master/LICENSE
+ */
+
 import Queue from './queue';
 import Events from './events';
 import { now } from './now';
