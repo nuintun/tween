@@ -5,14 +5,14 @@ var tween = new Tween({ width: 200, height: 100 })
   .yoyo(true)
   .delay(1000)
   .repeat(Infinity)
-  .on('update', function(coords, progress) {
+  .on('update', function(coords, progress, reversed) {
     animation.style.width = coords.width + 'px';
     animation.style.height = coords.height + 'px';
 
     var now = new Date();
 
     console && console.log(
-      '%o-%o-%o %o:%o:%o:%o  width: %o  height: %o  progress: %o',
+      '%o-%o-%o %o:%o:%o:%o  width: %o  height: %o  progress: %o  reversed: %o',
       now.getFullYear(),
       now.getMonth() + 1,
       now.getDate(),
@@ -20,7 +20,8 @@ var tween = new Tween({ width: 200, height: 100 })
       now.getMinutes(),
       now.getSeconds(),
       now.getMilliseconds(), ~~coords.width, ~~coords.height,
-      (~~(progress * 100)) + '%'
+      (~~(progress * 100)) + '%',
+      reversed
     );
   })
   .start();

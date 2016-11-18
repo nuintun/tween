@@ -19,13 +19,15 @@ export default function Tween(object) {
   context.__repeatDelayTime = null;
   context.__yoyo = false;
   context.__isPlaying = false;
-  context.reversed = false;
   context.__delayTime = 0;
   context.__startTime = null;
   context.__easingFunction = Easing.Linear.None;
   context.__interpolationFunction = Interpolation.Linear;
   context.__chainedTweens = [];
   context.__startEventFired = false;
+
+  // Is reverse
+  context.reversed = false;
 
   // Set all starting values present on the target object
   for (var field in object) {
@@ -81,10 +83,10 @@ Utils.Inherits(Tween, Events, {
         continue;
       }
 
-      // ensures we're using numbers
+      // Ensures we're using numbers
       startValue *= 1.0;
 
-      // must be finite
+      // Must be finite
       if (!Utils.IsFinite(startValue)) {
         continue;
       }
@@ -99,9 +101,9 @@ Utils.Inherits(Tween, Events, {
         valuesEnd[property] = [startValue].concat(valuesEnd[property]);
       }
 
-      // ensures we're using numbers, not strings
+      // Ensures we're using numbers, not strings
       valuesStart[property] = startValue;
-      // cache repeat
+      // Cache repeat
       context.__valuesStartRepeat[property] = startValue;
     }
 
@@ -237,7 +239,7 @@ Utils.Inherits(Tween, Events, {
       }
     }
 
-    context.emitWith('update', [object, value], object);
+    context.emitWith('update', [object, value, context.reversed], object);
 
     if (elapsed === 1) {
       if (context.__repeat > 0) {
@@ -245,7 +247,7 @@ Utils.Inherits(Tween, Events, {
           context.__repeat--;
         }
 
-        // yoyo
+        // Is yoyo
         var yoyo = context.__yoyo;
 
         // Reassign starting values, restart by making startTime = now
