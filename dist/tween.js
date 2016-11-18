@@ -792,6 +792,8 @@
       context.__startTime = IsNatural(time) ? time : now();
       context.__startTime += context.__delayTime;
 
+      var startType;
+      var startValue;
       var object = context.__object;
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
@@ -799,7 +801,18 @@
       for (var property in valuesEnd) {
         // If `to()` specifies a property that doesn't exist in the source object,
         // we should not set that property in the object
-        if (object[property] === undefined) {
+        startValue = object[property];
+        startType = Type(startValue);
+
+        if (startType !== '[object Number]' && startType !== '[object String]') {
+          continue;
+        }
+
+        // ensures we're using numbers
+        startValue *= 1.0;
+
+        // must be finite
+        if (!IsFinite(startValue)) {
           continue;
         }
 
@@ -810,17 +823,13 @@
           }
 
           // Create a local copy of the Array with the start value at the front
-          valuesEnd[property] = [object[property]].concat(valuesEnd[property]);
+          valuesEnd[property] = [startValue].concat(valuesEnd[property]);
         }
 
-        valuesStart[property] = object[property];
-
-        if (!IsType(valuesStart[property], 'Array')) {
-          // Ensures we're using numbers, not strings
-          valuesStart[property] *= 1.0;
-        }
-
-        context.__valuesStartRepeat[property] = valuesStart[property] || 0;
+        // ensures we're using numbers, not strings
+        valuesStart[property] = startValue;
+        // cache repeat
+        context.__valuesStartRepeat[property] = startValue;
       }
 
       return context;
@@ -926,14 +935,15 @@
 
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
+      var valuesStartRepeat = context.__valuesStartRepeat;
 
       for (property in valuesEnd) {
-        // Don't update properties that do not exist in the source object
-        if (valuesStart[property] === undefined) {
+        // Don't update properties that do not exist in the values start repeat object
+        if (!valuesStartRepeat.hasOwnProperty(property)) {
           continue;
         }
 
-        var start = valuesStart[property] || 0;
+        var start = valuesStart[property];
         var end = valuesEnd[property];
         var endType = Type(end);
 
@@ -964,8 +974,8 @@
             context.__repeat--;
           }
 
+          // yoyo
           var yoyo = context.__yoyo;
-          var valuesStartRepeat = context.__valuesStartRepeat;
 
           // Reassign starting values, restart by making startTime = now
           for (property in valuesStartRepeat) {
@@ -974,7 +984,15 @@
             }
 
             if (yoyo) {
-              valuesEnd[property] = [valuesStartRepeat[property], valuesStartRepeat[property] = valuesEnd[property]][0];
+              if (IsType(valuesEnd[property], 'Array')) {
+                valuesEnd[property] = valuesEnd[property].reverse();
+                valuesStartRepeat[property] = valuesEnd[property][0];
+              } else {
+                valuesEnd[property] = [
+                  valuesStartRepeat[property],
+                  valuesStartRepeat[property] = valuesEnd[property]
+                ][0];
+              }
             }
 
             valuesStart[property] = valuesStartRepeat[property];
