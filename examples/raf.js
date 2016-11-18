@@ -1,7 +1,7 @@
 (function() {
   var lastTime = 0;
   var frameDuration = 1000 / 60;
-  var vendors = ['webkit', 'moz'];
+  var vendors = ['webkit', 'moz', 'ms', 'o'];
 
   for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
     window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
