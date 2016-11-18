@@ -797,6 +797,12 @@
       var valuesStart = context.__valuesStart;
 
       for (var property in valuesEnd) {
+        // If `to()` specifies a property that doesn't exist in the source object,
+        // we should not set that property in the object
+        if (object[property] === undefined) {
+          continue;
+        }
+
         // Check if an Array was provided as property value
         if (IsType(valuesEnd[property], 'Array')) {
           if (valuesEnd[property].length === 0) {
@@ -807,15 +813,9 @@
           valuesEnd[property] = [object[property]].concat(valuesEnd[property]);
         }
 
-        // If `to()` specifies a property that doesn't exist in the source object,
-        // we should not set that property in the object
-        if (object[property] === undefined) {
-          continue;
-        }
-
         valuesStart[property] = object[property];
 
-        if (IsType(valuesStart[property], 'Array')) {
+        if (!IsType(valuesStart[property], 'Array')) {
           // Ensures we're using numbers, not strings
           valuesStart[property] *= 1.0;
         }

@@ -1,5 +1,5 @@
 var animation = document.getElementById('animation');
-var tween = new Tween({ width: 200, height: 100, rgb: 0 })
+var tween = new Tween({ width: 200, height: 100, rgb: [0, 255, 128] })
   .easing(Tween.Easing.Bounce.Out)
   .to({ width: 600, height: 300, rgb: [255, 100, 10] }, 1000)
   .yoyo(true)
