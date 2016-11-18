@@ -20,40 +20,6 @@
   </head>
   <body>
     <div id="animation"></div>
-    <script>
-      var animation = document.getElementById('animation');
-      var tween = new Tween({ width: 200, height: 100 })
-        .easing(Tween.Easing.Bounce.Out)
-        .to({ width: 600, height: 300 }, 1000)
-        .yoyo(true)
-        .delay(1000)
-        .repeat(Infinity)
-        .on('update', function(coords, progress) {
-          animation.style.width = coords.width + 'px';
-          animation.style.height = coords.height + 'px';
-
-          var now = new Date();
-
-          console && console.log(
-            '%o-%o-%o %o:%o:%o:%o  width: %o  height: %o  progress: %o',
-            now.getFullYear(),
-            now.getMonth() + 1,
-            now.getDate(),
-            now.getHours(),
-            now.getMinutes(),
-            now.getSeconds(),
-            now.getMilliseconds(), ~~coords.width, ~~coords.height,
-            (~~(progress * 100)) + '%'
-          );
-        })
-        .start();
-
-      function animate(time) {
-        Tween.update(time);
-        requestAnimationFrame(animate);
-      }
-
-      requestAnimationFrame(animate);
-    </script>
+    <script src="./index.js"></script>
   </body>
 </html>
