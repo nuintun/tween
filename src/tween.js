@@ -19,7 +19,7 @@ export default function Tween(object) {
   context.__repeatDelayTime = null;
   context.__yoyo = false;
   context.__isPlaying = false;
-  context.__reversed = false;
+  context.reversed = false;
   context.__delayTime = 0;
   context.__startTime = null;
   context.__easingFunction = Easing.Linear.None;
@@ -254,7 +254,7 @@ Utils.Inherits(Tween, Events, {
         }
 
         if (yoyo) {
-          context.__reversed = !context.__reversed;
+          context.reversed = !context.reversed;
         }
 
         if (context.__repeatDelayTime !== null) {
