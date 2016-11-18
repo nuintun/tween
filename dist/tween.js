@@ -974,10 +974,7 @@
             }
 
             if (yoyo) {
-              var tmp = valuesStartRepeat[property];
-
-              valuesStartRepeat[property] = valuesEnd[property];
-              valuesEnd[property] = tmp;
+              valuesEnd[property] = [valuesStartRepeat[property], valuesStartRepeat[property] = valuesEnd[property]][0];
             }
 
             valuesStart[property] = valuesStartRepeat[property];
