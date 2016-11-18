@@ -948,21 +948,19 @@
         var endType = Type(end);
 
         if (endType === '[object Array]') {
-          object[property] = context.__interpolationFunction(end, value);
-        } else {
+          end = context.__interpolationFunction(end, value);
+        } else if (endType === '[object String]') {
           // Parses relative end values with start as base (e.g.: +10, -3)
-          if (endType === '[object String]') {
-            if (end.charAt(0) === '+' || end.charAt(0) === '-') {
-              end = start + parseFloat(end, 10);
-            } else {
-              end = parseFloat(end, 10);
-            }
+          if (end.charAt(0) === '+' || end.charAt(0) === '-') {
+            end = start + parseFloat(end, 10);
+          } else {
+            end = parseFloat(end, 10);
           }
+        }
 
-          // Protect against non numeric properties.
-          if (endType === '[object Number]') {
-            object[property] = start + (end - start) * value;
-          }
+        // Protect against non numeric properties.
+        if (IsFinite(end)) {
+          object[property] = start + (end - start) * value;
         }
       }
 
