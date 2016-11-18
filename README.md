@@ -2,6 +2,7 @@ tween
 =========
 
 >Javascript tweening engine
+
 >[![Dependencies][david-image]][david-url]
 
 [david-image]: http://img.shields.io/david/nuintun/tween.svg?style=flat-square
