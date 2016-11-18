@@ -13,7 +13,7 @@
       #animation {
         width: 200px;
         height: 100px;
-        margin: 0 auto;        
+        margin: 0 auto;
         background: #f00;
       }
     </style>
@@ -23,15 +23,25 @@
     <script>
       var animation = document.getElementById('animation');
       var coords = { width: 200, height: 100 };
-      var tween = new Tween(coords)
+      var up = new Tween({ width: 600, height: 300 })
+        .easing(Tween.Easing.Bounce.Out)
+        .to({ width: 200, height: 100 }, 1000)
+        .on('update', function(coords, progress) {
+          animation.style.width = coords.width + 'px';
+          animation.style.height = coords.height + 'px';
+
+          console && console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
+        });
+      var down = new Tween(coords)
         .easing(Tween.Easing.Bounce.Out)
         .to({ width: 600, height: 300 }, 1000)
         .on('update', function(coords, progress) {
           animation.style.width = coords.width + 'px';
           animation.style.height = coords.height + 'px';
 
-          console && console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');          
+          console && console.log(~~coords.width, ~~coords.height, (~~(progress * 100)) + '%');
         })
+        .chain(up)
         .start();
 
       requestAnimationFrame(animate);
