@@ -817,11 +817,6 @@
 
     // Is reverse
     context.reversed = false;
-
-    // Set all starting values present on the target object
-    for (var field in object) {
-      context.__valuesStart[field] = object[field] * 1.0;
-    }
   }
 
   Tween.now = now;
@@ -856,44 +851,46 @@
       context.__startTime = IsNatural(time) ? time : now();
       context.__startTime += context.__delayTime;
 
-      var startType;
-      var startValue;
+      var start;
+      var end;
       var object = context.__object;
+
+      // Set all starting values present on the target object
+      for (var field in object) {
+        // Ensures we're using numbers, not strings
+        start = object[field] * 1.0;
+
+        if (IsFinite(start)) {
+          context.__valuesStart[field] = start;
+        }
+      }
+
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
 
       for (var property in valuesEnd) {
         // If `to()` specifies a property that doesn't exist in the source object,
         // we should not set that property in the object
-        startValue = object[property];
-        startType = Type(startValue);
-
-        if (startType !== '[object Number]' && startType !== '[object String]') {
+        if (!valuesStart.hasOwnProperty(property)) {
           continue;
         }
 
-        // Ensures we're using numbers
-        startValue *= 1.0;
-
-        // Must be finite
-        if (!IsFinite(startValue)) {
-          continue;
-        }
+        // Get start value
+        start = valuesStart[property];
+        end = valuesEnd[property];
 
         // Check if an Array was provided as property value
-        if (IsType(valuesEnd[property], 'Array')) {
-          if (valuesEnd[property].length === 0) {
+        if (IsType(end, 'Array')) {
+          if (end.length === 0) {
             continue;
           }
 
           // Create a local copy of the Array with the start value at the front
-          valuesEnd[property] = [startValue].concat(valuesEnd[property]);
+          valuesEnd[property] = [start].concat(end);
         }
 
-        // Ensures we're using numbers, not strings
-        valuesStart[property] = startValue;
         // Cache repeat
-        context.__valuesStartRepeat[property] = startValue;
+        context.__valuesStartRepeat[property] = start;
       }
 
       return context;
@@ -928,6 +925,8 @@
       Each(this.__chainedTweens, function(tween) {
         tween.stop();
       });
+
+      return this;
     },
     delay: function(amount) {
       if (IsNatural(amount)) {
@@ -955,7 +954,7 @@
       return this;
     },
     yoyo: function(yoyo) {
-      this.__yoyo = yoyo;
+      this.__yoyo = !!yoyo;
 
       return this;
     },
@@ -999,11 +998,10 @@
 
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
-      var valuesStartRepeat = context.__valuesStartRepeat;
 
       for (property in valuesEnd) {
         // Don't update properties that do not exist in the values start repeat object
-        if (!valuesStartRepeat.hasOwnProperty(property)) {
+        if (!valuesStart.hasOwnProperty(property)) {
           continue;
         }
 
@@ -1025,6 +1023,8 @@
         // Protect against non numeric properties.
         if (IsFinite(end)) {
           object[property] = start + (end - start) * value;
+        } else {
+          return true;
         }
       }
 
@@ -1038,11 +1038,12 @@
 
           // Is yoyo
           var yoyo = context.__yoyo;
+          var valuesStartRepeat = context.__valuesStartRepeat;
 
           // Reassign starting values, restart by making startTime = now
           for (property in valuesStartRepeat) {
-            if (typeof(valuesEnd[property]) === 'string') {
-              valuesStartRepeat[property] = valuesStartRepeat[property] + parseFloat(valuesEnd[property], 10);
+            if (IsType(valuesEnd, 'String')) {
+              valuesStartRepeat[property] = valuesStartRepeat[property] + valuesEnd[property] * 1.0;
             }
 
             if (yoyo) {
