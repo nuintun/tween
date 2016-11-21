@@ -30,7 +30,6 @@ export default function Tween(object) {
   context.__repeat = 0;
   context.__repeatDelayTime = null;
   context.__yoyo = false;
-  context.__isPlaying = false;
   context.__delayTime = 0;
   context.__startTime = null;
   context.__easingFunction = Easing.Linear.None;
@@ -38,6 +37,8 @@ export default function Tween(object) {
   context.__chainedTweens = [];
   context.__startEventFired = false;
 
+  // Is playing
+  context.playing = false;
   // Is reverse
   context.reversed = false;
 }
@@ -69,7 +70,7 @@ Utils.Inherits(Tween, Events, {
 
     QUEUE.add(context);
 
-    context.__isPlaying = true;
+    context.playing = true;
     context.__startEventFired = false;
     context.__startTime = Utils.IsNatural(time) ? time : now();
     context.__startTime += context.__delayTime;
@@ -177,13 +178,14 @@ Utils.Inherits(Tween, Events, {
   stop: function() {
     var context = this;
 
-    if (!context.__isPlaying) {
+    if (!context.playing) {
       return context;
     }
 
     QUEUE.remove(context);
 
-    context.__isPlaying = false;
+    context.playing = false;
+    context.__startEventFired = false;
 
     var object = context.__object;
 
@@ -253,9 +255,9 @@ Utils.Inherits(Tween, Events, {
     return this;
   },
   update: function(time) {
-    var property;
-    var elapsed;
     var value;
+    var elapsed;
+    var property;
     var context = this;
 
     time = Utils.IsNatural(time) ? time : now();
@@ -277,9 +279,10 @@ Utils.Inherits(Tween, Events, {
 
     value = context.__easingFunction(elapsed);
 
-    var start;
     var end;
+    var start;
     var endType;
+    var yoyo = context.__yoyo;
     var valuesEnd = context.__valuesEnd;
     var valuesStart = context.__valuesStart;
 
@@ -299,6 +302,11 @@ Utils.Inherits(Tween, Events, {
       } else if (endType === '[object String]') {
         // Parses relative end values with start as base (e.g.: +10, -3)
         end = start + end * 1.0;
+
+        // If not yoyo and relative end values reset values start
+        if (elapsed === 1 && !yoyo) {
+          valuesStart[property] = end;
+        }
       }
 
       // Change object property value
@@ -309,21 +317,25 @@ Utils.Inherits(Tween, Events, {
 
     if (elapsed === 1) {
       if (context.__repeat > 0) {
+        // Cycle events
+        context.emitWith('cycle', object, object);
+
+        // Is finite repeat
         if (Utils.IsFinite(context.__repeat)) {
           context.__repeat--;
         }
 
-        if (context.__yoyo) {
+        if (yoyo) {
           context.reversed = !context.reversed;
 
           context.__valuesStart = [
             context.__startReversed,
-            context.__startReversed = context.__valuesStart
+            context.__startReversed = valuesStart
           ][0];
 
           context.__valuesEnd = [
             context.__endReversed,
-            context.__endReversed = context.__valuesEnd
+            context.__endReversed = valuesEnd
           ][0];
         }
 
