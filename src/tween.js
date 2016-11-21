@@ -122,19 +122,7 @@ Utils.Inherits(Tween, Events, {
         endReversed = [];
 
         for (var i = 0; i < length; i++) {
-          item = valuesEnd[property][i];
-
-          if (Utils.IsType(item, 'String')) {
-            if (RELATIVERE.test(item)) {
-              end.push(item);
-
-              // Set reversed
-              endReversed = [(item.charAt(0) === '+' ? '-' : '+') + item.substring(1)].concat(endReversed);
-              continue;
-            }
-
-            item *= 1.0;
-          }
+          item = valuesEnd[property][i] * 1.0;
 
           if (Utils.IsFinite(item)) {
             end.push(item);
