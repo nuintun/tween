@@ -983,6 +983,8 @@
       var value;
       var context = this;
 
+      time = IsNatural(time) ? time : now();
+
       if (time < context.__startTime) {
         return true;
       }
@@ -1002,6 +1004,7 @@
 
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
+      var valuesStartRepeat = context.__valuesStartRepeat;
 
       for (property in valuesEnd) {
         // Don't update properties that do not exist in the values start repeat object
@@ -1027,6 +1030,9 @@
         // Protect against non numeric properties.
         if (IsFinite(end)) {
           object[property] = start + (end - start) * value;
+        } else {
+          // delete valuesStart[property];
+          // delete valuesStartRepeat[property];
         }
       }
 
@@ -1040,7 +1046,6 @@
 
           // Is yoyo
           var yoyo = context.__yoyo;
-          var valuesStartRepeat = context.__valuesStartRepeat;
 
           // Reassign starting values, restart by making startTime = now
           for (property in valuesStartRepeat) {

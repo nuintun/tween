@@ -87,11 +87,13 @@
         var coords = { x: x0, y: y0, old: { x: x0, y: y0 } };
         var tween = new Tween(coords);
 
+				// console.log(tween);
+
         // console.log('s: ', xA);
 
         tween
-          .repeat(1)
-          .yoyo(true)
+          // .repeat(1)
+          // .yoyo(true)
           .to({ x: xA, y: yA }, 1000)
           .on('update', function() {
             context.beginPath();
@@ -105,7 +107,7 @@
             this.old.y = this.y;
           })
           .on('complete', function() {
-						console.log('----------------------------------------------------------------');
+            // console.log('----------------------------------------------------------------');
           })
           .interpolation(interpolation)
           .easing(Tween.Easing.Linear.None)

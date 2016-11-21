@@ -204,6 +204,8 @@ Utils.Inherits(Tween, Events, {
     var value;
     var context = this;
 
+    time = Utils.IsNatural(time) ? time : now();
+
     if (time < context.__startTime) {
       return true;
     }
@@ -223,6 +225,7 @@ Utils.Inherits(Tween, Events, {
 
     var valuesEnd = context.__valuesEnd;
     var valuesStart = context.__valuesStart;
+    var valuesStartRepeat = context.__valuesStartRepeat;
 
     for (property in valuesEnd) {
       // Don't update properties that do not exist in the values start repeat object
@@ -248,6 +251,9 @@ Utils.Inherits(Tween, Events, {
       // Protect against non numeric properties.
       if (Utils.IsFinite(end)) {
         object[property] = start + (end - start) * value;
+      } else {
+        // delete valuesStart[property];
+        // delete valuesStartRepeat[property];
       }
     }
 
@@ -261,7 +267,6 @@ Utils.Inherits(Tween, Events, {
 
         // Is yoyo
         var yoyo = context.__yoyo;
-        var valuesStartRepeat = context.__valuesStartRepeat;
 
         // Reassign starting values, restart by making startTime = now
         for (property in valuesStartRepeat) {
