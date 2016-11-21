@@ -1033,8 +1033,8 @@
         if (IsFinite(end)) {
           object[property] = start + (end - start) * value;
         } else {
-          // delete valuesStart[property];
-          // delete valuesStartRepeat[property];
+          delete valuesStart[property];
+          delete valuesStartRepeat[property];
         }
       }
 
