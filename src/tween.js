@@ -78,6 +78,9 @@ Utils.Inherits(Tween, Events, {
     var start;
     var object = context.__object;
 
+    // Reset values
+    context.__valuesStart = {};
+
     // Set all starting values present on the target object
     for (var field in object) {
       // Ensures we're using numbers, not strings
