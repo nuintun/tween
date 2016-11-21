@@ -23,7 +23,6 @@ export default function Tween(object) {
   context.__object = object;
   context.__valuesStart = {};
   context.__valuesEnd = {};
-  context.__valuesStartRepeat = {};
   context.__duration = 1000;
   context.__repeat = 0;
   context.__repeatDelayTime = null;
@@ -89,14 +88,14 @@ Utils.Inherits(Tween, Events, {
     var valuesEnd = context.__valuesEnd;
     var valuesStart = context.__valuesStart;
 
-    // Reset repeat
-    context.__valuesStartRepeat = {};
+    // Reset value end
+    // context.__valuesEnd = {};
 
     // Init
-    for (var property in valuesEnd) {
+    for (var property in valuesStart) {
       // If `to()` specifies a property that doesn't exist in the source object,
       // we should not set that property in the object
-      if (!valuesStart.hasOwnProperty(property)) {
+      if (!valuesEnd.hasOwnProperty(property)) {
         continue;
       }
 
@@ -113,9 +112,6 @@ Utils.Inherits(Tween, Events, {
         // Create a local copy of the Array with the start value at the front
         valuesEnd[property] = [start].concat(end);
       }
-
-      // Cache repeat
-      context.__valuesStartRepeat[property] = start;
     }
 
     return context;
@@ -223,9 +219,11 @@ Utils.Inherits(Tween, Events, {
 
     value = context.__easingFunction(elapsed);
 
+    var start;
+    var end;
+    var endType;
     var valuesEnd = context.__valuesEnd;
     var valuesStart = context.__valuesStart;
-    var valuesStartRepeat = context.__valuesStartRepeat;
 
     for (property in valuesEnd) {
       // Don't update properties that do not exist in the values start repeat object
@@ -233,9 +231,9 @@ Utils.Inherits(Tween, Events, {
         continue;
       }
 
-      var start = valuesStart[property];
-      var end = valuesEnd[property];
-      var endType = Utils.Type(end);
+      start = valuesStart[property];
+      end = valuesEnd[property];
+      endType = Utils.Type(end);
 
       if (endType === '[object Array]') {
         end = context.__interpolationFunction(end, value);
@@ -255,7 +253,6 @@ Utils.Inherits(Tween, Events, {
         object[property] = end;
       } else {
         delete valuesStart[property];
-        delete valuesStartRepeat[property];
       }
     }
 
@@ -271,24 +268,25 @@ Utils.Inherits(Tween, Events, {
         var yoyo = context.__yoyo;
 
         // Reassign starting values, restart by making startTime = now
-        for (property in valuesStartRepeat) {
+        for (property in valuesStart) {
+          end = valuesEnd[property];
+          endType = Utils.Type(end);
+
           if (Utils.IsType(valuesEnd, 'String')) {
-            valuesStartRepeat[property] = valuesStartRepeat[property] + valuesEnd[property] * 1.0;
+            valuesStart[property] = valuesStart[property] + valuesEnd[property] * 1.0;
           }
 
           if (yoyo) {
             if (Utils.IsType(valuesEnd[property], 'Array')) {
               valuesEnd[property] = valuesEnd[property].reverse();
-              valuesStartRepeat[property] = valuesEnd[property][0];
+              valuesStart[property] = valuesStart[property][0];
             } else {
               valuesEnd[property] = [
-                valuesStartRepeat[property],
-                valuesStartRepeat[property] = valuesEnd[property]
+                valuesStart[property],
+                valuesStavaluesStartrtRepeat[property] = valuesEnd[property]
               ][0];
             }
           }
-
-          valuesStart[property] = valuesStartRepeat[property];
         }
 
         if (yoyo) {
