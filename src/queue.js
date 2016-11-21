@@ -8,6 +8,7 @@
  * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
  */
 
+import { now } from './now';
 import * as Utils from './utils';
 
 export default function Queue() {
@@ -48,6 +49,8 @@ Queue.prototype = {
     }
 
     var i = 0;
+
+    time = Utils.IsNatural(time) ? time : now();
 
     while (i < tweens.length) {
       if (tweens[i].update(time) || preserve) {
