@@ -47,7 +47,6 @@
       target.appendChild(createPath('Linear', Tween.Interpolation.Linear));
       target.appendChild(createPath('Bezier', Tween.Interpolation.Bezier));
       target.appendChild(createPath('CatmullRom', Tween.Interpolation.CatmullRom));
-
       target.appendChild(document.createElement('br'));
 
       xA.push(x0);
@@ -85,19 +84,33 @@
         context.lineWidth = 2;
         context.strokeStyle = "rgba(255,127,127,0.9)";
 
-        var obj = { x: x0, y: y0, old: { x: x0, y: y0 } };
+        var coords = { x: x0, y: y0, old: { x: x0, y: y0 } };
+        var tween = new Tween(coords);
 
-        new Tween(obj).to({ x: xA, y: yA }, 3000).on('update', function() {
-          context.beginPath();
-          context.moveTo(this.old.x, this.old.y);
-          context.lineTo(this.x, this.y);
-          context.closePath();
-          context.stroke();
+        console.log('s: ', xA);
 
-          this.old.x = this.x;
-          this.old.y = this.y;
+        tween
+          .repeat(1)
+          .yoyo(true)
+          .to({ x: xA, y: yA }, 1000)
+          .on('update', function() {
+            context.beginPath();
+            context.moveTo(this.old.x, this.old.y);
+            context.lineTo(this.x, this.y);
+            context.closePath();
+            context.stroke();
+            console.log('c: ', this.x);
 
-        }).interpolation(interpolation).easing(Tween.Easing.Linear.None).delay(250).start();
+            this.old.x = this.x;
+            this.old.y = this.y;
+          })
+          .on('complete', function() {
+						console.log('----------------------------------------------------------------');
+          })
+          .interpolation(interpolation)
+          .easing(Tween.Easing.Linear.None)
+          .delay(250)
+          .start();
 
         div.appendChild(document.createTextNode(title));
         div.appendChild(document.createElement('br'));

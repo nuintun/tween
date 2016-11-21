@@ -41,7 +41,7 @@ export default function Tween(object) {
 
   // Set all starting values present on the target object
   for (var field in object) {
-    context.__valuesStart[field] = parseFloat(object[field], 10);
+    context.__valuesStart[field] = object[field] * 1.0;
   }
 }
 
