@@ -284,6 +284,7 @@ Utils.Inherits(Tween, Events, {
           }
 
           valuesStart[property] = valuesStartRepeat[property];
+          console.log(valuesStart, valuesEnd);
         }
 
         if (yoyo) {

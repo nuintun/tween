@@ -87,11 +87,11 @@
         var coords = { x: x0, y: y0, old: { x: x0, y: y0 } };
         var tween = new Tween(coords);
 
-        console.log('s: ', xA);
+        // console.log('s: ', xA);
 
         tween
-          .repeat(1)
-          .yoyo(true)
+          // .repeat(1)
+          // .yoyo(true)
           .to({ x: xA, y: yA }, 1000)
           .on('update', function() {
             context.beginPath();
@@ -99,7 +99,7 @@
             context.lineTo(this.x, this.y);
             context.closePath();
             context.stroke();
-            console.log('c: ', this.x);
+            // console.log('c: ', this.x);
 
             this.old.x = this.x;
             this.old.y = this.y;
