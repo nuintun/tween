@@ -21,6 +21,8 @@ var RELATIVERE = /^[+-]\d+$/;
 export default function Tween(object) {
   var context = this;
 
+  Events.call(context);
+
   context.__object = object;
   context.__valuesStart = {};
   context.__valuesEnd = {};
