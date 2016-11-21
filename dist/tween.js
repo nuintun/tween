@@ -868,6 +868,10 @@
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
 
+      // Reset repeat
+      context.__valuesStartRepeat = {};
+
+      // Init
       for (var property in valuesEnd) {
         // If `to()` specifies a property that doesn't exist in the source object,
         // we should not set that property in the object
