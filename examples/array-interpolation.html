@@ -48,9 +48,9 @@
         xA.push(x0);
         yA.push(y0);
 
-        target.appendChild(createPath('start === end', Tween.Interpolation.Linear));
-        target.appendChild(createPath('', Tween.Interpolation.Bezier));
-        target.appendChild(createPath('', Tween.Interpolation.CatmullRom));
+        target.appendChild(createPath('Linear: start = end', Tween.Interpolation.Linear));
+        target.appendChild(createPath('Bezier: start = end', Tween.Interpolation.Bezier));
+        target.appendChild(createPath('CatmullRom: start = end', Tween.Interpolation.CatmullRom));
 
         function createPath(title, interpolation) {
           var div = document.createElement('div');
