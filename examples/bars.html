@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>bars / Tween</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="info">
+			<h1><a href="http://github.com/nuintun/tween">tween</a></h1>
+			<h2>Bars</h2>
+			<p>1000 bars, moving horizontally, looped.</p>
+		</div>
+		<div id="target"></div>
+		<script src="../dist/tween.js"></script>
+		<script src="js/stats.js"></script>
+		<script src="js/raf.js"></script>
+		<script>
+			var stats;
+			var elems = [];
+
+			init();
+			animate();
+
+			function init() {
+				stats = new Stats();
+
+				var sds = stats.dom.style;
+
+				sds.position = 'absolute';
+				sds.right = '0px';
+				sds.left = 'auto';
+				sds.top = '0px';
+				sds.margin = '4em 3em';
+				sds.width = '80px';
+				document.body.appendChild(stats.domElement);
+
+				elems = [];
+
+				var clientWidth = document.documentElement.clientWidth;
+
+				for (var i = 0; i < 1000; i++) {
+					var startValue = clientWidth / 2 + (Math.random() - Math.random()) * 250;
+					var endValue = clientWidth / 2 + (Math.random() - Math.random()) * 250;
+					var domElement = document.createElement('div');
+					var bg = (Math.random() * 0xffffff) >> 0;
+
+					domElement.style.position = 'absolute';
+					domElement.style.top = (Math.random() * window.innerHeight) + 'px';
+					domElement.style.left = startValue + 'px';
+					domElement.style.background = '#' + bg.toString(16);
+					domElement.style.width = '100px';
+					domElement.style.height = '2px';
+
+					var elem = { x: startValue, domElement: domElement };
+
+					var updateCallback = function() {
+						this.domElement.style.left = this.x + 'px';
+					}
+
+					var tween = new Tween(elem)
+						.to({ x: endValue }, 4000)
+						.delay(Math.random() * 1000)
+						.on('update', updateCallback)
+						.easing(Tween.Easing.Back.Out)
+						.start();
+
+					var tweenBack = new Tween(elem, false)
+						.to({ x: startValue }, 4000)
+						.delay(Math.random() * 1000)
+						.on('update', updateCallback)
+						.easing(Tween.Easing.Elastic.InOut);
+
+					tween.chain(tweenBack);
+					tweenBack.chain(tween);
+
+					document.body.appendChild(elem.domElement);
+
+					elems.push(elem);
+				}
+
+			}
+
+			function animate(time) {
+				Tween.update(time);
+				stats.update();
+				requestAnimationFrame(animate);
+			}
+		</script>
+	</body>
+</html>
