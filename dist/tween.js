@@ -307,10 +307,12 @@
    */
   Events.prototype.once = function(events, callback, context) {
     var that = this;
-
+    var args = arguments;
     var cb = function() {
+      context = args.length < 3 ? this : that;
+
       that.off(events, cb);
-      callback.apply(context || that, arguments);
+      Apply(callback, context, arguments);
     };
 
     return that.on(events, cb, context);
