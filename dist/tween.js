@@ -1027,11 +1027,13 @@
           } else {
             end *= 1.0;
           }
+
+          end = start + (end - start) * value;
         }
 
         // Protect against non numeric properties.
         if (IsFinite(end)) {
-          object[property] = start + (end - start) * value;
+          object[property] = end;
         } else {
           delete valuesStart[property];
           delete valuesStartRepeat[property];

@@ -33,8 +33,8 @@
 
     function init() {
       var target = document.getElementById('target');
-      var width = 240;
-      var height = 160;
+      var width = 320;
+      var height = 216;
       // fixed points
       var min = 1 / 6;
       var max = 5 / 6;
@@ -45,16 +45,16 @@
       var yA = [height * min, height * max];
 
       target.appendChild(createPath('Linear', Tween.Interpolation.Linear));
-      // target.appendChild(createPath('Bezier', Tween.Interpolation.Bezier));
-      // target.appendChild(createPath('CatmullRom', Tween.Interpolation.CatmullRom));
+      target.appendChild(createPath('Bezier', Tween.Interpolation.Bezier));
+      target.appendChild(createPath('CatmullRom', Tween.Interpolation.CatmullRom));
       target.appendChild(document.createElement('br'));
 
       xA.push(x0);
       yA.push(y0);
 
-      // target.appendChild(createPath('start === end', Tween.Interpolation.Linear));
-      // target.appendChild(createPath('', Tween.Interpolation.Bezier));
-      // target.appendChild(createPath('', Tween.Interpolation.CatmullRom));
+      target.appendChild(createPath('start === end', Tween.Interpolation.Linear));
+      target.appendChild(createPath('', Tween.Interpolation.Bezier));
+      target.appendChild(createPath('', Tween.Interpolation.CatmullRom));
 
       function createPath(title, interpolation) {
         var div = document.createElement('div');
@@ -87,27 +87,19 @@
         var coords = { x: x0, y: y0, old: { x: x0, y: y0 } };
         var tween = new Tween(coords);
 
-				// console.log(tween);
-
-        // console.log('s: ', xA);
-
         tween
-          // .repeat(1)
-          // .yoyo(true)
-          .to({ x: xA, y: yA }, 1000)
+          .repeat(1)
+          .yoyo(true)
+          .to({ x: xA, y: yA }, 3000)
           .on('update', function() {
             context.beginPath();
             context.moveTo(this.old.x, this.old.y);
             context.lineTo(this.x, this.y);
             context.closePath();
             context.stroke();
-            // console.log('c: ', this.x);
 
             this.old.x = this.x;
             this.old.y = this.y;
-          })
-          .on('complete', function() {
-            // console.log('----------------------------------------------------------------');
           })
           .interpolation(interpolation)
           .easing(Tween.Easing.Linear.None)
