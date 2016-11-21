@@ -1027,8 +1027,6 @@
         // Protect against non numeric properties.
         if (IsFinite(end)) {
           object[property] = start + (end - start) * value;
-        } else {
-          return true;
         }
       }
 
@@ -1063,7 +1061,6 @@
             }
 
             valuesStart[property] = valuesStartRepeat[property];
-            console.log(valuesStart, valuesEnd);
           }
 
           if (yoyo) {

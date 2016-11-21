@@ -248,8 +248,6 @@ Utils.Inherits(Tween, Events, {
       // Protect against non numeric properties.
       if (Utils.IsFinite(end)) {
         object[property] = start + (end - start) * value;
-      } else {
-        return true;
       }
     }
 
@@ -284,7 +282,6 @@ Utils.Inherits(Tween, Events, {
           }
 
           valuesStart[property] = valuesStartRepeat[property];
-          console.log(valuesStart, valuesEnd);
         }
 
         if (yoyo) {

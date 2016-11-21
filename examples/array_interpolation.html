@@ -45,16 +45,16 @@
       var yA = [height * min, height * max];
 
       target.appendChild(createPath('Linear', Tween.Interpolation.Linear));
-      target.appendChild(createPath('Bezier', Tween.Interpolation.Bezier));
-      target.appendChild(createPath('CatmullRom', Tween.Interpolation.CatmullRom));
+      // target.appendChild(createPath('Bezier', Tween.Interpolation.Bezier));
+      // target.appendChild(createPath('CatmullRom', Tween.Interpolation.CatmullRom));
       target.appendChild(document.createElement('br'));
 
       xA.push(x0);
       yA.push(y0);
 
-      target.appendChild(createPath('start === end', Tween.Interpolation.Linear));
-      target.appendChild(createPath('', Tween.Interpolation.Bezier));
-      target.appendChild(createPath('', Tween.Interpolation.CatmullRom));
+      // target.appendChild(createPath('start === end', Tween.Interpolation.Linear));
+      // target.appendChild(createPath('', Tween.Interpolation.Bezier));
+      // target.appendChild(createPath('', Tween.Interpolation.CatmullRom));
 
       function createPath(title, interpolation) {
         var div = document.createElement('div');
@@ -90,8 +90,8 @@
         // console.log('s: ', xA);
 
         tween
-          // .repeat(1)
-          // .yoyo(true)
+          .repeat(1)
+          .yoyo(true)
           .to({ x: xA, y: yA }, 1000)
           .on('update', function() {
             context.beginPath();
