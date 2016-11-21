@@ -20,12 +20,7 @@ Queue.prototype = {
     return this.__tweens;
   },
   add: function(tween) {
-    var context = this;
-    var tweens = context.__tweens;
-
-    if (Utils.ArrayIndexOf(tweens, tween) === -1) {
-      tweens.push(tween);
-    }
+    this.__tweens.push(tween);
   },
   remove: function(tween) {
     var context = this;
