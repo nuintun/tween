@@ -805,7 +805,8 @@
     context.__object = object;
     context.__valuesStart = {};
     context.__valuesEnd = {};
-    context.__valuesReversed = {};
+    context.__startReversed = {};
+    context.__endReversed = {};
     context.__duration = 1000;
     context.__repeat = 0;
     context.__repeatDelayTime = null;
@@ -876,11 +877,12 @@
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
 
-      // Reset
+      // Reset values
       context.__valuesEnd = {};
-      context.__valuesReversed = {};
+      context.__startReversed = {};
+      context.__endReversed = {};
 
-      // Init
+      // Protect against non numeric properties.
       for (var property in valuesStart) {
         // If `to()` specifies a property that doesn't exist in the source object,
         // we should not set that property in the object
@@ -953,7 +955,8 @@
 
         // Set values
         context.__valuesEnd[property] = end;
-        context.__valuesReversed[property] = reversed;
+        context.__endReversed[property] = reversed;
+        context.__startReversed[property] = endType === '[object Array]' ? reversed[0] : reversed;
       }
 
       return context;
@@ -1081,21 +1084,11 @@
           end = context.__interpolationFunction(end, value);
         } else if (endType === '[object String]') {
           // Parses relative end values with start as base (e.g.: +10, -3)
-          if (end.charAt(0) === '+' || end.charAt(0) === '-') {
-            end = start + end * 1.0;
-          } else {
-            end *= 1.0;
-          }
-
+          end = start + end * 1.0;
           end = start + (end - start) * value;
         }
 
-        // Protect against non numeric properties.
-        if (IsFinite(end)) {
-          object[property] = end;
-        } else {
-          delete valuesStart[property];
-        }
+        object[property] = end;
       }
 
       context.emitWith('update', [object, value, context.reversed], object);
@@ -1106,33 +1099,18 @@
             context.__repeat--;
           }
 
-          // Is yoyo
-          var yoyo = context.__yoyo;
-
-          // Reassign starting values, restart by making startTime = now
-          for (property in valuesStart) {
-            end = valuesEnd[property];
-            endType = Type(end);
-
-            if (IsType(valuesEnd, 'String')) {
-              valuesStart[property] = valuesStart[property] + valuesEnd[property] * 1.0;
-            }
-
-            if (yoyo) {
-              if (IsType(valuesEnd[property], 'Array')) {
-                valuesEnd[property] = valuesEnd[property].reverse();
-                valuesStart[property] = valuesStart[property][0];
-              } else {
-                valuesEnd[property] = [
-                  valuesStart[property],
-                  valuesStavaluesStartrtRepeat[property] = valuesEnd[property]
-                ][0];
-              }
-            }
-          }
-
-          if (yoyo) {
+          if (context.__yoyo) {
             context.reversed = !context.reversed;
+
+            context.__valuesStart = [
+              context.__startReversed,
+              context.__startReversed = context.__valuesStart
+            ][0];
+
+            context.__valuesEnd = [
+              context.__endReversed,
+              context.__endReversed = context.__valuesEnd
+            ][0];
           }
 
           if (context.__repeatDelayTime !== null) {
@@ -1142,17 +1120,17 @@
           }
 
           return true;
-        } else {
-          context.emitWith('complete', object, object);
-
-          Each(context.__chainedTweens, function(tween) {
-            // Make the chained tweens start exactly at the time they should,
-            // even if the `update()` method was called way past the duration of the tween
-            tween.start(context.__startTime + context.__duration);
-          });
-
-          return false;
         }
+
+        context.emitWith('complete', object, object);
+
+        Each(context.__chainedTweens, function(tween) {
+          // Make the chained tweens start exactly at the time they should,
+          // even if the `update()` method was called way past the duration of the tween
+          tween.start(context.__startTime + context.__duration);
+        });
+
+        return false;
       }
 
       return true;
