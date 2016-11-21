@@ -873,7 +873,8 @@
       var item;
       var length;
       var endType;
-      var reversed;
+      var endReversed;
+      var startReversed;
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
 
@@ -899,7 +900,7 @@
         if (endType === '[object Array]') {
           length = end.length;
           end = [];
-          reversed = [];
+          endReversed = [];
 
           for (var i = 0; i < length; i++) {
             item = valuesEnd[property][i];
@@ -909,7 +910,7 @@
                 end.push(item);
 
                 // Set reversed
-                reversed = [(item.charAt(0) === '+' ? '-' : '+') + item.substring(1)].concat(reversed);
+                endReversed = [(item.charAt(0) === '+' ? '-' : '+') + item.substring(1)].concat(endReversed);
                 continue;
               }
 
@@ -920,7 +921,7 @@
               end.push(item);
 
               // Set reversed
-              reversed = [item].concat(reversed);
+              endReversed = [item].concat(endReversed);
             } else {
               end = [];
               break;
@@ -935,28 +936,33 @@
           end = [start].concat(end);
 
           // Set reversed
-          reversed.push(start);
+          endReversed.push(start);
+          // Set start
+          startReversed = endReversed[0];
         } else if (endType === '[object String]') {
           if (RELATIVERE.test(end)) {
-            reversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
+            startReversed = start + end * 1.0;
+            endReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
           } else {
             end *= 1.0;
-            reversed = end;
+            startReversed = end;
+            endReversed = start;
 
             if (!IsFinite(end)) {
               continue;
             }
           }
         } else if (IsFinite(end)) {
-          reversed = end;
+          startReversed = end;
+          endReversed = start;
         } else {
           continue;
         }
 
         // Set values
         context.__valuesEnd[property] = end;
-        context.__endReversed[property] = reversed;
-        context.__startReversed[property] = endType === '[object Array]' ? reversed[0] : reversed;
+        context.__startReversed[property] = startReversed;
+        context.__endReversed[property] = endReversed;
       }
 
       return context;
@@ -1081,14 +1087,14 @@
         endType = Type(end);
 
         if (endType === '[object Array]') {
-          end = context.__interpolationFunction(end, value);
+          object[property] = context.__interpolationFunction(end, value);
+          continue;
         } else if (endType === '[object String]') {
           // Parses relative end values with start as base (e.g.: +10, -3)
           end = start + end * 1.0;
-          end = start + (end - start) * value;
         }
 
-        object[property] = end;
+        object[property] = start + (end - start) * value;
       }
 
       context.emitWith('update', [object, value, context.reversed], object);
