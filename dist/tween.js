@@ -797,6 +797,8 @@
    */
 
   var QUEUE = new Queue();
+  var RELATIVERE = /^[+-]\d+$/;
+
   function Tween(object) {
     var context = this;
 
@@ -865,14 +867,18 @@
         }
       }
 
+      var i;
       var end;
+      var item;
+      var length;
       var endType;
+      var reversed;
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
-      var valuesReversed = context.__valuesReversed;
 
-      // Reset value end
-      // context.__valuesEnd = {};
+      // Reset
+      context.__valuesEnd = {};
+      context.__valuesReversed = {};
 
       // Init
       for (var property in valuesStart) {
@@ -889,13 +895,65 @@
 
         // Check if an Array was provided as property value
         if (endType === '[object Array]') {
+          length = end.length;
+          end = [];
+          reversed = [];
+
+          for (var i = 0; i < length; i++) {
+            item = valuesEnd[property][i];
+
+            if (IsType(item, 'String')) {
+              if (RELATIVERE.test(item)) {
+                end.push(item);
+
+                // Set reversed
+                reversed = [(item.charAt(0) === '+' ? '-' : '+') + item.substring(1)].concat(reversed);
+                continue;
+              }
+
+              item *= 1.0;
+            }
+
+            if (IsFinite(item)) {
+              end.push(item);
+
+              // Set reversed
+              reversed = [item].concat(reversed);
+            } else {
+              end = [];
+              break;
+            }
+          }
+
           if (end.length === 0) {
             continue;
           }
 
           // Create a local copy of the Array with the start value at the front
-          valuesEnd[property] = [start].concat(end);
+          end = [start].concat(end);
+
+          // Set reversed
+          reversed.push(start);
+        } else if (endType === '[object String]') {
+          if (RELATIVERE.test(end)) {
+            reversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
+          } else {
+            end *= 1.0;
+            reversed = end;
+
+            if (!IsFinite(end)) {
+              continue;
+            }
+          }
+        } else if (IsFinite(end)) {
+          reversed = end;
+        } else {
+          continue;
         }
+
+        // Set values
+        context.__valuesEnd[property] = end;
+        context.__valuesReversed[property] = reversed;
       }
 
       return context;
