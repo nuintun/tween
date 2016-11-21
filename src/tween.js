@@ -15,7 +15,8 @@ import * as Utils from './utils';
 import { Easing } from './easing';
 import { Interpolation } from './interpolation';
 
-var queue = new Queue();
+var QUEUE = new Queue();
+var RELATIVERE = /^[+-]\d+$/;
 
 export default function Tween(object) {
   var context = this;
@@ -23,6 +24,7 @@ export default function Tween(object) {
   context.__object = object;
   context.__valuesStart = {};
   context.__valuesEnd = {};
+  context.__valuesReversed = {};
   context.__duration = 1000;
   context.__repeat = 0;
   context.__repeatDelayTime = null;
@@ -45,7 +47,7 @@ Tween.Interpolation = Interpolation;
 
 Utils.Each(['add', 'remove', 'update', 'items'], function(method) {
   Tween[method] = function() {
-    return Utils.Apply(queue[method], queue, arguments);
+    return Utils.Apply(QUEUE[method], QUEUE, arguments);
   };
 });
 
@@ -64,7 +66,7 @@ Utils.Inherits(Tween, Events, {
   start: function(time) {
     var context = this;
 
-    queue.add(context);
+    QUEUE.add(context);
 
     context.__isPlaying = true;
     context.__startEventFired = false;
@@ -72,7 +74,6 @@ Utils.Inherits(Tween, Events, {
     context.__startTime += context.__delayTime;
 
     var start;
-    var end;
     var object = context.__object;
 
     // Set all starting values present on the target object
@@ -85,8 +86,11 @@ Utils.Inherits(Tween, Events, {
       }
     }
 
+    var end;
+    var endType;
     var valuesEnd = context.__valuesEnd;
     var valuesStart = context.__valuesStart;
+    var valuesReversed = context.__valuesReversed;
 
     // Reset value end
     // context.__valuesEnd = {};
@@ -102,9 +106,10 @@ Utils.Inherits(Tween, Events, {
       // Get start value
       start = valuesStart[property];
       end = valuesEnd[property];
+      endType = Utils.Type(end);
 
       // Check if an Array was provided as property value
-      if (Utils.IsType(end, 'Array')) {
+      if (endType === '[object Array]') {
         if (end.length === 0) {
           continue;
         }
@@ -123,7 +128,7 @@ Utils.Inherits(Tween, Events, {
       return context;
     }
 
-    queue.remove(context);
+    QUEUE.remove(context);
 
     context.__isPlaying = false;
 

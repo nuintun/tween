@@ -796,14 +796,14 @@
    * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
-  var queue = new Queue();
-
+  var QUEUE = new Queue();
   function Tween(object) {
     var context = this;
 
     context.__object = object;
     context.__valuesStart = {};
     context.__valuesEnd = {};
+    context.__valuesReversed = {};
     context.__duration = 1000;
     context.__repeat = 0;
     context.__repeatDelayTime = null;
@@ -826,7 +826,7 @@
 
   Each(['add', 'remove', 'update', 'items'], function(method) {
     Tween[method] = function() {
-      return Apply(queue[method], queue, arguments);
+      return Apply(QUEUE[method], QUEUE, arguments);
     };
   });
 
@@ -845,7 +845,7 @@
     start: function(time) {
       var context = this;
 
-      queue.add(context);
+      QUEUE.add(context);
 
       context.__isPlaying = true;
       context.__startEventFired = false;
@@ -853,7 +853,6 @@
       context.__startTime += context.__delayTime;
 
       var start;
-      var end;
       var object = context.__object;
 
       // Set all starting values present on the target object
@@ -866,8 +865,11 @@
         }
       }
 
+      var end;
+      var endType;
       var valuesEnd = context.__valuesEnd;
       var valuesStart = context.__valuesStart;
+      var valuesReversed = context.__valuesReversed;
 
       // Reset value end
       // context.__valuesEnd = {};
@@ -883,9 +885,10 @@
         // Get start value
         start = valuesStart[property];
         end = valuesEnd[property];
+        endType = Type(end);
 
         // Check if an Array was provided as property value
-        if (IsType(end, 'Array')) {
+        if (endType === '[object Array]') {
           if (end.length === 0) {
             continue;
           }
@@ -904,7 +907,7 @@
         return context;
       }
 
-      queue.remove(context);
+      QUEUE.remove(context);
 
       context.__isPlaying = false;
 
