@@ -884,10 +884,10 @@
       context.__endReversed = {};
 
       // Protect against non numeric properties.
-      for (var property in valuesStart) {
+      for (var property in valuesEnd) {
         // If `to()` specifies a property that doesn't exist in the source object,
         // we should not set that property in the object
-        if (!valuesEnd.hasOwnProperty(property)) {
+        if (!valuesStart.hasOwnProperty(property)) {
           continue;
         }
 
