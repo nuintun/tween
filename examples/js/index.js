@@ -1,8 +1,8 @@
 var animation = document.getElementById('animation');
 var tween = new Tween({ width: 200, height: 100 })
   .easing(Tween.Easing.Bounce.Out)
-  .to({ width: 600, height: 300 }, 1000)
-  .yoyo(true)
+  .to({ width: '+400', height: '+200' }, 1000)
+  // .yoyo(true)
   .delay(1000)
   .repeat(Infinity)
   .on('update', function(coords, progress, reversed) {

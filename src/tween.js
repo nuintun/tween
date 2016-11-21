@@ -313,6 +313,7 @@ Utils.Inherits(Tween, Events, {
         end = start + end * 1.0;
       }
 
+      // Change object property value
       object[property] = start + (end - start) * value;
     }
 
