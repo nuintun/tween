@@ -8,8 +8,8 @@
  * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
  */
 
-// Factorial
-var Factorial = (function() {
+// factorial
+var factorial = (function() {
   var a = [1];
 
   return function(n) {
@@ -30,28 +30,28 @@ var Factorial = (function() {
 })();
 
 /**
- * Linear
+ * linear
  * @param {any} p0
  * @param {any} p1
  * @param {any} t
  * @returns
  */
-function Linear(p0, p1, t) {
+function linear(p0, p1, t) {
   return (p1 - p0) * t + p0;
 }
 
 /**
- * Bernstein
+ * bernstein
  * @param {any} n
  * @param {any} i
  * @returns
  */
-function Bernstein(n, i) {
-  return Factorial(n) / Factorial(i) / Factorial(n - i);
+function bernstein(n, i) {
+  return factorial(n) / factorial(i) / factorial(n - i);
 }
 
 /**
- * CatmullRom
+ * catmullRom
  * @param {any} p0
  * @param {any} p1
  * @param {any} p2
@@ -59,7 +59,7 @@ function Bernstein(n, i) {
  * @param {any} t
  * @returns
  */
-function CatmullRom(p0, p1, p2, p3, t) {
+function catmullRom(p0, p1, p2, p3, t) {
   var v0 = (p2 - p0) * 0.5;
   var v1 = (p3 - p1) * 0.5;
   var t2 = t * t;
@@ -76,14 +76,14 @@ export var Interpolation = {
     var i = Math.floor(f);
 
     if (k < 0) {
-      return Linear(v[0], v[1], f);
+      return linear(v[0], v[1], f);
     }
 
     if (k > 1) {
-      return Linear(v[m], v[m - 1], m - f);
+      return linear(v[m], v[m - 1], m - f);
     }
 
-    return Linear(v[i], v[i + 1 > m ? m : i + 1], f - i);
+    return linear(v[i], v[i + 1 > m ? m : i + 1], f - i);
   },
   Bezier: function(v, k) {
     var b = 0;
@@ -91,7 +91,7 @@ export var Interpolation = {
     var pw = Math.pow;
 
     for (var i = 0; i <= n; i++) {
-      b += pw(1 - k, n - i) * pw(k, i) * v[i] * Bernstein(n, i);
+      b += pw(1 - k, n - i) * pw(k, i) * v[i] * bernstein(n, i);
     }
 
     return b;
@@ -106,17 +106,17 @@ export var Interpolation = {
         i = Math.floor(f = m * (1 + k));
       }
 
-      return CatmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);
+      return catmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);
     } else {
       if (k < 0) {
-        return v[0] - (CatmullRom(v[0], v[0], v[1], v[1], -f) - v[0]);
+        return v[0] - (catmullRom(v[0], v[0], v[1], v[1], -f) - v[0]);
       }
 
       if (k > 1) {
-        return v[m] - (CatmullRom(v[m], v[m], v[m - 1], v[m - 1], f - m) - v[m]);
+        return v[m] - (catmullRom(v[m], v[m], v[m - 1], v[m - 1], f - m) - v[m]);
       }
 
-      return CatmullRom(v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2], f - i);
+      return catmullRom(v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2], f - i);
     }
   }
 };
