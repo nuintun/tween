@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tween.js / graphs</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+      body {
+        margin: 0px;
+      }
+      #target {
+        font-size: 13px;
+        padding: 0px 32px;
+      }
+    </style>
+    <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div id="info" style="position: relative;">
+      <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
+      <h2>Graphs</h2>
+      <p>The curves, visualised.</p>
+    </div>
+    <div id="target"></div>
+    <script src="../dist/tween.min.js"></script>
+    <script src="js/raf.js"></script>
+    <script src="js/graph.js"></script>
+    <script>
+      init();
+      animate();
+
+      function init() {
+        var target = document.getElementById('target');
+
+        target.appendChild(createGraph('Linear.None', Tween.Easing.Linear.None));
+
+        target.appendChild(document.createElement('br'));
+
+        target.appendChild(createGraph('Quadratic.In', Tween.Easing.Quadratic.In));
+        target.appendChild(createGraph('Quadratic.Out', Tween.Easing.Quadratic.Out));
+        target.appendChild(createGraph('Quadratic.InOut', Tween.Easing.Quadratic.InOut));
+
+        target.appendChild(createGraph('Cubic.In', Tween.Easing.Cubic.In));
+        target.appendChild(createGraph('Cubic.Out', Tween.Easing.Cubic.Out));
+        target.appendChild(createGraph('Cubic.InOut', Tween.Easing.Cubic.InOut));
+
+        target.appendChild(document.createElement('br'));
+
+        target.appendChild(createGraph('Quartic.In', Tween.Easing.Quartic.In));
+        target.appendChild(createGraph('Quartic.Out', Tween.Easing.Quartic.Out));
+        target.appendChild(createGraph('Quartic.InOut', Tween.Easing.Quartic.InOut));
+
+        target.appendChild(createGraph('Quintic.In', Tween.Easing.Quintic.In));
+        target.appendChild(createGraph('Quintic.Out', Tween.Easing.Quintic.Out));
+        target.appendChild(createGraph('Quintic.InOut', Tween.Easing.Quintic.InOut));
+
+        target.appendChild(document.createElement('br'));
+
+        target.appendChild(createGraph('Sinusoidal.In', Tween.Easing.Sinusoidal.In));
+        target.appendChild(createGraph('Sinusoidal.Out', Tween.Easing.Sinusoidal.Out));
+        target.appendChild(createGraph('Sinusoidal.InOut', Tween.Easing.Sinusoidal.InOut));
+
+        target.appendChild(createGraph('Exponential.In', Tween.Easing.Exponential.In));
+        target.appendChild(createGraph('Exponential.Out', Tween.Easing.Exponential.Out));
+        target.appendChild(createGraph('Exponential.InOut', Tween.Easing.Exponential.InOut));
+
+        target.appendChild(document.createElement('br'));
+
+        target.appendChild(createGraph('Circular.In', Tween.Easing.Circular.In));
+        target.appendChild(createGraph('Circular.Out', Tween.Easing.Circular.Out));
+        target.appendChild(createGraph('Circular.InOut', Tween.Easing.Circular.InOut));
+
+        target.appendChild(createGraph('Elastic.In', Tween.Easing.Elastic.In));
+        target.appendChild(createGraph('Elastic.Out', Tween.Easing.Elastic.Out));
+        target.appendChild(createGraph('Elastic.InOut', Tween.Easing.Elastic.InOut));
+
+        target.appendChild(document.createElement('br'));
+
+        target.appendChild(createGraph('Back.In', Tween.Easing.Back.In));
+        target.appendChild(createGraph('Back.Out', Tween.Easing.Back.Out));
+        target.appendChild(createGraph('Back.InOut', Tween.Easing.Back.InOut));
+
+        target.appendChild(createGraph('Bounce.In', Tween.Easing.Bounce.In));
+        target.appendChild(createGraph('Bounce.Out', Tween.Easing.Bounce.Out));
+        target.appendChild(createGraph('Bounce.InOut', Tween.Easing.Bounce.InOut));
+      }
+
+      function animate(time) {
+        Tween.update(time);
+        requestAnimationFrame(animate);
+      }
+    </script>
+  </body>
+</html>
