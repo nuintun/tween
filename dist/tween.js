@@ -195,7 +195,9 @@
       return this.__tweens;
     },
     add: function(tween) {
-      this.__tweens.push(tween);
+      if (tween instanceof Tween) {
+        this.__tweens.push(tween);
+      }
     },
     remove: function(tween) {
       var context = this;

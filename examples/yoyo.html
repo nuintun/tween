@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tween / YoYo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      .box {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        text-align: center;
+        -webkit-border-radius: 70px;
+        -moz-border-radius: 70px;
+        border-radius: 70px;
+        position: absolute;
+        border: 1px solid black;
+        font-size: 10px;
+        padding: 20px;
+      }
+      #target1 {
+        background: #fcc;
+      }
+      #target2 {
+        background: #cfc;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="info">
+      <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
+      <h2>YoYo</h2>
+      <p>Demonstrating the yoyo() feature.</p>
+    </div>
+    <div style="position: absolute; top: 300px; left: 2em; ">
+      <div id="target1" data-rotation="0" data-y="0" class="box" style="left: 0; top: 0;">
+        yoyo with repeat once
+      </div>
+      <div id="target2" data-rotation="0" data-y="0" class="box" style="left: 300px; top: 0;">
+        yoyo with repeat forever
+      </div>
+    </div>
+    <script src="../dist/tween.min.js"></script>
+    <script src="js/raf.js"></script>
+    <script>
+      init();
+      animate();
+
+      function init() {
+        var target1 = document.getElementById('target1');
+        var tween1 = new Tween(target1.dataset)
+          .to({ rotation: 360, y: 300 }, 750)
+          .repeat(1)
+          .delay(1000)
+          .yoyo(true)
+          .easing(Tween.Easing.Cubic.InOut)
+          .on('update', function() {
+            updateBox(target1, this);
+          })
+          .start();
+        var target2 = document.getElementById('target2');
+        var tween2 = new Tween(target2.dataset)
+          .to({ rotation: 360, y: 300 }, 750)
+          .repeat(Infinity)
+          .delay(1000)
+          .yoyo(true)
+          .easing(Tween.Easing.Cubic.InOut)
+          .on('update', function() {
+            updateBox(target2, this);
+          })
+          .start();
+      }
+
+      function animate(time) {
+        Tween.update(time);
+        requestAnimationFrame(animate);
+      }
+
+      function updateBox(box, params) {
+        var s = box.style;
+        var transform = 'translateY(' + Math.round(params.y) + 'px) rotate(' + Math.floor(params.rotation) + 'deg)';
+
+        s.webkitTransform = transform;
+        s.mozTransform = transform;
+        s.transform = transform;
+      }
+    </script>
+  </body>
+</html>
