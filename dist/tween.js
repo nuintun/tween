@@ -17,31 +17,31 @@
   var toString = Object.prototype.toString;
 
   /**
-   * Type
+   * type
    * @param {any} value
    * @returns
    */
-  function Type(value) {
+  function type(value) {
     return toString.call(value);
   }
 
   /**
-   * IsType
+   * isType
    * @param {any} value
    * @param {any} type
    * @returns
    */
-  function IsType(value, type) {
+  function isType(value, type) {
     return Type(value) === '[object ' + type + ']';
   }
 
   /**
-   * Inherits
+   * inherits
    * @param ctor
    * @param superCtor
    * @param proto
    */
-  function Inherits(ctor, superCtor, proto) {
+  function inherits(ctor, superCtor, proto) {
     function F() {
       // constructor
     }
@@ -61,19 +61,19 @@
     }
   }
 
-  // IsFinite
-  var IsFinite = Number.isFinite || isFinite;
+  // isFinite
+  var isFinite = Number.isFinite || isFinite;
 
   /** 
-   * IsNatural
+   * isNatural
    * @param {any} number
    */
-  function IsNatural(number) {
-    return IsType(number, 'Number') && IsFinite(number) && number >= 0;
+  function isNatural(number) {
+    return isType(number, 'Number') && isFinite(number) && number >= 0;
   }
 
   /**
-   * Apply
+   * apply
    * @param  {Function} fn
    * @param  {Any} context
    * @param  {Array} args
@@ -82,7 +82,7 @@
    * http://blog.csdn.net/zhengyinhui100/article/details/7837127
    */
 
-  function Apply(fn, context, args) {
+  function apply(fn, context, args) {
     switch (args.length) {
       case 1:
         return fn.call(context, args[0]);
@@ -102,35 +102,28 @@
   }
 
   /**
-   * Each
+   * each
    * @param {any} array
    * @param {any} iterator
    * @param {any} context
    */
-  function Each(array, iterator, context) {
+  function each(array, iterator, context) {
     if (arguments.length < 3) {
       context = array;
     }
 
     for (var i = 0, length = array.length; i < length; i++) {
-      Apply(iterator, array, [array[i], i, array]);
+      apply(iterator, array, [array[i], i, array]);
     }
   }
 
   /**
-   * object keys
-   * @param object
-   * @returns {Array}
-   */
-
-
-  /**
-   * ArrayIndexOf
+   * arrayIndexOf
    * @param {any} array
    * @param {any} item
    * @returns
    */
-  function ArrayIndexOf(array, item) {
+  function arrayIndexOf(array, item) {
     if (array.indexOf) {
       return array.indexOf.call(array, item);
     }
@@ -159,14 +152,14 @@
 
   if (window &&
     window.performance &&
-    IsType(window.performance.now, 'Function')) {
+    isType(window.performance.now, 'Function')) {
     // In a browser, use window.performance.now if it is available.
     // This must be bound, because directly assigning this function
     // leads to an invocation exception in Chrome.
     now = function() {
       return window.performance.now.call(window.performance);
     };
-  } else if (IsType(Date.now, 'Function')) {
+  } else if (isType(Date.now, 'Function')) {
     // Use Date.now if it is available.
     now = Date.now;
   } else {
@@ -206,7 +199,7 @@
         context.__tweens = [];
       } else {
         var tweens = context.__tweens;
-        var i = ArrayIndexOf(tweens, tween);
+        var i = arrayIndexOf(tweens, tween);
 
         if (i !== -1) {
           tweens.splice(i, 1);
@@ -222,7 +215,7 @@
 
       var i = 0;
 
-      time = IsNatural(time) ? time : now();
+      time = isNatural(time) ? time : now();
 
       while (i < tweens.length) {
         if (tweens[i].update(time) || preserve) {
@@ -268,7 +261,7 @@
       var events = context.__events;
       var callbacks = events[event] || (events[event] = []);
 
-      if (IsType(callback, 'Function')) {
+      if (isType(callback, 'Function')) {
         callbacks.push(callback);
       }
 
@@ -296,7 +289,7 @@
           var callbacks = events[event];
 
           if (callbacks) {
-            var i = ArrayIndexOf(callbacks, callback);
+            var i = arrayIndexOf(callbacks, callback);
 
             if (i !== -1) {
               callbacks.splice(i, 1);
@@ -320,7 +313,7 @@
         context = args.length < 3 ? this : that;
 
         that.off(events, cb);
-        Apply(callback, context, arguments);
+        apply(callback, context, arguments);
       };
 
       return that.on(events, cb, context);
@@ -345,10 +338,10 @@
         context = that;
       }
 
-      args = IsType(args, 'Array') ? args : [args];
+      args = isType(args, 'Array') ? args : [args];
 
-      Each(callbacks, function(callback) {
-        Apply(callback, context, args);
+      each(callbacks, function(callback) {
+        apply(callback, context, args);
       });
 
       return true;
@@ -601,6 +594,7 @@
    * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
+  // Factorial
   var Factorial = (function() {
     var a = [1];
 
@@ -621,14 +615,36 @@
     };
   })();
 
+  /**
+   * Linear
+   * @param {any} p0
+   * @param {any} p1
+   * @param {any} t
+   * @returns
+   */
   function Linear(p0, p1, t) {
     return (p1 - p0) * t + p0;
   }
 
+  /**
+   * Bernstein
+   * @param {any} n
+   * @param {any} i
+   * @returns
+   */
   function Bernstein(n, i) {
     return Factorial(n) / Factorial(i) / Factorial(n - i);
   }
 
+  /**
+   * CatmullRom
+   * @param {any} p0
+   * @param {any} p1
+   * @param {any} p2
+   * @param {any} p3
+   * @param {any} t
+   * @returns
+   */
   function CatmullRom(p0, p1, p2, p3, t) {
     var v0 = (p2 - p0) * 0.5;
     var v1 = (p3 - p1) * 0.5;
@@ -638,6 +654,7 @@
     return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1;
   }
 
+  // Interpolation
   var Interpolation = {
     Linear: function(v, k) {
       var m = v.length - 1;
@@ -734,17 +751,17 @@
   Tween.Easing = Easing;
   Tween.Interpolation = Interpolation;
 
-  Each(['add', 'remove', 'update', 'items'], function(method) {
+  each(['add', 'remove', 'update', 'items'], function(method) {
     Tween[method] = function() {
-      return Apply(QUEUE[method], QUEUE, arguments);
+      return apply(QUEUE[method], QUEUE, arguments);
     };
   });
 
-  Inherits(Tween, Events, {
+  inherits(Tween, Events, {
     to: function(properties, duration) {
       var context = this;
 
-      if (IsNatural(duration)) {
+      if (isNatural(duration)) {
         context.__duration = duration;
       }
 
@@ -757,7 +774,7 @@
 
       context.playing = true;
       context.__startEventFired = false;
-      context.__startTime = IsNatural(time) ? time : now();
+      context.__startTime = isNatural(time) ? time : now();
       context.__startTime += context.__delayTime;
 
       var start;
@@ -771,7 +788,7 @@
         // Ensures we're using numbers, not strings
         start = object[field] * 1.0;
 
-        if (IsFinite(start)) {
+        if (isFinite(start)) {
           context.__valuesStart[field] = start;
         }
       }
@@ -802,7 +819,7 @@
         // Get start value
         start = valuesStart[property];
         end = valuesEnd[property];
-        endType = Type(end);
+        endType = type(end);
 
         // Check if an Array was provided as property value
         if (endType === '[object Array]') {
@@ -813,7 +830,7 @@
           for (var i = 0; i < length; i++) {
             item = valuesEnd[property][i] * 1.0;
 
-            if (IsFinite(item)) {
+            if (isFinite(item)) {
               end.push(item);
 
               // Set reversed
@@ -844,11 +861,11 @@
             startReversed = end;
             endReversed = start;
 
-            if (!IsFinite(end)) {
+            if (!isFinite(end)) {
               continue;
             }
           }
-        } else if (IsFinite(end)) {
+        } else if (isFinite(end)) {
           startReversed = end;
           endReversed = start;
         } else {
@@ -898,21 +915,21 @@
       return context;
     },
     stopChainedTweens: function() {
-      Each(this.__chainedTweens, function(tween) {
+      each(this.__chainedTweens, function(tween) {
         tween.stop();
       });
 
       return this;
     },
     delay: function(amount) {
-      if (IsNatural(amount)) {
+      if (isNatural(amount)) {
         this.__delayTime = amount;
       }
 
       return this;
     },
     repeat: function(times) {
-      if (IsNatural(times) || times === Infinity) {
+      if (isNatural(times) || times === Infinity) {
         this.__repeat = times;
       }
 
@@ -921,7 +938,7 @@
     repeatDelay: function(amount) {
       var context = this;
 
-      if (IsNatural(amount)) {
+      if (isNatural(amount)) {
         context.__repeatDelayTime = amount;
       } else if (amount === false) {
         context.__repeatDelayTime = null;
@@ -955,7 +972,7 @@
       var property;
       var context = this;
 
-      time = IsNatural(time) ? time : now();
+      time = isNatural(time) ? time : now();
 
       if (time < context.__startTime) {
         return true;
@@ -989,7 +1006,7 @@
 
         start = valuesStart[property];
         end = valuesEnd[property];
-        endType = Type(end);
+        endType = type(end);
 
         if (endType === '[object Array]') {
           object[property] = context.__interpolationFunction(end, value);
@@ -1016,7 +1033,7 @@
           context.emitWith('cycle', object, object);
 
           // Is finite repeat
-          if (IsFinite(context.__repeat)) {
+          if (isFinite(context.__repeat)) {
             context.__repeat--;
           }
 
@@ -1045,7 +1062,7 @@
 
         context.emitWith('complete', object, object);
 
-        Each(context.__chainedTweens, function(tween) {
+        each(context.__chainedTweens, function(tween) {
           // Make the chained tweens start exactly at the time they should,
           // even if the `update()` method was called way past the duration of the tween
           tween.start(context.__startTime + context.__duration);

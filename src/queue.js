@@ -32,7 +32,7 @@ Queue.prototype = {
       context.__tweens = [];
     } else {
       var tweens = context.__tweens;
-      var i = Utils.ArrayIndexOf(tweens, tween);
+      var i = Utils.arrayIndexOf(tweens, tween);
 
       if (i !== -1) {
         tweens.splice(i, 1);
@@ -48,7 +48,7 @@ Queue.prototype = {
 
     var i = 0;
 
-    time = Utils.IsNatural(time) ? time : now();
+    time = Utils.isNatural(time) ? time : now();
 
     while (i < tweens.length) {
       if (tweens[i].update(time) || preserve) {

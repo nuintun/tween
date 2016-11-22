@@ -11,31 +11,31 @@
 var toString = Object.prototype.toString;
 
 /**
- * Type
+ * type
  * @param {any} value
  * @returns
  */
-export function Type(value) {
+export function type(value) {
   return toString.call(value);
 }
 
 /**
- * IsType
+ * isType
  * @param {any} value
  * @param {any} type
  * @returns
  */
-export function IsType(value, type) {
+export function isType(value, type) {
   return Type(value) === '[object ' + type + ']';
 }
 
 /**
- * Inherits
+ * inherits
  * @param ctor
  * @param superCtor
  * @param proto
  */
-export function Inherits(ctor, superCtor, proto) {
+export function inherits(ctor, superCtor, proto) {
   function F() {
     // constructor
   }
@@ -55,19 +55,19 @@ export function Inherits(ctor, superCtor, proto) {
   }
 }
 
-// IsFinite
-export var IsFinite = Number.isFinite || isFinite;
+// isFinite
+export var isFinite = Number.isFinite || isFinite;
 
 /** 
- * IsNatural
+ * isNatural
  * @param {any} number
  */
-export function IsNatural(number) {
-  return IsType(number, 'Number') && IsFinite(number) && number >= 0;
+export function isNatural(number) {
+  return isType(number, 'Number') && isFinite(number) && number >= 0;
 }
 
 /**
- * Apply
+ * apply
  * @param  {Function} fn
  * @param  {Any} context
  * @param  {Array} args
@@ -76,7 +76,7 @@ export function IsNatural(number) {
  * http://blog.csdn.net/zhengyinhui100/article/details/7837127
  */
 
-export function Apply(fn, context, args) {
+export function apply(fn, context, args) {
   switch (args.length) {
     case 1:
       return fn.call(context, args[0]);
@@ -96,45 +96,28 @@ export function Apply(fn, context, args) {
 }
 
 /**
- * Each
+ * each
  * @param {any} array
  * @param {any} iterator
  * @param {any} context
  */
-export function Each(array, iterator, context) {
+export function each(array, iterator, context) {
   if (arguments.length < 3) {
     context = array;
   }
 
   for (var i = 0, length = array.length; i < length; i++) {
-    Apply(iterator, array, [array[i], i, array]);
+    apply(iterator, array, [array[i], i, array]);
   }
 }
 
 /**
- * object keys
- * @param object
- * @returns {Array}
- */
-export var Keys = Object.keys ? Object.keys : function(object) {
-  var result = [];
-
-  for (var name in object) {
-    if (object.hasOwnProperty(name)) {
-      result.push(name);
-    }
-  }
-
-  return result;
-};
-
-/**
- * ArrayIndexOf
+ * arrayIndexOf
  * @param {any} array
  * @param {any} item
  * @returns
  */
-export function ArrayIndexOf(array, item) {
+export function arrayIndexOf(array, item) {
   if (array.indexOf) {
     return array.indexOf.call(array, item);
   }

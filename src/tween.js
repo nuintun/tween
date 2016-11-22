@@ -49,17 +49,17 @@ Tween.now = now;
 Tween.Easing = Easing;
 Tween.Interpolation = Interpolation;
 
-Utils.Each(['add', 'remove', 'update', 'items'], function(method) {
+Utils.each(['add', 'remove', 'update', 'items'], function(method) {
   Tween[method] = function() {
-    return Utils.Apply(QUEUE[method], QUEUE, arguments);
+    return Utils.apply(QUEUE[method], QUEUE, arguments);
   };
 });
 
-Utils.Inherits(Tween, Events, {
+Utils.inherits(Tween, Events, {
   to: function(properties, duration) {
     var context = this;
 
-    if (Utils.IsNatural(duration)) {
+    if (Utils.isNatural(duration)) {
       context.__duration = duration;
     }
 
@@ -72,7 +72,7 @@ Utils.Inherits(Tween, Events, {
 
     context.playing = true;
     context.__startEventFired = false;
-    context.__startTime = Utils.IsNatural(time) ? time : now();
+    context.__startTime = Utils.isNatural(time) ? time : now();
     context.__startTime += context.__delayTime;
 
     var start;
@@ -86,7 +86,7 @@ Utils.Inherits(Tween, Events, {
       // Ensures we're using numbers, not strings
       start = object[field] * 1.0;
 
-      if (Utils.IsFinite(start)) {
+      if (Utils.isFinite(start)) {
         context.__valuesStart[field] = start;
       }
     }
@@ -117,7 +117,7 @@ Utils.Inherits(Tween, Events, {
       // Get start value
       start = valuesStart[property];
       end = valuesEnd[property];
-      endType = Utils.Type(end);
+      endType = Utils.type(end);
 
       // Check if an Array was provided as property value
       if (endType === '[object Array]') {
@@ -128,7 +128,7 @@ Utils.Inherits(Tween, Events, {
         for (var i = 0; i < length; i++) {
           item = valuesEnd[property][i] * 1.0;
 
-          if (Utils.IsFinite(item)) {
+          if (Utils.isFinite(item)) {
             end.push(item);
 
             // Set reversed
@@ -159,11 +159,11 @@ Utils.Inherits(Tween, Events, {
           startReversed = end;
           endReversed = start;
 
-          if (!Utils.IsFinite(end)) {
+          if (!Utils.isFinite(end)) {
             continue;
           }
         }
-      } else if (Utils.IsFinite(end)) {
+      } else if (Utils.isFinite(end)) {
         startReversed = end;
         endReversed = start;
       } else {
@@ -213,21 +213,21 @@ Utils.Inherits(Tween, Events, {
     return context;
   },
   stopChainedTweens: function() {
-    Utils.Each(this.__chainedTweens, function(tween) {
+    Utils.each(this.__chainedTweens, function(tween) {
       tween.stop();
     });
 
     return this;
   },
   delay: function(amount) {
-    if (Utils.IsNatural(amount)) {
+    if (Utils.isNatural(amount)) {
       this.__delayTime = amount;
     }
 
     return this;
   },
   repeat: function(times) {
-    if (Utils.IsNatural(times) || times === Infinity) {
+    if (Utils.isNatural(times) || times === Infinity) {
       this.__repeat = times;
     }
 
@@ -236,7 +236,7 @@ Utils.Inherits(Tween, Events, {
   repeatDelay: function(amount) {
     var context = this;
 
-    if (Utils.IsNatural(amount)) {
+    if (Utils.isNatural(amount)) {
       context.__repeatDelayTime = amount;
     } else if (amount === false) {
       context.__repeatDelayTime = null;
@@ -270,7 +270,7 @@ Utils.Inherits(Tween, Events, {
     var property;
     var context = this;
 
-    time = Utils.IsNatural(time) ? time : now();
+    time = Utils.isNatural(time) ? time : now();
 
     if (time < context.__startTime) {
       return true;
@@ -304,7 +304,7 @@ Utils.Inherits(Tween, Events, {
 
       start = valuesStart[property];
       end = valuesEnd[property];
-      endType = Utils.Type(end);
+      endType = Utils.type(end);
 
       if (endType === '[object Array]') {
         object[property] = context.__interpolationFunction(end, value);
@@ -331,7 +331,7 @@ Utils.Inherits(Tween, Events, {
         context.emitWith('cycle', object, object);
 
         // Is finite repeat
-        if (Utils.IsFinite(context.__repeat)) {
+        if (Utils.isFinite(context.__repeat)) {
           context.__repeat--;
         }
 
@@ -360,7 +360,7 @@ Utils.Inherits(Tween, Events, {
 
       context.emitWith('complete', object, object);
 
-      Utils.Each(context.__chainedTweens, function(tween) {
+      Utils.each(context.__chainedTweens, function(tween) {
         // Make the chained tweens start exactly at the time they should,
         // even if the `update()` method was called way past the duration of the tween
         tween.start(context.__startTime + context.__duration);

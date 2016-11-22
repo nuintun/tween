@@ -8,6 +8,7 @@
  * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
  */
 
+// Factorial
 var Factorial = (function() {
   var a = [1];
 
@@ -28,14 +29,36 @@ var Factorial = (function() {
   };
 })();
 
+/**
+ * Linear
+ * @param {any} p0
+ * @param {any} p1
+ * @param {any} t
+ * @returns
+ */
 function Linear(p0, p1, t) {
   return (p1 - p0) * t + p0;
 }
 
+/**
+ * Bernstein
+ * @param {any} n
+ * @param {any} i
+ * @returns
+ */
 function Bernstein(n, i) {
   return Factorial(n) / Factorial(i) / Factorial(n - i);
 }
 
+/**
+ * CatmullRom
+ * @param {any} p0
+ * @param {any} p1
+ * @param {any} p2
+ * @param {any} p3
+ * @param {any} t
+ * @returns
+ */
 function CatmullRom(p0, p1, p2, p3, t) {
   var v0 = (p2 - p0) * 0.5;
   var v1 = (p3 - p1) * 0.5;
@@ -45,6 +68,7 @@ function CatmullRom(p0, p1, p2, p3, t) {
   return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1;
 }
 
+// Interpolation
 export var Interpolation = {
   Linear: function(v, k) {
     var m = v.length - 1;

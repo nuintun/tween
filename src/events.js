@@ -32,7 +32,7 @@ Events.prototype = {
     var events = context.__events;
     var callbacks = events[event] || (events[event] = []);
 
-    if (Utils.IsType(callback, 'Function')) {
+    if (Utils.isType(callback, 'Function')) {
       callbacks.push(callback);
     }
 
@@ -60,7 +60,7 @@ Events.prototype = {
         var callbacks = events[event];
 
         if (callbacks) {
-          var i = Utils.ArrayIndexOf(callbacks, callback);
+          var i = Utils.arrayIndexOf(callbacks, callback);
 
           if (i !== -1) {
             callbacks.splice(i, 1);
@@ -84,7 +84,7 @@ Events.prototype = {
       context = args.length < 3 ? this : that;
 
       that.off(events, cb);
-      Utils.Apply(callback, context, arguments);
+      Utils.apply(callback, context, arguments);
     };
 
     return that.on(events, cb, context);
@@ -109,10 +109,10 @@ Events.prototype = {
       context = that;
     }
 
-    args = Utils.IsType(args, 'Array') ? args : [args];
+    args = Utils.isType(args, 'Array') ? args : [args];
 
-    Utils.Each(callbacks, function(callback) {
-      Utils.Apply(callback, context, args);
+    Utils.each(callbacks, function(callback) {
+      Utils.apply(callback, context, args);
     });
 
     return true;
