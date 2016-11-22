@@ -70,8 +70,6 @@ Utils.Inherits(Tween, Events, {
   start: function(time) {
     var context = this;
 
-    QUEUE.add(context);
-
     context.playing = true;
     context.__startEventFired = false;
     context.__startTime = Utils.IsNatural(time) ? time : now();
@@ -178,24 +176,31 @@ Utils.Inherits(Tween, Events, {
       context.__endReversed[property] = endReversed;
     }
 
+    // Add to Tween queue
+    QUEUE.add(context);
+
     return context;
   },
   stop: function() {
     var context = this;
 
+    // Is stoped
     if (!context.playing) {
       return context;
     }
 
+    // Remove from Tween queue
     QUEUE.remove(context);
 
+    // Set values
     context.playing = false;
     context.__startEventFired = false;
 
     var object = context.__object;
 
+    // Emit stop event
     context.emitWith('stop', object, object);
-
+    // Stop chain tween
     context.stopChainedTweens();
 
     return context;

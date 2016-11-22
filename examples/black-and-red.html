@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tween / Black And Red</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div id="info">
+      <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
+      <h2>Black And Red</h2>
+      <p>4096 continuously changing color cells (in a 64x64 table)</p>
+      <p></p>
+    </div>
+    <div id="target"></div>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      td {
+        width: 5px;
+        height: 5px;
+      }
+      #target {
+        position: absolute;
+        top: 16em;
+        left: 2em;
+      }
+    </style>
+    <script src="../dist/tween.min.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/raf.js"></script>
+    <script>
+      var stats;
+
+      init();
+      animate();
+
+      function init() {
+        var target = document.getElementById('target');
+
+        stats = new Stats();
+
+        var sds = stats.dom.style;
+
+        sds.position = 'absolute';
+        sds.right = '0px';
+        sds.left = 'auto';
+        sds.top = '0px';
+        sds.margin = '0 -5.5em';
+        sds.width = '80px';
+
+        target.appendChild(stats.dom);
+
+        var t = document.createElement('table');
+        var index = 0;
+
+        for (var i = 0; i < 64; i++) {
+          var tr = t.insertRow(-1);
+
+          for (var j = 0; j < 64; j++) {
+            var td = tr.insertCell(-1);
+
+            td.style.background = '#000';
+
+            var x = (i + j) * 0.1;
+            var cell = { 'td': td, value: 0 };
+            var tween = new Tween(cell)
+              .to({ value: 1 }, 8000)
+              .delay((0.001 * index + Math.random()) * 500)
+              .easing(Tween.Easing.Elastic.InOut)
+              .on('update', function() {
+                var c = Math.floor(this.value * 0xff);
+                this.td.style.background = 'rgb(' + c + ', 0, 0)';
+              });
+            var tweenBack = new Tween(cell)
+              .to({ value: 0 }, 4000)
+              .delay((0.001 * index + Math.random()) * 500)
+              .easing(Tween.Easing.Elastic.InOut)
+              .on('update', function() {
+                var c = Math.floor(this.value * 0xff);
+                this.td.style.background = 'rgb(' + c + ', 0, 0)';
+              });
+
+            tween.chain(tweenBack);
+            tweenBack.chain(tween);
+            tween.start();
+
+            index++;
+          }
+        }
+
+        target.appendChild(t);
+      }
+
+      function animate(time) {
+        Tween.update(time);
+        stats.update();
+        requestAnimationFrame(animate);
+      }
+    </script>
+  </body>
+</html>
