@@ -9,7 +9,7 @@
     <div id="info">
       <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
       <h2>Black And Red</h2>
-      <p>4096 continuously changing color cells (in a 64x64 table)</p>
+      <p>1024 continuously changing color cells (in a 32x32 table)</p>
       <p></p>
     </div>
     <div id="target"></div>
@@ -58,10 +58,10 @@
         var t = document.createElement('table');
         var index = 0;
 
-        for (var i = 0; i < 64; i++) {
+        for (var i = 0; i < 32; i++) {
           var tr = t.insertRow(-1);
 
-          for (var j = 0; j < 64; j++) {
+          for (var j = 0; j < 32; j++) {
             var td = tr.insertCell(-1);
 
             td.style.background = '#000';
