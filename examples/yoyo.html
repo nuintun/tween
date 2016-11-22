@@ -55,7 +55,7 @@
           .repeat(1)
           .delay(1000)
           .yoyo(true)
-          .easing(Tween.Easing.Cubic.InOut)
+          .easing(Tween.Easing.Bounce.Out)
           .on('update', function() {
             updateBox(target1, this);
           })
@@ -66,7 +66,7 @@
           .repeat(Infinity)
           .delay(1000)
           .yoyo(true)
-          .easing(Tween.Easing.Cubic.InOut)
+          .easing(Tween.Easing.Bounce.Out)
           .on('update', function() {
             updateBox(target2, this);
           })
