@@ -123,6 +123,14 @@ Events.prototype = {
    * @returns {*}
    */
   emit: function(event) {
+    var context = this;
+    var events = context.__events;
+    var callbacks = events[event];
+
+    if (!callbacks || callbacks.length === 0) {
+      return false;
+    }
+
     var rest = [];
 
     // fill up `rest` with the callback arguments.  Since we're only copying
@@ -131,6 +139,6 @@ Events.prototype = {
       rest[i - 1] = arguments[i];
     }
 
-    return this.emitWith(event, rest);
+    return context.emitWith(event, rest);
   }
 };
