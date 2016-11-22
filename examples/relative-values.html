@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tween / Relative Values</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      .box {
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+        padding: 10px;
+        display: inline-block;
+      }
+      #target {
+        background: #fcc;
+      }
+    </style>
+    <script src="../dist/tween.min.js"></script>
+    <script src="js/raf.js"></script>
+  </head>
+  <body>
+    <div id="info">
+      <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
+      <h2>Relative Values</h2>
+      <p>Tweening to relative values, with repeat.</p>
+    </div>
+    <div style="position: absolute; top:100px; left: 300px; ">
+      <div id="target" style="position: absolute;" data-top="150" data-left="150" class="box"></div>
+    </div>
+    <script>
+      init();
+      animate();
+
+      function init() {
+        var target = document.getElementById('target');
+        var tween = new Tween(target.dataset)
+          .to({ top: "+20", left: "-20" }, 500)
+          .repeat(5)
+          .delay(500)
+          .easing(Tween.Easing.Exponential.In)
+          .on('update', function() {
+            this.top = Math.round(this.top);
+            this.left = Math.round(this.left);
+
+            updateBox(target, this);
+          })
+          .start();
+
+        updateBox(target, target.dataset);
+      }
+
+      function animate(time) {
+        Tween.update(time);
+        requestAnimationFrame(animate);
+      }
+
+      function updateBox(box, params) {
+        var s = box.style;
+        var transform = 'translate(' + params.left + 'px, ' + params.top + 'px)';
+
+        s.transform = transform;
+      }
+    </script>
+  </body>
+</html>
