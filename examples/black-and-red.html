@@ -74,6 +74,7 @@
               .easing(Tween.Easing.Elastic.InOut)
               .on('update', function() {
                 var c = Math.floor(this.value * 0xff);
+
                 this.td.style.background = 'rgb(' + c + ', 0, 0)';
               });
             var tweenBack = new Tween(cell)
@@ -82,6 +83,7 @@
               .easing(Tween.Easing.Elastic.InOut)
               .on('update', function() {
                 var c = Math.floor(this.value * 0xff);
+                
                 this.td.style.background = 'rgb(' + c + ', 0, 0)';
               });
 
