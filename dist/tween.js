@@ -84,6 +84,8 @@
 
   function apply(fn, context, args) {
     switch (args.length) {
+      case 0:
+        return fn.call(context);
       case 1:
         return fn.call(context, args[0]);
       case 2:
