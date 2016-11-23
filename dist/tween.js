@@ -335,11 +335,20 @@
         return false;
       }
 
-      if (arguments.length < 3) {
+      // arguments length
+      var length = arguments.length;
+
+      // default context
+      if (length < 3) {
         context = that;
       }
 
-      args = isType(args, 'Array') ? args : [args];
+      // format args
+      if (length < 2) {
+        args = [];
+      } else {
+        args = isType(args, 'Array') ? args : [args];
+      }
 
       each(callbacks, function(callback) {
         apply(callback, context, args);

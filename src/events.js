@@ -105,11 +105,20 @@ Events.prototype = {
       return false;
     }
 
-    if (arguments.length < 3) {
+    // arguments length
+    var length = arguments.length;
+
+    // default context
+    if (length < 3) {
       context = that;
     }
 
-    args = Utils.isType(args, 'Array') ? args : [args];
+    // format args
+    if (length < 2) {
+      args = [];
+    } else {
+      args = Utils.isType(args, 'Array') ? args : [args];
+    }
 
     Utils.each(callbacks, function(callback) {
       Utils.apply(callback, context, args);
