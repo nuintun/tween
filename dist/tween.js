@@ -28,11 +28,11 @@
   /**
    * isType
    * @param {any} value
-   * @param {any} datatype
+   * @param {any} dataType
    * @returns
    */
-  function isType(value, datatype) {
-    return type(value) === '[object ' + datatype + ']';
+  function isType(value, dataType) {
+    return type(value) === '[object ' + dataType + ']';
   }
 
   /**

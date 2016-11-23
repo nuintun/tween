@@ -22,11 +22,11 @@ export function type(value) {
 /**
  * isType
  * @param {any} value
- * @param {any} datatype
+ * @param {any} dataType
  * @returns
  */
-export function isType(value, datatype) {
-  return type(value) === '[object ' + datatype + ']';
+export function isType(value, dataType) {
+  return type(value) === '[object ' + dataType + ']';
 }
 
 /**
