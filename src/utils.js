@@ -75,7 +75,6 @@ export function isNatural(number) {
  * https://github.com/micro-js/apply
  * http://blog.csdn.net/zhengyinhui100/article/details/7837127
  */
-
 export function apply(fn, context, args) {
   switch (args.length) {
     case 0:
