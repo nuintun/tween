@@ -72,7 +72,7 @@ Events.prototype = {
     return context;
   },
   /**
-   * bind a event only emit once
+   * Bind a event only emit once
    * @param events
    * @param callback
    * @param context
@@ -105,15 +105,15 @@ Events.prototype = {
       return false;
     }
 
-    // arguments length
+    // Arguments length
     var length = arguments.length;
 
-    // default context
+    // Default context
     if (length < 3) {
       context = that;
     }
 
-    // format args
+    // Format args
     if (length < 2) {
       args = [];
     } else {
@@ -142,7 +142,7 @@ Events.prototype = {
 
     var rest = [];
 
-    // fill up `rest` with the callback arguments.  Since we're only copying
+    // Fill up `rest` with the callback arguments. Since we're only copying
     // the tail of `arguments`, a loop is much faster than Array#slice.
     for (var i = 1, length = arguments.length; i < length; i++) {
       rest[i - 1] = arguments[i];
