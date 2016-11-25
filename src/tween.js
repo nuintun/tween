@@ -49,7 +49,7 @@ Tween.now = now;
 Tween.Easing = Easing;
 Tween.Interpolation = Interpolation;
 
-Utils.each(['add', 'remove', 'update', 'items'], function(method) {
+Utils.forEach(['add', 'remove', 'update', 'items'], function(method) {
   Tween[method] = function() {
     return Utils.apply(QUEUE[method], QUEUE, arguments);
   };
@@ -213,7 +213,7 @@ Utils.inherits(Tween, Events, {
     return context;
   },
   stopChainedTweens: function() {
-    Utils.each(this.__chainedTweens, function(tween) {
+    Utils.forEach(this.__chainedTweens, function(tween) {
       tween.stop();
     });
 
@@ -360,7 +360,7 @@ Utils.inherits(Tween, Events, {
 
       context.emitWith('complete', object, object);
 
-      Utils.each(context.__chainedTweens, function(tween) {
+      Utils.forEach(context.__chainedTweens, function(tween) {
         // Make the chained tweens start exactly at the time they should,
         // even if the `update()` method was called way past the duration of the tween
         tween.start(context.__startTime + context.__duration);

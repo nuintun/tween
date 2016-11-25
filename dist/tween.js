@@ -14,7 +14,11 @@
    * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
-  var toString = Object.prototype.toString;
+  var AP = Array.prototype;
+  var OP = Object.prototype;
+  var APIndexOf = AP.indexOf;
+  var APForEach = AP.forEach;
+  var OPToString = OP.toString;
 
   /**
    * type
@@ -22,16 +26,16 @@
    * @returns
    */
   function type(value) {
-    return toString.call(value);
+    return OPToString.call(value);
   }
 
   /**
-   * isType
+   * typeIs
    * @param {any} value
    * @param {any} dataType
    * @returns
    */
-  function isType(value, dataType) {
+  function typeIs(value, dataType) {
     return type(value) === '[object ' + dataType + ']';
   }
 
@@ -64,12 +68,12 @@
   // isFinite
   var isFinite = Number.isFinite || isFinite;
 
-  /** 
+  /**
    * isNatural
    * @param {any} number
    */
   function isNatural(number) {
-    return isType(number, 'Number') && isFinite(number) && number >= 0;
+    return typeIs(number, 'Number') && isFinite(number) && number >= 0;
   }
 
   /**
@@ -93,46 +97,56 @@
       case 3:
         return fn.call(context, args[0], args[1], args[2]);
       default:
-        // slower          
+        // slower
         return fn.apply(context, args);
     }
   }
 
   /**
-   * each
+   * indexOf
+   * @param {any} array
+   * @param {any} value
+   * @param {any} from
+   * @returns
+   */
+  var indexOf = APIndexOf ? function(array, value, from) {
+    return APIndexOf.call(array, value, from);
+  } : function(array, value, from) {
+    var len = array.length >>> 0;
+
+    from = Number(from) || 0;
+    from = Math[from < 0 ? 'ceil' : 'floor'](from);
+
+    if (from < 0) {
+      from = Math.max(from + len, 0);
+    }
+
+    for (; from < len; from++) {
+      if (from in array && array[from] === value) {
+        return from;
+      }
+    }
+
+    return -1;
+  };
+
+  /**
+   * forEach
    * @param {any} array
    * @param {any} iterator
    * @param {any} context
    */
-  function each(array, iterator, context) {
+  var forEach = APForEach ? function(array, iterator, context) {
+    APForEach.call(array, iterator, context);
+  } : function(array, iterator, context) {
     if (arguments.length < 3) {
       context = array;
     }
 
     for (var i = 0, length = array.length; i < length; i++) {
-      apply(iterator, array, [array[i], i, array]);
+      iterator.call(array, array[i], i, array);
     }
-  }
-
-  /**
-   * arrayIndexOf
-   * @param {any} array
-   * @param {any} item
-   * @returns
-   */
-  function arrayIndexOf(array, item) {
-    if (array.indexOf) {
-      return array.indexOf.call(array, item);
-    }
-
-    for (var i = 0, length = array.length; i < length; i++) {
-      if (array[i] === item) {
-        return i;
-      }
-    }
-
-    return -1;
-  }
+  };
 
   /*!
    * now
@@ -149,14 +163,14 @@
 
   if (window &&
     window.performance &&
-    isType(window.performance.now, 'Function')) {
+    typeIs(window.performance.now, 'Function')) {
     // In a browser, use window.performance.now if it is available.
     // This must be bound, because directly assigning this function
     // leads to an invocation exception in Chrome.
     now = function() {
       return window.performance.now.call(window.performance);
     };
-  } else if (isType(Date.now, 'Function')) {
+  } else if (typeIs(Date.now, 'Function')) {
     // Use Date.now if it is available.
     now = Date.now;
   } else {
@@ -196,7 +210,7 @@
         context.__tweens = [];
       } else {
         var tweens = context.__tweens;
-        var i = arrayIndexOf(tweens, tween);
+        var i = indexOf(tweens, tween);
 
         if (i !== -1) {
           tweens.splice(i, 1);
@@ -258,7 +272,7 @@
       var events = context.__events;
       var callbacks = events[event] || (events[event] = []);
 
-      if (isType(callback, 'Function')) {
+      if (typeIs(callback, 'Function')) {
         callbacks.push(callback);
       }
 
@@ -266,7 +280,7 @@
     },
     /**
      * Remove callback of event.
-     * If `callback` is null, removes all callbacks for the event. 
+     * If `callback` is null, removes all callbacks for the event.
      * If `event` is null, removes all bound callbacks for the event.
      * @param event
      * @param callback
@@ -286,7 +300,7 @@
           var callbacks = events[event];
 
           if (callbacks) {
-            var i = arrayIndexOf(callbacks, callback);
+            var i = indexOf(callbacks, callback);
 
             if (i !== -1) {
               callbacks.splice(i, 1);
@@ -343,10 +357,10 @@
       if (length < 2) {
         args = [];
       } else {
-        args = isType(args, 'Array') ? args : [args];
+        args = typeIs(args, 'Array') ? args : [args];
       }
 
-      each(callbacks, function(callback) {
+      forEach(callbacks, function(callback) {
         apply(callback, context, args);
       });
 
@@ -757,7 +771,7 @@
   Tween.Easing = Easing;
   Tween.Interpolation = Interpolation;
 
-  each(['add', 'remove', 'update', 'items'], function(method) {
+  forEach(['add', 'remove', 'update', 'items'], function(method) {
     Tween[method] = function() {
       return apply(QUEUE[method], QUEUE, arguments);
     };
@@ -921,7 +935,7 @@
       return context;
     },
     stopChainedTweens: function() {
-      each(this.__chainedTweens, function(tween) {
+      forEach(this.__chainedTweens, function(tween) {
         tween.stop();
       });
 
@@ -1068,7 +1082,7 @@
 
         context.emitWith('complete', object, object);
 
-        each(context.__chainedTweens, function(tween) {
+        forEach(context.__chainedTweens, function(tween) {
           // Make the chained tweens start exactly at the time they should,
           // even if the `update()` method was called way past the duration of the tween
           tween.start(context.__startTime + context.__duration);

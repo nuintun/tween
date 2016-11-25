@@ -8,7 +8,12 @@
  * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
  */
 
-var toString = Object.prototype.toString;
+var AP = Array.prototype;
+var OP = Object.prototype;
+var APFilter = AP.filter;
+var APIndexOf = AP.indexOf;
+var APForEach = AP.forEach;
+var OPToString = OP.toString;
 
 /**
  * type
@@ -16,16 +21,16 @@ var toString = Object.prototype.toString;
  * @returns
  */
 export function type(value) {
-  return toString.call(value);
+  return OPToString.call(value);
 }
 
 /**
- * isType
+ * typeIs
  * @param {any} value
  * @param {any} dataType
  * @returns
  */
-export function isType(value, dataType) {
+export function typeIs(value, dataType) {
   return type(value) === '[object ' + dataType + ']';
 }
 
@@ -58,12 +63,12 @@ export function inherits(ctor, superCtor, proto) {
 // isFinite
 export var isFinite = Number.isFinite || isFinite;
 
-/** 
+/**
  * isNatural
  * @param {any} number
  */
 export function isNatural(number) {
-  return isType(number, 'Number') && isFinite(number) && number >= 0;
+  return typeIs(number, 'Number') && isFinite(number) && number >= 0;
 }
 
 /**
@@ -87,43 +92,53 @@ export function apply(fn, context, args) {
     case 3:
       return fn.call(context, args[0], args[1], args[2]);
     default:
-      // slower          
+      // slower
       return fn.apply(context, args);
   }
 }
 
 /**
- * each
+ * indexOf
+ * @param {any} array
+ * @param {any} value
+ * @param {any} from
+ * @returns
+ */
+export var indexOf = APIndexOf ? function(array, value, from) {
+  return APIndexOf.call(array, value, from);
+} : function(array, value, from) {
+  var len = array.length >>> 0;
+
+  from = Number(from) || 0;
+  from = Math[from < 0 ? 'ceil' : 'floor'](from);
+
+  if (from < 0) {
+    from = Math.max(from + len, 0);
+  }
+
+  for (; from < len; from++) {
+    if (from in array && array[from] === value) {
+      return from;
+    }
+  }
+
+  return -1;
+};
+
+/**
+ * forEach
  * @param {any} array
  * @param {any} iterator
  * @param {any} context
  */
-export function each(array, iterator, context) {
+export var forEach = APForEach ? function(array, iterator, context) {
+  APForEach.call(array, iterator, context);
+} : function(array, iterator, context) {
   if (arguments.length < 3) {
     context = array;
   }
 
   for (var i = 0, length = array.length; i < length; i++) {
-    apply(iterator, array, [array[i], i, array]);
+    iterator.call(array, array[i], i, array);
   }
-}
-
-/**
- * arrayIndexOf
- * @param {any} array
- * @param {any} item
- * @returns
- */
-export function arrayIndexOf(array, item) {
-  if (array.indexOf) {
-    return array.indexOf.call(array, item);
-  }
-
-  for (var i = 0, length = array.length; i < length; i++) {
-    if (array[i] === item) {
-      return i;
-    }
-  }
-
-  return -1;
 }

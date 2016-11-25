@@ -15,14 +15,14 @@ var now;
 
 if (window &&
   window.performance &&
-  Utils.isType(window.performance.now, 'Function')) {
+  Utils.typeIs(window.performance.now, 'Function')) {
   // In a browser, use window.performance.now if it is available.
   // This must be bound, because directly assigning this function
   // leads to an invocation exception in Chrome.
   now = function() {
     return window.performance.now.call(window.performance);
   }
-} else if (Utils.isType(Date.now, 'Function')) {
+} else if (Utils.typeIs(Date.now, 'Function')) {
   // Use Date.now if it is available.
   now = Date.now;
 } else {

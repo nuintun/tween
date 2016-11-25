@@ -32,7 +32,7 @@ Events.prototype = {
     var events = context.__events;
     var callbacks = events[event] || (events[event] = []);
 
-    if (Utils.isType(callback, 'Function')) {
+    if (Utils.typeIs(callback, 'Function')) {
       callbacks.push(callback);
     }
 
@@ -40,7 +40,7 @@ Events.prototype = {
   },
   /**
    * Remove callback of event.
-   * If `callback` is null, removes all callbacks for the event. 
+   * If `callback` is null, removes all callbacks for the event.
    * If `event` is null, removes all bound callbacks for the event.
    * @param event
    * @param callback
@@ -60,7 +60,7 @@ Events.prototype = {
         var callbacks = events[event];
 
         if (callbacks) {
-          var i = Utils.arrayIndexOf(callbacks, callback);
+          var i = Utils.indexOf(callbacks, callback);
 
           if (i !== -1) {
             callbacks.splice(i, 1);
@@ -117,10 +117,10 @@ Events.prototype = {
     if (length < 2) {
       args = [];
     } else {
-      args = Utils.isType(args, 'Array') ? args : [args];
+      args = Utils.typeIs(args, 'Array') ? args : [args];
     }
 
-    Utils.each(callbacks, function(callback) {
+    Utils.forEach(callbacks, function(callback) {
       Utils.apply(callback, context, args);
     });
 

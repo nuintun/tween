@@ -32,7 +32,7 @@ Queue.prototype = {
       context.__tweens = [];
     } else {
       var tweens = context.__tweens;
-      var i = Utils.arrayIndexOf(tweens, tween);
+      var i = Utils.indexOf(tweens, tween);
 
       if (i !== -1) {
         tweens.splice(i, 1);
