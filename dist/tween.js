@@ -112,16 +112,16 @@
   var indexOf = APIndexOf ? function(array, value, from) {
     return APIndexOf.call(array, value, from);
   } : function(array, value, from) {
-    var len = array.length >>> 0;
+    var length = array.length >>> 0;
 
     from = Number(from) || 0;
     from = Math[from < 0 ? 'ceil' : 'floor'](from);
 
     if (from < 0) {
-      from = Math.max(from + len, 0);
+      from = Math.max(from + length, 0);
     }
 
-    for (; from < len; from++) {
+    for (; from < length; from++) {
       if (from in array && array[from] === value) {
         return from;
       }
