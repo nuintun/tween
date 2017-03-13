@@ -80,14 +80,15 @@ Events.prototype = {
   once: function(events, callback, context) {
     var that = this;
     var args = arguments;
-    var cb = function() {
+
+    function feedback() {
       context = args.length < 3 ? this : that;
 
-      that.off(events, cb);
+      that.off(events, feedback);
       Utils.apply(callback, context, arguments);
-    };
+    }
 
-    return that.on(events, cb, context);
+    return that.on(events, feedback, context);
   },
   /**
    * Emit event with context
