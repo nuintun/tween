@@ -22,8 +22,9 @@
 
   /**
    * type
+   *
    * @param {any} value
-   * @returns
+   * @returns {String}
    */
   function type(value) {
     return OPToString.call(value);
@@ -31,9 +32,10 @@
 
   /**
    * typeIs
+   *
    * @param {any} value
-   * @param {any} dataType
-   * @returns
+   * @param {String} dataType
+   * @returns {Boolean}
    */
   function typeIs(value, dataType) {
     return type(value) === '[object ' + dataType + ']';
@@ -41,9 +43,11 @@
 
   /**
    * inherits
-   * @param ctor
-   * @param superCtor
-   * @param proto
+   *
+   * @param {Class} ctor
+   * @param {Class} superCtor
+   * @param {Object} proto
+   * @returns {void}
    */
   function inherits(ctor, superCtor, proto) {
     function F() {
@@ -70,7 +74,9 @@
 
   /**
    * isNatural
+   *
    * @param {any} number
+   * @returns {Boolean}
    */
   function isNatural(number) {
     return typeIs(number, 'Number') && isFinite(number) && number >= 0;
@@ -78,9 +84,11 @@
 
   /**
    * apply
+   *
    * @param  {Function} fn
-   * @param  {Any} context
+   * @param  {any} context
    * @param  {Array} args
+   * @returns {void}
    * call is faster than apply, optimize less than 6 args
    * https://github.com/micro-js/apply
    * http://blog.csdn.net/zhengyinhui100/article/details/7837127
@@ -104,10 +112,11 @@
 
   /**
    * indexOf
-   * @param {any} array
+   *
+   * @param {Array} array
    * @param {any} value
-   * @param {any} from
-   * @returns
+   * @param {Number} from
+   * @returns {Number}
    */
   var indexOf = APIndexOf ? function(array, value, from) {
     return APIndexOf.call(array, value, from);
@@ -132,9 +141,11 @@
 
   /**
    * forEach
-   * @param {any} array
-   * @param {any} iterator
+   *
+   * @param {Array} array
+   * @param {Function} iterator
    * @param {any} context
+   * @returns {void}
    */
   var forEach = APForEach ? function(array, iterator, context) {
     APForEach.call(array, iterator, context);
@@ -252,6 +263,7 @@
 
   /**
    * Events
+   *
    * @constructor
    */
   function Events() {
@@ -262,9 +274,10 @@
   Events.prototype = {
     /**
      * Bind callback tos event
-     * @param events
-     * @param callback
-     * @param context
+     *
+     * @param {String} events
+     * @param {Function} callback
+     * @param {any} context
      * @returns {Events}
      */
     on: function(event, callback) {
@@ -279,11 +292,12 @@
       return context;
     },
     /**
-     * Remove callback of event.
+     * Remove callback of event
+     *
      * If `callback` is null, removes all callbacks for the event.
      * If `event` is null, removes all bound callbacks for the event.
-     * @param event
-     * @param callback
+     * @param {String} event
+     * @param {Function} callback
      * @returns {Events}
      */
     off: function(event, callback) {
@@ -313,29 +327,28 @@
     },
     /**
      * Bind a event only emit once
-     * @param events
-     * @param callback
-     * @param context
+     *
+     * @param {String} events
+     * @param {Function} callback
+     * @returns {Events}
      */
-    once: function(events, callback, context) {
+    once: function(events, callback) {
       var that = this;
-      var args = arguments;
 
       function feedback() {
-        context = args.length < 3 ? this : that;
-
         that.off(events, feedback);
-        apply(callback, context, arguments);
+        apply(callback, this, arguments);
       }
 
-      return that.on(events, feedback, context);
+      return that.on(events, feedback);
     },
     /**
      * Emit event with context
-     * @param event
-     * @param args
-     * @param context
-     * @returns {*}
+     *
+     * @param {String} event
+     * @param {Array} args
+     * @param {any} context
+     * @returns {Events}
      */
     emitWith: function(event, args, context) {
       var that = this;
@@ -369,8 +382,10 @@
     },
     /**
      * Emit event
-     * @param event
-     * @returns {*}
+     *
+     * @param {String} event
+     * @param {any} [...args]
+     * @returns {Events}
      */
     emit: function(event) {
       var context = this;

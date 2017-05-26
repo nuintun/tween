@@ -17,8 +17,9 @@ var OPToString = OP.toString;
 
 /**
  * type
+ *
  * @param {any} value
- * @returns
+ * @returns {String}
  */
 export function type(value) {
   return OPToString.call(value);
@@ -26,9 +27,10 @@ export function type(value) {
 
 /**
  * typeIs
+ *
  * @param {any} value
- * @param {any} dataType
- * @returns
+ * @param {String} dataType
+ * @returns {Boolean}
  */
 export function typeIs(value, dataType) {
   return type(value) === '[object ' + dataType + ']';
@@ -36,9 +38,11 @@ export function typeIs(value, dataType) {
 
 /**
  * inherits
- * @param ctor
- * @param superCtor
- * @param proto
+ *
+ * @param {Class} ctor
+ * @param {Class} superCtor
+ * @param {Object} proto
+ * @returns {void}
  */
 export function inherits(ctor, superCtor, proto) {
   function F() {
@@ -65,7 +69,9 @@ export var isFinite = Number.isFinite || isFinite;
 
 /**
  * isNatural
+ *
  * @param {any} number
+ * @returns {Boolean}
  */
 export function isNatural(number) {
   return typeIs(number, 'Number') && isFinite(number) && number >= 0;
@@ -73,9 +79,11 @@ export function isNatural(number) {
 
 /**
  * apply
+ *
  * @param  {Function} fn
- * @param  {Any} context
+ * @param  {any} context
  * @param  {Array} args
+ * @returns {void}
  * call is faster than apply, optimize less than 6 args
  * https://github.com/micro-js/apply
  * http://blog.csdn.net/zhengyinhui100/article/details/7837127
@@ -99,10 +107,11 @@ export function apply(fn, context, args) {
 
 /**
  * indexOf
- * @param {any} array
+ *
+ * @param {Array} array
  * @param {any} value
- * @param {any} from
- * @returns
+ * @param {Number} from
+ * @returns {Number}
  */
 export var indexOf = APIndexOf ? function(array, value, from) {
   return APIndexOf.call(array, value, from);
@@ -127,9 +136,11 @@ export var indexOf = APIndexOf ? function(array, value, from) {
 
 /**
  * forEach
- * @param {any} array
- * @param {any} iterator
+ *
+ * @param {Array} array
+ * @param {Function} iterator
  * @param {any} context
+ * @returns {void}
  */
 export var forEach = APForEach ? function(array, iterator, context) {
   APForEach.call(array, iterator, context);

@@ -8,44 +8,40 @@ rollup.rollup({
   legacy: true,
   entry: 'src/tween.js'
 }).then(function(bundle) {
-  let stat;
-  const map = 'tween.js.map';
-  const src = 'dist/tween.js';
-  const min = 'dist/tween.min.js';
+  fs.stat('dist', function(error) {
+    if (error) {
+      fs.mkdirSync('dist');
+    }
 
-  try {
-    stat = fs.statSync('dist')
-  } catch (e) {
-    // no such file or directory
-  }
+    const src = 'dist/tween.js';
+    const min = 'dist/tween.min.js';
+    const map = 'tween.js.map';
 
-  if (!stat) {
-    fs.mkdirSync('dist');
-  }
+    let result = bundle.generate({
+      format: 'umd',
+      indent: true,
+      useStrict: true,
+      moduleId: 'tween',
+      moduleName: 'Tween'
+    });
 
-  let result = bundle.generate({
-    format: 'umd',
-    indent: true,
-    useStrict: true,
-    moduleId: 'tween',
-    moduleName: 'Tween'
+    fs.writeFileSync(src, result.code);
+    console.log(`  Build ${ src } success!`);
+
+    result = uglify.minify({
+      'tween.js': result.code
+    }, {
+      compress: { ie8: true },
+      mangle: { ie8: true },
+      output: { ie8: true },
+      sourceMap: { url: map }
+    });
+
+    fs.writeFileSync(min, result.code);
+    console.log(`  Build ${ min } success!`);
+    fs.writeFileSync(src + '.map', result.map);
+    console.log(`  Build ${ src + '.map' } success!`);
   });
-
-  fs.writeFileSync(src, result.code);
-  console.log(`  Build ${ src } success!`);
-
-  result = uglify.minify(result.code, {
-    fromString: true,
-    compress: { screw_ie8: false },
-    mangle: { screw_ie8: false, eval: true },
-    output: { screw_ie8: false },
-    outSourceMap: map
-  });
-
-  fs.writeFileSync(min, result.code);
-  console.log(`  Build ${ min } success!`);
-  fs.writeFileSync(src + '.map', result.map.replace('"sources":["?"]', '"sources":["tween.js"]'));
-  console.log(`  Build ${ src + '.map' } success!`);
 }).catch(function(error) {
   console.error(error);
 });

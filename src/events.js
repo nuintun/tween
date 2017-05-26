@@ -12,6 +12,7 @@ import * as Utils from './utils';
 
 /**
  * Events
+ *
  * @constructor
  */
 export default function Events() {
@@ -22,9 +23,10 @@ export default function Events() {
 Events.prototype = {
   /**
    * Bind callback tos event
-   * @param events
-   * @param callback
-   * @param context
+   *
+   * @param {String} events
+   * @param {Function} callback
+   * @param {any} context
    * @returns {Events}
    */
   on: function(event, callback) {
@@ -39,11 +41,12 @@ Events.prototype = {
     return context;
   },
   /**
-   * Remove callback of event.
+   * Remove callback of event
+   *
    * If `callback` is null, removes all callbacks for the event.
    * If `event` is null, removes all bound callbacks for the event.
-   * @param event
-   * @param callback
+   * @param {String} event
+   * @param {Function} callback
    * @returns {Events}
    */
   off: function(event, callback) {
@@ -73,29 +76,28 @@ Events.prototype = {
   },
   /**
    * Bind a event only emit once
-   * @param events
-   * @param callback
-   * @param context
+   *
+   * @param {String} events
+   * @param {Function} callback
+   * @returns {Events}
    */
-  once: function(events, callback, context) {
+  once: function(events, callback) {
     var that = this;
-    var args = arguments;
 
     function feedback() {
-      context = args.length < 3 ? this : that;
-
       that.off(events, feedback);
-      Utils.apply(callback, context, arguments);
+      Utils.apply(callback, this, arguments);
     }
 
-    return that.on(events, feedback, context);
+    return that.on(events, feedback);
   },
   /**
    * Emit event with context
-   * @param event
-   * @param args
-   * @param context
-   * @returns {*}
+   *
+   * @param {String} event
+   * @param {Array} args
+   * @param {any} context
+   * @returns {Events}
    */
   emitWith: function(event, args, context) {
     var that = this;
@@ -129,8 +131,10 @@ Events.prototype = {
   },
   /**
    * Emit event
-   * @param event
-   * @returns {*}
+   *
+   * @param {String} event
+   * @param {any} [...args]
+   * @returns {Events}
    */
   emit: function(event) {
     var context = this;
