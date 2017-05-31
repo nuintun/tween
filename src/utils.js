@@ -153,3 +153,25 @@ export var forEach = APForEach ? function(array, iterator, context) {
     iterator.call(array, array[i], i, array);
   }
 }
+
+/**
+ * add
+ *
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {Number}
+ */
+export function add(x, y) {
+  var decimal = /\.\d+/;
+  var x1 = decimal.exec(String(x));
+  var y1 = decimal.exec(String(y));
+  var e = Math.max(x1 ? x1[0].length - 1 : 0, y1 ? y1[0].length - 1 : 0);
+
+  if (e) {
+    e = Math.pow(10, e);
+
+    return (x * e + y * e) / e;
+  } else {
+    return x + y;
+  }
+}

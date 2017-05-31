@@ -16,7 +16,6 @@ import { Easing } from './easing';
 import { Interpolation } from './interpolation';
 
 var QUEUE = new Queue();
-var RELATIVERE = /^[+-]\d+$/;
 
 export default function Tween(object) {
   var context = this;
@@ -151,8 +150,8 @@ Utils.inherits(Tween, Events, {
         // Set start
         startReversed = endReversed[0];
       } else if (endType === '[object String]') {
-        if (RELATIVERE.test(end)) {
-          startReversed = start + end * 1.0;
+        if (/^[+-](?:\d*\.)?\d+$/.test(end)) {
+          startReversed = Utils.add(start, end * 1.0);
           endReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
         } else {
           end *= 1.0;

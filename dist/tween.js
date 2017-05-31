@@ -159,6 +159,28 @@
     }
   };
 
+  /**
+   * add
+   *
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Number}
+   */
+  function add(x, y) {
+    var decimal = /\.\d+/;
+    var x1 = decimal.exec(String(x));
+    var y1 = decimal.exec(String(y));
+    var e = Math.max(x1 ? x1[0].length - 1 : 0, y1 ? y1[0].length - 1 : 0);
+
+    if (e) {
+      e = Math.pow(10, e);
+
+      return (x * e + y * e) / e;
+    } else {
+      return x + y;
+    }
+  }
+
   /*!
    * now
    * Version: 0.0.1
@@ -754,7 +776,6 @@
    */
 
   var QUEUE = new Queue();
-  var RELATIVERE = /^[+-]\d+$/;
 
   function Tween(object) {
     var context = this;
@@ -889,8 +910,8 @@
           // Set start
           startReversed = endReversed[0];
         } else if (endType === '[object String]') {
-          if (RELATIVERE.test(end)) {
-            startReversed = start + end * 1.0;
+          if (/^[+-](?:\d*\.)?\d+$/.test(end)) {
+            startReversed = add(start, end * 1.0);
             endReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
           } else {
             end *= 1.0;
