@@ -16,7 +16,7 @@ import * as Utils from './utils';
  * @constructor
  */
 export default function Events() {
-  this.__events = {};
+  this._events = {};
 }
 
 // Set prototype
@@ -31,7 +31,7 @@ Events.prototype = {
    */
   on: function(event, callback) {
     var context = this;
-    var events = context.__events;
+    var events = context._events;
     var callbacks = events[event] || (events[event] = []);
 
     if (Utils.typeIs(callback, 'Function')) {
@@ -54,10 +54,10 @@ Events.prototype = {
 
     switch (arguments.length) {
       case 0:
-        context.__events = {};
+        context._events = {};
         break;
       case 1:
-        delete context.__events[event];
+        delete context._events[event];
         break;
       default:
         var callbacks = events[event];
@@ -101,7 +101,7 @@ Events.prototype = {
    */
   emitWith: function(event, args, context) {
     var that = this;
-    var events = that.__events;
+    var events = that._events;
     var callbacks = events[event];
 
     if (!callbacks || callbacks.length === 0) {
@@ -138,7 +138,7 @@ Events.prototype = {
    */
   emit: function(event) {
     var context = this;
-    var events = context.__events;
+    var events = context._events;
     var callbacks = events[event];
 
     if (!callbacks || callbacks.length === 0) {

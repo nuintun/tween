@@ -224,25 +224,25 @@
    */
 
   function Queue() {
-    this.__tweens = [];
+    this._tweens = [];
   }
 
   Queue.prototype = {
     items: function() {
-      return this.__tweens;
+      return this._tweens;
     },
     add: function(tween) {
       if (tween instanceof Tween) {
-        this.__tweens.push(tween);
+        this._tweens.push(tween);
       }
     },
     remove: function(tween) {
       var context = this;
 
       if (arguments.length === 0) {
-        context.__tweens = [];
+        context._tweens = [];
       } else {
-        var tweens = context.__tweens;
+        var tweens = context._tweens;
         var i = indexOf(tweens, tween);
 
         if (i !== -1) {
@@ -251,7 +251,7 @@
       }
     },
     update: function(time, preserve) {
-      var tweens = this.__tweens;
+      var tweens = this._tweens;
 
       if (tweens.length === 0) {
         return false;
@@ -289,7 +289,7 @@
    * @constructor
    */
   function Events() {
-    this.__events = {};
+    this._events = {};
   }
 
   // Set prototype
@@ -304,7 +304,7 @@
      */
     on: function(event, callback) {
       var context = this;
-      var events = context.__events;
+      var events = context._events;
       var callbacks = events[event] || (events[event] = []);
 
       if (typeIs(callback, 'Function')) {
@@ -327,10 +327,10 @@
 
       switch (arguments.length) {
         case 0:
-          context.__events = {};
+          context._events = {};
           break;
         case 1:
-          delete context.__events[event];
+          delete context._events[event];
           break;
         default:
           var callbacks = events[event];
@@ -374,7 +374,7 @@
      */
     emitWith: function(event, args, context) {
       var that = this;
-      var events = that.__events;
+      var events = that._events;
       var callbacks = events[event];
 
       if (!callbacks || callbacks.length === 0) {
@@ -411,7 +411,7 @@
      */
     emit: function(event) {
       var context = this;
-      var events = context.__events;
+      var events = context._events;
       var callbacks = events[event];
 
       if (!callbacks || callbacks.length === 0) {
@@ -782,21 +782,21 @@
 
     Events.call(context);
 
-    context.__object = object;
-    context.__valuesStart = {};
-    context.__valuesEnd = {};
-    context.__startReversed = {};
-    context.__endReversed = {};
-    context.__duration = 1000;
-    context.__repeat = 0;
-    context.__repeatDelayTime = null;
-    context.__yoyo = false;
-    context.__delayTime = 0;
-    context.__startTime = null;
-    context.__easingFunction = Easing.Linear.None;
-    context.__interpolationFunction = Interpolation.Linear;
-    context.__chainedTweens = [];
-    context.__startEventFired = false;
+    context._object = object;
+    context._valuesStart = {};
+    context._valuesEnd = {};
+    context._startReversed = {};
+    context._endReversed = {};
+    context._duration = 1000;
+    context._repeat = 0;
+    context._repeatDelayTime = null;
+    context._yoyo = false;
+    context._delayTime = 0;
+    context._startTime = null;
+    context._easingFunction = Easing.Linear.None;
+    context._interpolationFunction = Interpolation.Linear;
+    context._chainedTweens = [];
+    context._startEventFired = false;
 
     // Is playing
     context.playing = false;
@@ -819,10 +819,10 @@
       var context = this;
 
       if (isNatural(duration)) {
-        context.__duration = duration;
+        context._duration = duration;
       }
 
-      context.__valuesEnd = properties;
+      context._valuesEnd = properties;
 
       return context;
     },
@@ -830,15 +830,15 @@
       var context = this;
 
       context.playing = true;
-      context.__startEventFired = false;
-      context.__startTime = isNatural(time) ? time : now();
-      context.__startTime += context.__delayTime;
+      context._startEventFired = false;
+      context._startTime = isNatural(time) ? time : now();
+      context._startTime += context._delayTime;
 
       var start;
-      var object = context.__object;
+      var object = context._object;
 
       // Reset values
-      context.__valuesStart = {};
+      context._valuesStart = {};
 
       // Set all starting values present on the target object
       for (var field in object) {
@@ -846,7 +846,7 @@
         start = object[field] * 1.0;
 
         if (isFinite(start)) {
-          context.__valuesStart[field] = start;
+          context._valuesStart[field] = start;
         }
       }
 
@@ -857,13 +857,13 @@
       var endType;
       var endReversed;
       var startReversed;
-      var valuesEnd = context.__valuesEnd;
-      var valuesStart = context.__valuesStart;
+      var valuesEnd = context._valuesEnd;
+      var valuesStart = context._valuesStart;
 
       // Reset values
-      context.__valuesEnd = {};
-      context.__startReversed = {};
-      context.__endReversed = {};
+      context._valuesEnd = {};
+      context._startReversed = {};
+      context._endReversed = {};
 
       // Protect against non numeric properties.
       for (var property in valuesEnd) {
@@ -930,9 +930,9 @@
         }
 
         // Set values
-        context.__valuesEnd[property] = end;
-        context.__startReversed[property] = startReversed;
-        context.__endReversed[property] = endReversed;
+        context._valuesEnd[property] = end;
+        context._startReversed[property] = startReversed;
+        context._endReversed[property] = endReversed;
       }
 
       // Add to Tween queue
@@ -953,9 +953,9 @@
 
       // Set values
       context.playing = false;
-      context.__startEventFired = false;
+      context._startEventFired = false;
 
-      var object = context.__object;
+      var object = context._object;
 
       // Emit stop event
       context.emitWith('stop', object, object);
@@ -967,12 +967,12 @@
     end: function() {
       var context = this;
 
-      context.update(context.__startTime + context.__duration);
+      context.update(context._startTime + context._duration);
 
       return context;
     },
     stopChainedTweens: function() {
-      forEach(this.__chainedTweens, function(tween) {
+      forEach(this._chainedTweens, function(tween) {
         tween.stop();
       });
 
@@ -980,14 +980,14 @@
     },
     delay: function(amount) {
       if (isNatural(amount)) {
-        this.__delayTime = amount;
+        this._delayTime = amount;
       }
 
       return this;
     },
     repeat: function(times) {
       if (isNatural(times) || times === Infinity) {
-        this.__repeat = times;
+        this._repeat = times;
       }
 
       return this;
@@ -996,30 +996,30 @@
       var context = this;
 
       if (isNatural(amount)) {
-        context.__repeatDelayTime = amount;
+        context._repeatDelayTime = amount;
       } else if (amount === false) {
-        context.__repeatDelayTime = null;
+        context._repeatDelayTime = null;
       }
 
       return this;
     },
     yoyo: function(yoyo) {
-      this.__yoyo = !!yoyo;
+      this._yoyo = !!yoyo;
 
       return this;
     },
     easing: function(easing) {
-      this.__easingFunction = easing;
+      this._easingFunction = easing;
 
       return this;
     },
     interpolation: function(interpolation) {
-      this.__interpolationFunction = interpolation;
+      this._interpolationFunction = interpolation;
 
       return this;
     },
     chain: function() {
-      this.__chainedTweens = arguments;
+      this._chainedTweens = arguments;
 
       return this;
     },
@@ -1031,29 +1031,29 @@
 
       time = isNatural(time) ? time : now();
 
-      if (time < context.__startTime) {
+      if (time < context._startTime) {
         return true;
       }
 
-      var object = context.__object;
+      var object = context._object;
 
-      if (context.__startEventFired === false) {
+      if (context._startEventFired === false) {
         context.emitWith('start', object, object);
 
-        context.__startEventFired = true;
+        context._startEventFired = true;
       }
 
-      elapsed = (time - context.__startTime) / context.__duration;
+      elapsed = (time - context._startTime) / context._duration;
       elapsed = elapsed > 1 ? 1 : elapsed;
 
-      value = context.__easingFunction(elapsed);
+      value = context._easingFunction(elapsed);
 
       var end;
       var start;
       var endType;
-      var yoyo = context.__yoyo;
-      var valuesEnd = context.__valuesEnd;
-      var valuesStart = context.__valuesStart;
+      var yoyo = context._yoyo;
+      var valuesEnd = context._valuesEnd;
+      var valuesStart = context._valuesStart;
 
       for (property in valuesEnd) {
         // Don't update properties that do not exist in the values start repeat object
@@ -1066,7 +1066,7 @@
         endType = type(end);
 
         if (endType === '[object Array]') {
-          object[property] = context.__interpolationFunction(end, value);
+          object[property] = context._interpolationFunction(end, value);
           continue;
         } else if (endType === '[object String]') {
           // Parses relative end values with start as base (e.g.: +10, -3)
@@ -1085,33 +1085,33 @@
       context.emitWith('update', [object, value, context.reversed], object);
 
       if (elapsed === 1) {
-        if (context.__repeat > 0) {
+        if (context._repeat > 0) {
           // Cycle events
           context.emitWith('cycle', object, object);
 
           // Is finite repeat
-          if (isFinite(context.__repeat)) {
-            context.__repeat--;
+          if (isFinite(context._repeat)) {
+            context._repeat--;
           }
 
           if (yoyo) {
             context.reversed = !context.reversed;
 
-            context.__valuesStart = [
-              context.__startReversed,
-              context.__startReversed = valuesStart
+            context._valuesStart = [
+              context._startReversed,
+              context._startReversed = valuesStart
             ][0];
 
-            context.__valuesEnd = [
-              context.__endReversed,
-              context.__endReversed = valuesEnd
+            context._valuesEnd = [
+              context._endReversed,
+              context._endReversed = valuesEnd
             ][0];
           }
 
-          if (context.__repeatDelayTime !== null) {
-            context.__startTime = time + context.__repeatDelayTime;
+          if (context._repeatDelayTime !== null) {
+            context._startTime = time + context._repeatDelayTime;
           } else {
-            context.__startTime = time + context.__delayTime;
+            context._startTime = time + context._delayTime;
           }
 
           return true;
@@ -1119,10 +1119,10 @@
 
         context.emitWith('complete', object, object);
 
-        forEach(context.__chainedTweens, function(tween) {
+        forEach(context._chainedTweens, function(tween) {
           // Make the chained tweens start exactly at the time they should,
           // even if the `update()` method was called way past the duration of the tween
-          tween.start(context.__startTime + context.__duration);
+          tween.start(context._startTime + context._duration);
         });
 
         return false;

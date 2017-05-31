@@ -13,25 +13,25 @@ import Tween from './tween';
 import * as Utils from './utils';
 
 export default function Queue() {
-  this.__tweens = [];
+  this._tweens = [];
 }
 
 Queue.prototype = {
   items: function() {
-    return this.__tweens;
+    return this._tweens;
   },
   add: function(tween) {
     if (tween instanceof Tween) {
-      this.__tweens.push(tween);
+      this._tweens.push(tween);
     }
   },
   remove: function(tween) {
     var context = this;
 
     if (arguments.length === 0) {
-      context.__tweens = [];
+      context._tweens = [];
     } else {
-      var tweens = context.__tweens;
+      var tweens = context._tweens;
       var i = Utils.indexOf(tweens, tween);
 
       if (i !== -1) {
@@ -40,7 +40,7 @@ Queue.prototype = {
     }
   },
   update: function(time, preserve) {
-    var tweens = this.__tweens;
+    var tweens = this._tweens;
 
     if (tweens.length === 0) {
       return false;
