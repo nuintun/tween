@@ -23,8 +23,8 @@ export default function Tween(object) {
   Events.call(context);
 
   context._object = object;
-  context._valuesStart = {};
-  context._valuesEnd = {};
+  context._startValues = {};
+  context._endValues = {};
   context._startReversed = {};
   context._endReversed = {};
   context._duration = 1000;
@@ -62,7 +62,7 @@ Utils.inherits(Tween, Events, {
       context._duration = duration;
     }
 
-    context._valuesEnd = properties;
+    context._endValues = properties;
 
     return context;
   },
@@ -78,7 +78,7 @@ Utils.inherits(Tween, Events, {
     var object = context._object;
 
     // Reset values
-    context._valuesStart = {};
+    context._startValues = {};
 
     // Set all starting values present on the target object
     for (var field in object) {
@@ -86,7 +86,7 @@ Utils.inherits(Tween, Events, {
       start = object[field] * 1.0;
 
       if (Utils.isFinite(start)) {
-        context._valuesStart[field] = start;
+        context._startValues[field] = start;
       }
     }
 
@@ -97,25 +97,25 @@ Utils.inherits(Tween, Events, {
     var endType;
     var endReversed;
     var startReversed;
-    var valuesEnd = context._valuesEnd;
-    var valuesStart = context._valuesStart;
+    var endValues = context._endValues;
+    var startValues = context._startValues;
 
     // Reset values
-    context._valuesEnd = {};
+    context._endValues = {};
     context._startReversed = {};
     context._endReversed = {};
 
     // Protect against non numeric properties.
-    for (var property in valuesEnd) {
+    for (var property in endValues) {
       // If `to()` specifies a property that doesn't exist in the source object,
       // we should not set that property in the object
-      if (!valuesStart.hasOwnProperty(property)) {
+      if (!startValues.hasOwnProperty(property)) {
         continue;
       }
 
       // Get start value
-      start = valuesStart[property];
-      end = valuesEnd[property];
+      start = startValues[property];
+      end = endValues[property];
       endType = Utils.type(end);
 
       // Check if an Array was provided as property value
@@ -125,7 +125,7 @@ Utils.inherits(Tween, Events, {
         endReversed = [];
 
         for (var i = 0; i < length; i++) {
-          item = valuesEnd[property][i] * 1.0;
+          item = endValues[property][i] * 1.0;
 
           if (Utils.isFinite(item)) {
             end.push(item);
@@ -170,7 +170,7 @@ Utils.inherits(Tween, Events, {
       }
 
       // Set values
-      context._valuesEnd[property] = end;
+      context._endValues[property] = end;
       context._startReversed[property] = startReversed;
       context._endReversed[property] = endReversed;
     }
@@ -292,17 +292,17 @@ Utils.inherits(Tween, Events, {
     var start;
     var endType;
     var yoyo = context._yoyo;
-    var valuesEnd = context._valuesEnd;
-    var valuesStart = context._valuesStart;
+    var endValues = context._endValues;
+    var startValues = context._startValues;
 
-    for (property in valuesEnd) {
+    for (property in endValues) {
       // Don't update properties that do not exist in the values start repeat object
-      if (!valuesStart.hasOwnProperty(property)) {
+      if (!startValues.hasOwnProperty(property)) {
         continue;
       }
 
-      start = valuesStart[property];
-      end = valuesEnd[property];
+      start = startValues[property];
+      end = endValues[property];
       endType = Utils.type(end);
 
       if (endType === '[object Array]') {
@@ -314,7 +314,7 @@ Utils.inherits(Tween, Events, {
 
         // If not yoyo and relative end values reset values start
         if (elapsed === 1 && !yoyo) {
-          valuesStart[property] = end;
+          startValues[property] = end;
         }
       }
 
@@ -337,14 +337,14 @@ Utils.inherits(Tween, Events, {
         if (yoyo) {
           context.reversed = !context.reversed;
 
-          context._valuesStart = [
+          context._startValues = [
             context._startReversed,
-            context._startReversed = valuesStart
+            context._startReversed = startValues
           ][0];
 
-          context._valuesEnd = [
+          context._endValues = [
             context._endReversed,
-            context._endReversed = valuesEnd
+            context._endReversed = endValues
           ][0];
         }
 
