@@ -65,7 +65,9 @@ export function inherits(ctor, superCtor, proto) {
 }
 
 // isFinite
-export var isFinite = Number.isFinite || isFinite;
+export var isFinite = Number.isFinite || function(value) {
+  return typeIs(number, 'Number') && isFinite(value);
+};
 
 /**
  * isNatural

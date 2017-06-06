@@ -70,7 +70,9 @@
   }
 
   // isFinite
-  var isFinite = Number.isFinite || isFinite;
+  var isFinite = Number.isFinite || function(value) {
+    return typeIs(number, 'Number') && isFinite(value);
+  };
 
   /**
    * isNatural
