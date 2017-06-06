@@ -21,7 +21,7 @@ rollup.rollup({
       format: 'umd',
       indent: true,
       useStrict: true,
-      moduleId: 'tween',
+      amd: { id: 'tween' },
       moduleName: 'Tween'
     });
 
