@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "rollup": "^0.42.0",
-    "uglify-js": "^3.0.15"
+    "rollup": "^0.43.0",
+    "uglify-js": "^3.0.19"
   }
 }
