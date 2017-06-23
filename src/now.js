@@ -21,7 +21,7 @@ if (window
   // leads to an invocation exception in Chrome.
   now = function() {
     return window.performance.now.call(window.performance);
-  }
+  };
 } else if (Utils.typeIs(Date.now, 'Function')) {
   // Use Date.now if it is available.
   now = Date.now;
