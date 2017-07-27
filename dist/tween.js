@@ -1092,9 +1092,9 @@
       var end;
       var start;
       var endType;
-      var yoyo = context._yoyo;
-      var from = context._from;
       var to = context._to;
+      var from = context._from;
+      var yoyo = context._yoyo;
 
       for (property in to) {
         // Don't update properties that do not exist in the values start repeat object
