@@ -974,11 +974,11 @@
         }
       }
 
-      context._time = 0;
       context._repeated = 0;
       context._startEventFired = false;
       context._startTime = isNonNegative(time) ? time : now();
       context._startTime += context._delayTime;
+      context._offsetTime = context._time;
 
       // Add to Tween queue
       QUEUE.add(context);
@@ -992,11 +992,8 @@
       QUEUE.remove(context);
 
       // Set values
-      if (context.playing) {
-        context.playing = false;
-        context._startEventFired = false;
-        context._offsetTime = context._time;
-      }
+      context.playing = false;
+      context._startEventFired = false;
 
       var object = context._object;
 
@@ -1133,8 +1130,8 @@
       context.emitWith('update', [object, value, context.reversed], object);
 
       if (elapsed === 1) {
+        context._time = 0;
         context.playing = false;
-        context._offsetTime = 0;
 
         if (context._repeated < context._repeat) {
           // Cycle events
