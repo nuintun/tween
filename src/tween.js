@@ -45,6 +45,7 @@ export default function Tween(object) {
   context._interpolationFunction = Interpolation.Linear;
   context._chainedTweens = [];
   context._startEventFired = false;
+  context._reset = false;
 
   // Is playing
   context.playing = false;
@@ -92,13 +93,18 @@ Utils.inherits(Tween, Events, {
     }
 
     context._to = properties;
+    context._reset = true;
 
     return context;
   },
   start: function(time) {
     var context = this;
 
-    if (!context._startEventFired) {
+    // must run after to method
+    if (!context._to) return context;
+
+    // reset from and to values
+    if (context._reset) {
       var start;
       var object = context._object;
 
