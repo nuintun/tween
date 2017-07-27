@@ -102,8 +102,8 @@ Utils.inherits(Tween, Events, {
   start: function(time) {
     var context = this;
 
-    // must run after to method
-    if (!context._to) return context;
+    // must not playing and run after to method
+    if (context.playing || !context._to) return context;
 
     // reset from and to values
     if (context._reset) {
@@ -225,22 +225,20 @@ Utils.inherits(Tween, Events, {
   stop: function() {
     var context = this;
 
-    // Is playing
-    if (context.playing) {
-      // Remove from Tween queue
-      QUEUE.remove(context);
+    // Remove from Tween queue
+    QUEUE.remove(context);
 
-      // Set values
+    // Set values
+    if (context.playing) {
       context.playing = false;
       context._startEventFired = false;
       context._offsetTime = context._time;
-
-      var object = context._object;
-
-      // Emit stop event
-      context.emitWith('stop', object, object);
     }
 
+    var object = context._object;
+
+    // Emit stop event
+    context.emitWith('stop', object, object);
     // Stop chain tween
     context.stopChainedTweens();
 
