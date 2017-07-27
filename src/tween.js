@@ -30,10 +30,10 @@ export default function Tween(object) {
   Events.call(context);
 
   context._object = object;
-  context._startValues = {};
-  context._endValues = {};
-  context._startReversed = {};
-  context._endReversed = {};
+  context._from = {};
+  context._to = {};
+  context._fromReversed = {};
+  context._toReversed = {};
   context._duration = 1000;
   context._repeat = 0;
   context._repeated = 0;
@@ -69,14 +69,14 @@ Utils.forEach(['add', 'remove', 'update', 'items'], function(method) {
  */
 function reverseValues(tween) {
   if (tween._yoyo) {
-    tween._startValues = [
-      tween._startReversed,
-      tween._startReversed = tween._startValues
+    tween._from = [
+      tween._fromReversed,
+      tween._fromReversed = tween._from
     ][0];
 
-    tween._endValues = [
-      tween._endReversed,
-      tween._endReversed = tween._endValues
+    tween._to = [
+      tween._toReversed,
+      tween._toReversed = tween._to
     ][0];
 
     tween.reversed = !tween.reversed;
@@ -91,7 +91,7 @@ Utils.inherits(Tween, Events, {
       context._duration = duration;
     }
 
-    context._endValues = properties;
+    context._to = properties;
 
     return context;
   },
@@ -103,7 +103,7 @@ Utils.inherits(Tween, Events, {
       var object = context._object;
 
       // Reset values
-      context._startValues = {};
+      context._from = {};
 
       // Set all starting values present on the target object
       for (var field in object) {
@@ -111,7 +111,7 @@ Utils.inherits(Tween, Events, {
         start = object[field] * 1.0;
 
         if (Utils.isFinite(start)) {
-          context._startValues[field] = start;
+          context._from[field] = start;
         }
       }
 
@@ -120,43 +120,43 @@ Utils.inherits(Tween, Events, {
       var item;
       var length;
       var endType;
-      var endReversed;
-      var startReversed;
-      var endValues = context._endValues;
-      var startValues = context._startValues;
+      var toReversed;
+      var fromReversed;
+      var to = context._to;
+      var from = context._from;
 
       // Reset values
-      context._endValues = {};
-      context._startReversed = {};
-      context._endReversed = {};
+      context._to = {};
+      context._fromReversed = {};
+      context._toReversed = {};
 
       // Protect against non numeric properties.
-      for (var property in endValues) {
+      for (var property in to) {
         // If `to()` specifies a property that doesn't exist in the source object,
         // we should not set that property in the object
-        if (!startValues.hasOwnProperty(property)) {
+        if (!from.hasOwnProperty(property)) {
           continue;
         }
 
         // Get start value
-        start = startValues[property];
-        end = endValues[property];
+        start = from[property];
+        end = to[property];
         endType = Utils.type(end);
 
         // Check if an Array was provided as property value
         if (endType === '[object Array]') {
           length = end.length;
           end = [];
-          endReversed = [];
+          toReversed = [];
 
           for (var i = 0; i < length; i++) {
-            item = endValues[property][i] * 1.0;
+            item = to[property][i] * 1.0;
 
             if (Utils.isFinite(item)) {
               end.push(item);
 
               // Set reversed
-              endReversed = [item].concat(endReversed);
+              toReversed = [item].concat(toReversed);
             } else {
               end = [];
               break;
@@ -171,33 +171,33 @@ Utils.inherits(Tween, Events, {
           end = [start].concat(end);
 
           // Set reversed
-          endReversed.push(start);
+          toReversed.push(start);
           // Set start
-          startReversed = endReversed[0];
+          fromReversed = toReversed[0];
         } else if (endType === '[object String]') {
           if (/^[+-](?:\d*\.)?\d+$/.test(end)) {
-            startReversed = Utils.add(start, end * 1.0);
-            endReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
+            fromReversed = Utils.add(start, end * 1.0);
+            toReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
           } else {
             end *= 1.0;
-            startReversed = end;
-            endReversed = start;
+            fromReversed = end;
+            toReversed = start;
 
             if (!Utils.isFinite(end)) {
               continue;
             }
           }
         } else if (Utils.isFinite(end)) {
-          startReversed = end;
-          endReversed = start;
+          fromReversed = end;
+          toReversed = start;
         } else {
           continue;
         }
 
         // Set values
-        context._endValues[property] = end;
-        context._startReversed[property] = startReversed;
-        context._endReversed[property] = endReversed;
+        context._to[property] = end;
+        context._fromReversed[property] = fromReversed;
+        context._toReversed[property] = toReversed;
       }
     }
 
@@ -325,17 +325,17 @@ Utils.inherits(Tween, Events, {
     var start;
     var endType;
     var yoyo = context._yoyo;
-    var endValues = context._endValues;
-    var startValues = context._startValues;
+    var from = context._from;
+    var to = context._to;
 
-    for (property in endValues) {
+    for (property in to) {
       // Don't update properties that do not exist in the values start repeat object
-      if (!startValues.hasOwnProperty(property)) {
+      if (!from.hasOwnProperty(property)) {
         continue;
       }
 
-      start = startValues[property];
-      end = endValues[property];
+      start = from[property];
+      end = to[property];
       endType = Utils.type(end);
 
       if (endType === '[object Array]') {
@@ -347,7 +347,7 @@ Utils.inherits(Tween, Events, {
 
         // If not yoyo and relative end values reset values start
         if (elapsed === 1 && !yoyo) {
-          startValues[property] = end;
+          from[property] = end;
         }
       }
 
