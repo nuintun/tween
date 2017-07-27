@@ -58,7 +58,7 @@ Utils.inherits(Tween, Events, {
   to: function(properties, duration) {
     var context = this;
 
-    if (Utils.isNatural(duration)) {
+    if (Utils.isNonNegative(duration)) {
       context._duration = duration;
     }
 
@@ -71,7 +71,7 @@ Utils.inherits(Tween, Events, {
 
     context.playing = true;
     context._startEventFired = false;
-    context._startTime = Utils.isNatural(time) ? time : now();
+    context._startTime = Utils.isNonNegative(time) ? time : now();
     context._startTime += context._delayTime;
 
     var start;
@@ -219,14 +219,14 @@ Utils.inherits(Tween, Events, {
     return this;
   },
   delay: function(amount) {
-    if (Utils.isNatural(amount)) {
+    if (Utils.isNonNegative(amount)) {
       this._delayTime = amount;
     }
 
     return this;
   },
   repeat: function(times) {
-    if (Utils.isNatural(times) || times === Infinity) {
+    if (Utils.isNonNegative(times) || times === Infinity) {
       this._repeat = times;
     }
 
@@ -235,7 +235,7 @@ Utils.inherits(Tween, Events, {
   repeatDelay: function(amount) {
     var context = this;
 
-    if (Utils.isNatural(amount)) {
+    if (Utils.isNonNegative(amount)) {
       context._repeatDelayTime = amount;
     } else if (amount === false) {
       context._repeatDelayTime = null;
@@ -269,7 +269,7 @@ Utils.inherits(Tween, Events, {
     var property;
     var context = this;
 
-    time = Utils.isNatural(time) ? time : now();
+    time = Utils.isNonNegative(time) ? time : now();
 
     if (time < context._startTime) {
       return true;

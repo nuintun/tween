@@ -70,12 +70,12 @@ export var isFinite = Number.isFinite || function(value) {
 };
 
 /**
- * isNatural
+ * isNonNegative
  *
  * @param {any} number
  * @returns {Boolean}
  */
-export function isNatural(number) {
+export function isNonNegative(number) {
   return typeIs(number, 'Number') && isFinite(number) && number >= 0;
 }
 

@@ -48,7 +48,7 @@ Queue.prototype = {
 
     var i = 0;
 
-    time = Utils.isNatural(time) ? time : now();
+    time = Utils.isNonNegative(time) ? time : now();
 
     while (i < tweens.length) {
       if (tweens[i].update(time) || preserve) {

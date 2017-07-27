@@ -75,12 +75,12 @@
   };
 
   /**
-   * isNatural
+   * isNonNegative
    *
    * @param {any} number
    * @returns {Boolean}
    */
-  function isNatural(number) {
+  function isNonNegative(number) {
     return typeIs(number, 'Number') && isFinite(number) && number >= 0;
   }
 
@@ -261,7 +261,7 @@
 
       var i = 0;
 
-      time = isNatural(time) ? time : now();
+      time = isNonNegative(time) ? time : now();
 
       while (i < tweens.length) {
         if (tweens[i].update(time) || preserve) {
@@ -820,7 +820,7 @@
     to: function(properties, duration) {
       var context = this;
 
-      if (isNatural(duration)) {
+      if (isNonNegative(duration)) {
         context._duration = duration;
       }
 
@@ -833,7 +833,7 @@
 
       context.playing = true;
       context._startEventFired = false;
-      context._startTime = isNatural(time) ? time : now();
+      context._startTime = isNonNegative(time) ? time : now();
       context._startTime += context._delayTime;
 
       var start;
@@ -981,14 +981,14 @@
       return this;
     },
     delay: function(amount) {
-      if (isNatural(amount)) {
+      if (isNonNegative(amount)) {
         this._delayTime = amount;
       }
 
       return this;
     },
     repeat: function(times) {
-      if (isNatural(times) || times === Infinity) {
+      if (isNonNegative(times) || times === Infinity) {
         this._repeat = times;
       }
 
@@ -997,7 +997,7 @@
     repeatDelay: function(amount) {
       var context = this;
 
-      if (isNatural(amount)) {
+      if (isNonNegative(amount)) {
         context._repeatDelayTime = amount;
       } else if (amount === false) {
         context._repeatDelayTime = null;
@@ -1031,7 +1031,7 @@
       var property;
       var context = this;
 
-      time = isNatural(time) ? time : now();
+      time = isNonNegative(time) ? time : now();
 
       if (time < context._startTime) {
         return true;
