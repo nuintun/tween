@@ -235,6 +235,7 @@
     },
     add: function(tween) {
       if (tween instanceof Tween) {
+        this.remove(tween);
         this._tweens.push(tween);
       }
     },
@@ -978,8 +979,6 @@
       context._startEventFired = false;
       context._startTime = isNonNegative(time) ? time : now();
       context._startTime += context._delayTime;
-
-      context.playing = true;
 
       // Add to Tween queue
       QUEUE.add(context);

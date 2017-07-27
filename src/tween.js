@@ -217,8 +217,6 @@ Utils.inherits(Tween, Events, {
     context._startTime = Utils.isNonNegative(time) ? time : now();
     context._startTime += context._delayTime;
 
-    context.playing = true;
-
     // Add to Tween queue
     QUEUE.add(context);
 

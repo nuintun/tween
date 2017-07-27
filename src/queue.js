@@ -22,6 +22,7 @@ Queue.prototype = {
   },
   add: function(tween) {
     if (tween instanceof Tween) {
+      this.remove(tween);
       this._tweens.push(tween);
     }
   },
