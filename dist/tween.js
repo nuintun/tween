@@ -779,6 +779,13 @@
 
   var QUEUE = new Queue();
 
+  /**
+   * Tween
+   *
+   * @constructor
+   * @param {Object} object
+   * @returns {Tween}
+   */
   function Tween(object) {
     var context = this;
 
@@ -791,6 +798,7 @@
     context._endReversed = {};
     context._duration = 1000;
     context._repeat = 0;
+    context._repeated = 0;
     context._repeatDelayTime = null;
     context._yoyo = false;
     context._delayTime = 0;
@@ -816,6 +824,27 @@
     };
   });
 
+  /**
+   * reverseValues
+   *
+   * @param {Tween} tween
+   */
+  function reverseValues(tween) {
+    if (tween._yoyo) {
+      tween._startValues = [
+        tween._startReversed,
+        tween._startReversed = tween._startValues
+      ][0];
+
+      tween._endValues = [
+        tween._endReversed,
+        tween._endReversed = tween._endValues
+      ][0];
+
+      tween.reversed = !tween.reversed;
+    }
+  }
+
   inherits(Tween, Events, {
     to: function(properties, duration) {
       var context = this;
@@ -831,111 +860,115 @@
     start: function(time) {
       var context = this;
 
-      context.playing = true;
+      if (!context._startEventFired) {
+        var start;
+        var object = context._object;
+
+        // Reset values
+        context._startValues = {};
+
+        // Set all starting values present on the target object
+        for (var field in object) {
+          // Ensures we're using numbers, not strings
+          start = object[field] * 1.0;
+
+          if (isFinite(start)) {
+            context._startValues[field] = start;
+          }
+        }
+
+        var i;
+        var end;
+        var item;
+        var length;
+        var endType;
+        var endReversed;
+        var startReversed;
+        var endValues = context._endValues;
+        var startValues = context._startValues;
+
+        // Reset values
+        context._endValues = {};
+        context._startReversed = {};
+        context._endReversed = {};
+
+        // Protect against non numeric properties.
+        for (var property in endValues) {
+          // If `to()` specifies a property that doesn't exist in the source object,
+          // we should not set that property in the object
+          if (!startValues.hasOwnProperty(property)) {
+            continue;
+          }
+
+          // Get start value
+          start = startValues[property];
+          end = endValues[property];
+          endType = type(end);
+
+          // Check if an Array was provided as property value
+          if (endType === '[object Array]') {
+            length = end.length;
+            end = [];
+            endReversed = [];
+
+            for (var i = 0; i < length; i++) {
+              item = endValues[property][i] * 1.0;
+
+              if (isFinite(item)) {
+                end.push(item);
+
+                // Set reversed
+                endReversed = [item].concat(endReversed);
+              } else {
+                end = [];
+                break;
+              }
+            }
+
+            if (end.length === 0) {
+              continue;
+            }
+
+            // Create a local copy of the Array with the start value at the front
+            end = [start].concat(end);
+
+            // Set reversed
+            endReversed.push(start);
+            // Set start
+            startReversed = endReversed[0];
+          } else if (endType === '[object String]') {
+            if (/^[+-](?:\d*\.)?\d+$/.test(end)) {
+              startReversed = add(start, end * 1.0);
+              endReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
+            } else {
+              end *= 1.0;
+              startReversed = end;
+              endReversed = start;
+
+              if (!isFinite(end)) {
+                continue;
+              }
+            }
+          } else if (isFinite(end)) {
+            startReversed = end;
+            endReversed = start;
+          } else {
+            continue;
+          }
+
+          // Set values
+          context._endValues[property] = end;
+          context._startReversed[property] = startReversed;
+          context._endReversed[property] = endReversed;
+        }
+      }
+
+      context._repeated = 0;
       context._startEventFired = false;
       context._startTime = isNonNegative(time) ? time : now();
       context._startTime += context._delayTime;
 
-      var start;
-      var object = context._object;
-
-      // Reset values
-      context._startValues = {};
-
-      // Set all starting values present on the target object
-      for (var field in object) {
-        // Ensures we're using numbers, not strings
-        start = object[field] * 1.0;
-
-        if (isFinite(start)) {
-          context._startValues[field] = start;
-        }
-      }
-
-      var i;
-      var end;
-      var item;
-      var length;
-      var endType;
-      var endReversed;
-      var startReversed;
-      var endValues = context._endValues;
-      var startValues = context._startValues;
-
-      // Reset values
-      context._endValues = {};
-      context._startReversed = {};
-      context._endReversed = {};
-
-      // Protect against non numeric properties.
-      for (var property in endValues) {
-        // If `to()` specifies a property that doesn't exist in the source object,
-        // we should not set that property in the object
-        if (!startValues.hasOwnProperty(property)) {
-          continue;
-        }
-
-        // Get start value
-        start = startValues[property];
-        end = endValues[property];
-        endType = type(end);
-
-        // Check if an Array was provided as property value
-        if (endType === '[object Array]') {
-          length = end.length;
-          end = [];
-          endReversed = [];
-
-          for (var i = 0; i < length; i++) {
-            item = endValues[property][i] * 1.0;
-
-            if (isFinite(item)) {
-              end.push(item);
-
-              // Set reversed
-              endReversed = [item].concat(endReversed);
-            } else {
-              end = [];
-              break;
-            }
-          }
-
-          if (end.length === 0) {
-            continue;
-          }
-
-          // Create a local copy of the Array with the start value at the front
-          end = [start].concat(end);
-
-          // Set reversed
-          endReversed.push(start);
-          // Set start
-          startReversed = endReversed[0];
-        } else if (endType === '[object String]') {
-          if (/^[+-](?:\d*\.)?\d+$/.test(end)) {
-            startReversed = add(start, end * 1.0);
-            endReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
-          } else {
-            end *= 1.0;
-            startReversed = end;
-            endReversed = start;
-
-            if (!isFinite(end)) {
-              continue;
-            }
-          }
-        } else if (isFinite(end)) {
-          startReversed = end;
-          endReversed = start;
-        } else {
-          continue;
-        }
-
-        // Set values
-        context._endValues[property] = end;
-        context._startReversed[property] = startReversed;
-        context._endReversed[property] = endReversed;
-      }
+      context.playing = true;
 
       // Add to Tween queue
       QUEUE.add(context);
@@ -1087,28 +1120,15 @@
       context.emitWith('update', [object, value, context.reversed], object);
 
       if (elapsed === 1) {
-        if (context._repeat > 0) {
+        if (context._repeated < context._repeat) {
           // Cycle events
           context.emitWith('cycle', object, object);
 
-          // Is finite repeat
-          if (isFinite(context._repeat)) {
-            context._repeat--;
-          }
+          // repeated times
+          context._repeated++;
 
-          if (yoyo) {
-            context.reversed = !context.reversed;
-
-            context._startValues = [
-              context._startReversed,
-              context._startReversed = startValues
-            ][0];
-
-            context._endValues = [
-              context._endReversed,
-              context._endReversed = endValues
-            ][0];
-          }
+          // reverse values
+          reverseValues(context);
 
           if (context._repeatDelayTime !== null) {
             context._startTime = time + context._repeatDelayTime;
@@ -1120,6 +1140,9 @@
         }
 
         context.emitWith('complete', object, object);
+
+        // reverse values
+        reverseValues(context);
 
         forEach(context._chainedTweens, function(tween) {
           // Make the chained tweens start exactly at the time they should,

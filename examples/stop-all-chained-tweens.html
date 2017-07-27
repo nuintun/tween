@@ -21,11 +21,11 @@
       font-size: 10px;
       padding: 20px;
     }
-    
+
     #target1 {
       background: #fcc;
     }
-    
+
     #target2 {
       background: #cfc;
     }
@@ -70,24 +70,19 @@
     t0 = new Tween(p0)
       .to({ x: 700 }, 2000)
       .delay(1000)
-      .easing(Tween.Easing.Elastic.InOut)
+      .yoyo(true)
+      .easing(Tween.Easing.Bounce.Out)
       .on('update', function() {
         a.style.left = p0.x + 'px';
-      })
-      .on('complete', function() {
-        p0.x = 0;
-        a.style.left = p0.x + 'px';
       });
+
 
     t1 = new Tween(p1)
       .to({ x: 1000 }, 3000)
       .delay(1000)
-      .easing(Tween.Easing.Elastic.InOut)
+      .yoyo(true)
+      .easing(Tween.Easing.Bounce.Out)
       .on('update', function() {
-        b.style.left = p1.x + 'px';
-      })
-      .on('complete', function() {
-        p1.x = 0;
         b.style.left = p1.x + 'px';
       });
 
