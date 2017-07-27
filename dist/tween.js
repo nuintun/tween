@@ -259,9 +259,9 @@
         return false;
       }
 
-      var i = 0;
-
       time = isNonNegative(time) ? time : now();
+
+      var i = 0;
 
       while (i < tweens.length) {
         if (tweens[i].update(time) || preserve) {
