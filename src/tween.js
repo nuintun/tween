@@ -37,11 +37,12 @@ export default function Tween(object) {
   context._duration = 1000;
   context._repeat = 0;
   context._repeated = 0;
-  context._repeatDelayTime = null;
   context._yoyo = false;
-  context._delayTime = 0;
+  context._time = 0;
   context._offsetTime = 0;
   context._startTime = null;
+  context._delayTime = 0;
+  context._repeatDelayTime = null;
   context._easingFunction = Easing.Linear.None;
   context._interpolationFunction = Interpolation.Linear;
   context._chainedTweens = [];
@@ -210,6 +211,7 @@ Utils.inherits(Tween, Events, {
       }
     }
 
+    context._time = 0;
     context._repeated = 0;
     context._startEventFired = false;
     context._startTime = Utils.isNonNegative(time) ? time : now();
@@ -233,7 +235,7 @@ Utils.inherits(Tween, Events, {
       // Set values
       context.playing = false;
       context._startEventFired = false;
-      context._offsetTime = Math.max(0, now() - context._startTime);
+      context._offsetTime = context._time;
 
       var object = context._object;
 
@@ -328,7 +330,9 @@ Utils.inherits(Tween, Events, {
       context.emitWith('start', object, object);
     }
 
-    elapsed = (time - context._startTime + context._offsetTime) / context._duration;
+    context._time = time - context._startTime;
+
+    elapsed = (context._time + context._offsetTime) / context._duration;
     elapsed = elapsed > 1 ? 1 : elapsed;
 
     value = context._easingFunction(elapsed);
