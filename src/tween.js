@@ -105,6 +105,14 @@ Utils.inherits(Tween, Events, {
     // must not playing and run after to method
     if (context.playing || !context._to) return context;
 
+    // chained tweens
+    var chainedTweens = context._chainedTweens;
+
+    // if chained tweens do nothing
+    for (var i = 0, length = chainedTweens.length; i < length; i++) {
+      if (chainedTweens.playing) return context;
+    }
+
     // reset from and to values
     if (context._reset) {
       context._reset = false;
@@ -216,6 +224,7 @@ Utils.inherits(Tween, Events, {
     context._startTime = Utils.isNonNegative(time) ? time : now();
     context._startTime += context._delayTime;
     context._offsetTime = context._time;
+    context._startCalled = true;
 
     // Add to Tween queue
     QUEUE.add(context);
@@ -230,7 +239,6 @@ Utils.inherits(Tween, Events, {
 
     // Set values
     context.playing = false;
-    context._startEventFired = false;
 
     var object = context._object;
 
