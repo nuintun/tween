@@ -40,6 +40,7 @@ export default function Tween(object) {
   context._repeatDelayTime = null;
   context._yoyo = false;
   context._delayTime = 0;
+  context._offsetTime = 0;
   context._startTime = null;
   context._easingFunction = Easing.Linear.None;
   context._interpolationFunction = Interpolation.Linear;
@@ -70,15 +71,15 @@ Utils.forEach(['add', 'remove', 'update', 'items'], function(method) {
  */
 function reverseValues(tween) {
   if (tween._yoyo) {
-    tween._from = [
-      tween._fromReversed,
-      tween._fromReversed = tween._from
-    ][0];
+    var fromReversed = tween._fromReversed;
 
-    tween._to = [
-      tween._toReversed,
-      tween._toReversed = tween._to
-    ][0];
+    tween._fromReversed = tween._from;
+    tween._from = fromReversed;
+
+    var toReversed = tween._toReversed;
+
+    tween._toReversed = tween._to;
+    tween._to = toReversed;
 
     tween.reversed = !tween.reversed;
   }
@@ -88,12 +89,12 @@ Utils.inherits(Tween, Events, {
   to: function(properties, duration) {
     var context = this;
 
+    context._reset = true;
+    context._to = properties;
+
     if (Utils.isNonNegative(duration)) {
       context._duration = duration;
     }
-
-    context._to = properties;
-    context._reset = true;
 
     return context;
   },
@@ -105,6 +106,8 @@ Utils.inherits(Tween, Events, {
 
     // reset from and to values
     if (context._reset) {
+      context._reset = false;
+
       var start;
       var object = context._object;
 
@@ -222,22 +225,22 @@ Utils.inherits(Tween, Events, {
   stop: function() {
     var context = this;
 
-    // Is stoped
-    if (!context.playing) {
-      return context;
+    // Is playing
+    if (context.playing) {
+      // Remove from Tween queue
+      QUEUE.remove(context);
+
+      // Set values
+      context.playing = false;
+      context._startEventFired = false;
+      context._offsetTime = Math.max(0, now() - context._startTime);
+
+      var object = context._object;
+
+      // Emit stop event
+      context.emitWith('stop', object, object);
     }
 
-    // Remove from Tween queue
-    QUEUE.remove(context);
-
-    // Set values
-    context.playing = false;
-    context._startEventFired = false;
-
-    var object = context._object;
-
-    // Emit stop event
-    context.emitWith('stop', object, object);
     // Stop chain tween
     context.stopChainedTweens();
 
@@ -252,7 +255,9 @@ Utils.inherits(Tween, Events, {
   },
   stopChainedTweens: function() {
     Utils.forEach(this._chainedTweens, function(tween) {
-      tween.stop();
+      if (tween.playing) {
+        tween.stop();
+      }
     });
 
     return this;
@@ -317,12 +322,13 @@ Utils.inherits(Tween, Events, {
     var object = context._object;
 
     if (context._startEventFired === false) {
-      context.emitWith('start', object, object);
-
+      context.playing = true;
       context._startEventFired = true;
+
+      context.emitWith('start', object, object);
     }
 
-    elapsed = (time - context._startTime) / context._duration;
+    elapsed = (time - context._startTime + context._offsetTime) / context._duration;
     elapsed = elapsed > 1 ? 1 : elapsed;
 
     value = context._easingFunction(elapsed);
@@ -364,6 +370,9 @@ Utils.inherits(Tween, Events, {
     context.emitWith('update', [object, value, context.reversed], object);
 
     if (elapsed === 1) {
+      context.playing = false;
+      context._offsetTime = 0;
+
       if (context._repeated < context._repeat) {
         // Cycle events
         context.emitWith('cycle', object, object);

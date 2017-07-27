@@ -94,15 +94,11 @@
       t1.chain(t0);
 
       start.onclick = function() {
-        if (!t0.playing) {
-          t0.start();
-        }
+        t0.start();
       };
 
       stop.onclick = function() {
-        if (t0.playing) {
-          t0.stop();
-        }
+        t0.stop();
       };
     </script>
   </body>
