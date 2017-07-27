@@ -17,13 +17,16 @@
       body {
         font-family: Arial, Helvetica, sans;
       }
+
       table {
         border-collapse: collapse;
       }
+
       td {
         width: 5px;
         height: 5px;
       }
+
       #target {
         position: absolute;
         top: 16em;
@@ -83,7 +86,7 @@
               .easing(Tween.Easing.Elastic.InOut)
               .on('update', function() {
                 var c = Math.floor(this.value * 0xff);
-                
+
                 this.td.style.background = 'rgb(' + c + ', 0, 0)';
               });
 
