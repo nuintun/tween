@@ -49,7 +49,8 @@ function createGraph(t, f, c) {
 
       position_old.x = position.x;
       position_old.y = position.y;
-    }).start();
+    })
+    .start();
 
   div.appendChild(document.createTextNode(t));
   div.appendChild(document.createElement('br'));
