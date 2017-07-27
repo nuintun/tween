@@ -100,12 +100,6 @@
               this.old.x = this.x;
               this.old.y = this.y;
             })
-            .on('cycle', function() {
-              if (!yoyo) {
-                this.old.x = x0;
-                this.old.y = y0;
-              }
-            })
             .interpolation(interpolation)
             .easing(Tween.Easing.Linear.None)
             .delay(250)
