@@ -31,6 +31,7 @@ var factorial = (function() {
 
 /**
  * linear
+ *
  * @param {any} p0
  * @param {any} p1
  * @param {any} t
@@ -42,6 +43,7 @@ function linear(p0, p1, t) {
 
 /**
  * bernstein
+ *
  * @param {any} n
  * @param {any} i
  * @returns
@@ -52,6 +54,7 @@ function bernstein(n, i) {
 
 /**
  * catmullRom
+ *
  * @param {any} p0
  * @param {any} p1
  * @param {any} p2

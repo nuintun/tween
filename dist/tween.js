@@ -679,6 +679,7 @@
 
   /**
    * linear
+   *
    * @param {any} p0
    * @param {any} p1
    * @param {any} t
@@ -690,6 +691,7 @@
 
   /**
    * bernstein
+   *
    * @param {any} n
    * @param {any} i
    * @returns
@@ -700,6 +702,7 @@
 
   /**
    * catmullRom
+   *
    * @param {any} p0
    * @param {any} p1
    * @param {any} p2
@@ -866,10 +869,10 @@
     start: function(time) {
       var context = this;
 
-      // must not playing and run after to method
+      // Must not playing and run after to method
       if (context.playing || !context._to) return context;
 
-      // reset from and to values
+      // Reset from and to values
       if (context._reset) {
         context._reset = false;
 
@@ -1081,7 +1084,7 @@
         return true;
       }
 
-      // playing
+      // Playing
       context.playing = true;
 
       var object = context._object;
@@ -1143,10 +1146,10 @@
           // Cycle events
           context.emitWith('cycle', object, object);
 
-          // repeated times
+          // Repeated times
           context._repeated++;
 
-          // reverse values
+          // Reverse values
           reverseValues(context);
 
           if (context._repeatDelayTime > 0) {
@@ -1160,7 +1163,7 @@
 
         context.emitWith('complete', object, object);
 
-        // reverse values
+        // Reverse values
         reverseValues(context);
 
         forEach(context._chainedTweens, function(tween) {

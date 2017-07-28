@@ -102,10 +102,10 @@ Utils.inherits(Tween, Events, {
   start: function(time) {
     var context = this;
 
-    // must not playing and run after to method
+    // Must not playing and run after to method
     if (context.playing || !context._to) return context;
 
-    // reset from and to values
+    // Reset from and to values
     if (context._reset) {
       context._reset = false;
 
@@ -317,7 +317,7 @@ Utils.inherits(Tween, Events, {
       return true;
     }
 
-    // playing
+    // Playing
     context.playing = true;
 
     var object = context._object;
@@ -379,10 +379,10 @@ Utils.inherits(Tween, Events, {
         // Cycle events
         context.emitWith('cycle', object, object);
 
-        // repeated times
+        // Repeated times
         context._repeated++;
 
-        // reverse values
+        // Reverse values
         reverseValues(context);
 
         if (context._repeatDelayTime > 0) {
@@ -396,7 +396,7 @@ Utils.inherits(Tween, Events, {
 
       context.emitWith('complete', object, object);
 
-      // reverse values
+      // Reverse values
       reverseValues(context);
 
       Utils.forEach(context._chainedTweens, function(tween) {
