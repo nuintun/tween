@@ -40,9 +40,9 @@ export default function Tween(object) {
   context._yoyo = false;
   context._time = 0;
   context._offsetTime = 0;
-  context._startTime = null;
+  context._startTime = 0;
   context._delayTime = 0;
-  context._repeatDelayTime = null;
+  context._repeatDelayTime = 0;
   context._easingFunction = Easing.Linear.None;
   context._interpolationFunction = Interpolation.Linear;
   context._chainedTweens = [];
@@ -104,14 +104,6 @@ Utils.inherits(Tween, Events, {
 
     // must not playing and run after to method
     if (context.playing || !context._to) return context;
-
-    // chained tweens
-    var chainedTweens = context._chainedTweens;
-
-    // if chained tweens do nothing
-    for (var i = 0, length = chainedTweens.length; i < length; i++) {
-      if (chainedTweens.playing) return context;
-    }
 
     // reset from and to values
     if (context._reset) {
@@ -234,16 +226,19 @@ Utils.inherits(Tween, Events, {
   stop: function() {
     var context = this;
 
-    // Remove from Tween queue
-    QUEUE.remove(context);
+    if (context.playing) {
+      // Remove from Tween queue
+      QUEUE.remove(context);
 
-    // Set values
-    context.playing = false;
+      // Set values
+      context.playing = false;
 
-    var object = context._object;
+      var object = context._object;
 
-    // Emit stop event
-    context.emitWith('stop', object, object);
+      // Emit stop event
+      context.emitWith('stop', object, object);
+    }
+
     // Stop chain tween
     context.stopChainedTweens();
 
@@ -284,8 +279,8 @@ Utils.inherits(Tween, Events, {
 
     if (Utils.isNonNegative(amount)) {
       context._repeatDelayTime = amount;
-    } else if (amount === false) {
-      context._repeatDelayTime = null;
+    } else {
+      context._repeatDelayTime = 0;
     }
 
     return this;
@@ -322,10 +317,12 @@ Utils.inherits(Tween, Events, {
       return true;
     }
 
+    // playing
+    context.playing = true;
+
     var object = context._object;
 
-    if (context._startEventFired === false) {
-      context.playing = true;
+    if (!context._startEventFired) {
       context._startEventFired = true;
 
       context.emitWith('start', object, object);
@@ -388,7 +385,7 @@ Utils.inherits(Tween, Events, {
         // reverse values
         reverseValues(context);
 
-        if (context._repeatDelayTime !== null) {
+        if (context._repeatDelayTime > 0) {
           context._startTime = time + context._repeatDelayTime;
         } else {
           context._startTime = time + context._delayTime;

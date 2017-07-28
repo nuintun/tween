@@ -21,9 +21,10 @@ Queue.prototype = {
     return this._tweens;
   },
   add: function(tween) {
-    if (tween instanceof Tween) {
-      this.remove(tween);
-      this._tweens.push(tween);
+    var tweens = this._tweens;
+
+    if (tween instanceof Tween && Utils.indexOf(tweens, tween) === -1) {
+      tweens.push(tween);
     }
   },
   remove: function(tween) {
@@ -33,10 +34,10 @@ Queue.prototype = {
       context._tweens = [];
     } else {
       var tweens = context._tweens;
-      var i = Utils.indexOf(tweens, tween);
+      var index = Utils.indexOf(tweens, tween);
 
-      if (i !== -1) {
-        tweens.splice(i, 1);
+      if (index !== -1) {
+        tweens.splice(index, 1);
       }
     }
   },
