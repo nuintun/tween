@@ -1102,11 +1102,12 @@
         context.emitWith('start', object, object);
       }
 
-      // Elapsed time, max is duration
-      context._time = Math.min(time - context._startTime, context._duration);
+      // Elapsed time
+      context._time = time - context._startTime;
 
       // Elapsed percent
       elapsed = (context._time + context._offsetTime) / context._duration;
+      elapsed = elapsed > 1 ? 1 : elapsed;
 
       // Easing value
       value = context._easingFunction(elapsed);
