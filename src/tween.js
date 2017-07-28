@@ -38,7 +38,7 @@ export default function Tween(object) {
   context._repeat = 0;
   context._repeated = 0;
   context._yoyo = false;
-  context._time = 0;
+  context._elapsed = 0;
   context._offsetTime = 0;
   context._startTime = 0;
   context._delayTime = 0;
@@ -217,9 +217,12 @@ Utils.inherits(Tween, Events, {
       }
     }
 
-    context._offsetTime = context._time;
-    context._startTime = Utils.isNonNegative(time) ? time : now();
-    context._startTime += context._delayTime;
+    time = Utils.isNonNegative(time) ? time : now();
+    time += context._delayTime;
+
+    // Set values
+    context._startTime = time;
+    context._offsetTime = context._duration * context._elapsed;
 
     // Add to Tween queue
     QUEUE.add(context);
@@ -310,9 +313,6 @@ Utils.inherits(Tween, Events, {
     return this;
   },
   update: function(time) {
-    var value;
-    var elapsed;
-    var property;
     var context = this;
 
     time = Utils.isNonNegative(time) ? time : now();
@@ -334,22 +334,24 @@ Utils.inherits(Tween, Events, {
       context.emitWith('start', object, object);
     }
 
-    // Elapsed time
-    context._time = time - context._startTime + offsetTime;
-
     // Elapsed percent
-    elapsed = context._time / context._duration;
+    var elapsed = (time - context._startTime + offsetTime) / context._duration;
+
+    // Max 1
     elapsed = elapsed > 1 ? 1 : elapsed;
 
-    // Easing value
-    value = context._easingFunction(elapsed);
+    // Elapsed
+    context._elapsed = elapsed;
 
     var end;
     var start;
     var endType;
+    var property;
     var to = context._to;
     var from = context._from;
     var yoyo = context._yoyo;
+    // Easing value
+    var value = context._easingFunction(elapsed);
 
     for (property in to) {
       // Don't update properties that do not exist in the values start repeat object
@@ -383,7 +385,7 @@ Utils.inherits(Tween, Events, {
 
     if (elapsed === 1) {
       // Set values
-      context._time = 0;
+      context._elapsed = 0;
       context._offsetTime = 0;
       context.playing = false;
 
