@@ -335,10 +335,10 @@ Utils.inherits(Tween, Events, {
     }
 
     // Elapsed time
-    context._time = time - context._startTime;
+    context._time = time - context._startTime + offsetTime;
 
     // Elapsed percent
-    elapsed = (context._time + offsetTime) / context._duration;
+    elapsed = context._time / context._duration;
     elapsed = elapsed > 1 ? 1 : elapsed;
 
     // Easing value
