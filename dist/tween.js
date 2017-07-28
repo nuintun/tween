@@ -1185,7 +1185,7 @@
         forEach(context._chainedTweens, function(tween) {
           // Make the chained tweens start exactly at the time they should,
           // even if the `update()` method was called way past the duration of the tween
-          tween.start(context._startTime + context._duration);
+          tween.start(context._startTime - context._offsetTime + context._duration);
         });
 
         return false;
