@@ -327,6 +327,7 @@ Utils.inherits(Tween, Events, {
     context.playing = true;
 
     var object = context._object;
+    var offsetTime = context._offsetTime;
 
     if (!context._startEventFired) {
       context._startEventFired = true;
@@ -339,7 +340,7 @@ Utils.inherits(Tween, Events, {
     context._time = time - context._startTime;
 
     // Elapsed percent
-    elapsed = (context._time + context._offsetTime) / context._duration;
+    elapsed = (context._time + offsetTime) / context._duration;
     elapsed = elapsed > 1 ? 1 : elapsed;
 
     // Easing value
@@ -383,8 +384,6 @@ Utils.inherits(Tween, Events, {
     context.emitWith('update', [object, value, context.reversed], object);
 
     if (elapsed === 1) {
-      var offsetTime = context._offsetTime;
-
       // Set values
       context._time = 0;
       context._offsetTime = 0;
