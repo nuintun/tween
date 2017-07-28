@@ -1150,9 +1150,14 @@
       context.emitWith('update', [object, value, context.reversed], object);
 
       if (elapsed === 1) {
+        var offsetTime = context._offsetTime;
+
+        // Set values
         context._time = 0;
+        context._offsetTime = 0;
         context.playing = false;
 
+        // Repeat
         if (context._repeated < context._repeat) {
           // Repeated times
           context._repeated++;
@@ -1167,7 +1172,6 @@
             time += context._delayTime;
           }
 
-          // Restart
           context._startTime = time;
 
           // Repeat event
@@ -1188,7 +1192,7 @@
         forEach(context._chainedTweens, function(tween) {
           // Make the chained tweens start exactly at the time they should,
           // even if the `update()` method was called way past the duration of the tween
-          tween.start(context._startTime - context._offsetTime + context._duration);
+          tween.start(context._startTime - offsetTime + context._duration);
         });
 
         return false;
