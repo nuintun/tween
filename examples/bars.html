@@ -62,8 +62,8 @@
             .to({ x: endValue }, 4000)
             .delay(Math.random() * 1000)
             .on('update', updateCallback)
-            .easing(Tween.Easing.Back.Out)
-            .start();
+            .easing(Tween.Easing.Back.Out);
+
 
           var tweenBack = new Tween(elem, false)
             .to({ x: startValue }, 4000)
@@ -73,6 +73,7 @@
 
           tween.chain(tweenBack);
           tweenBack.chain(tween);
+          tween.start();
 
           document.body.appendChild(elem.domElement);
 
