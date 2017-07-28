@@ -217,8 +217,6 @@ Utils.inherits(Tween, Events, {
       }
     }
 
-    context._repeated = 0;
-    context._startEventFired = false;
     context._offsetTime = context._time;
     context._startTime = Utils.isNonNegative(time) ? time : now();
     context._startTime += context._delayTime;
@@ -412,11 +410,13 @@ Utils.inherits(Tween, Events, {
         return true;
       }
 
-      // Set started false
-      context._started = false;
-
       // Complete event
       context.emitWith('complete', object, object);
+
+      // Set started false
+      context._repeated = 0;
+      context._started = false;
+      context._startEventFired = false;
 
       // Reverse values
       reverseValues(context);
