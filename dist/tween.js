@@ -161,28 +161,6 @@
     }
   };
 
-  /**
-   * add
-   *
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */
-  function add(x, y) {
-    var decimal = /\.\d+/;
-    var x1 = decimal.exec(String(x));
-    var y1 = decimal.exec(String(y));
-    var e = Math.max(x1 ? x1[0].length - 1 : 0, y1 ? y1[0].length - 1 : 0);
-
-    if (e) {
-      e = Math.pow(10, e);
-
-      return (x * e + y * e) / e;
-    } else {
-      return x + y;
-    }
-  }
-
   /*!
    * now
    * Version: 0.0.1
@@ -903,6 +881,7 @@
         var item;
         var length;
         var endType;
+        var endArray;
         var toReversed;
         var fromReversed;
         var to = context._to;
@@ -910,8 +889,8 @@
 
         // Reset values
         context._to = {};
-        context._fromReversed = {};
         context._toReversed = {};
+        context._fromReversed = {};
 
         // Protect against non numeric properties.
         for (var property in to) {
@@ -928,38 +907,37 @@
 
           // Check if an Array was provided as property value
           if (endType === '[object Array]') {
-            length = end.length;
-            end = [];
+            endArray = [];
             toReversed = [];
+            length = end.length;
 
             for (var i = 0; i < length; i++) {
-              item = to[property][i] * 1.0;
+              item = end[i] * 1.0;
 
               if (isFinite(item)) {
-                end.push(item);
+                endArray.push(item);
 
                 // Set reversed
                 toReversed = [item].concat(toReversed);
               } else {
-                end = [];
+                endArray = [];
                 break;
               }
             }
 
-            if (end.length === 0) {
+            if (endArray.length === 0) {
               continue;
             }
 
-            // Create a local copy of the Array with the start value at the front
-            end = [start].concat(end);
-
             // Set reversed
             toReversed.push(start);
-            // Set start
+
+            // Create a local copy of the Array with the start value at the front
+            end = [start].concat(endArray);
             fromReversed = toReversed[0];
           } else if (endType === '[object String]') {
             if (/^[+-](?:\d*\.)?\d+$/.test(end)) {
-              fromReversed = add(start, end * 1.0);
+              fromReversed = start + end * 1.0;
               toReversed = (end.charAt(0) === '+' ? '-' : '+') + end.substring(1);
             } else {
               end *= 1.0;
@@ -979,11 +957,12 @@
 
           // Set values
           context._to[property] = end;
-          context._fromReversed[property] = fromReversed;
           context._toReversed[property] = toReversed;
+          context._fromReversed[property] = fromReversed;
         }
       }
 
+      // Get start time
       time = isNonNegative(time) ? time : now();
       time += context._delayTime;
 
