@@ -48,6 +48,7 @@ export default function Tween(object) {
   context._chainedTweens = [];
   context._startEventFired = false;
   context._reset = false;
+  context._started = false;
 
   // Is playing
   context.playing = false;
@@ -90,6 +91,7 @@ Utils.inherits(Tween, Events, {
   to: function(properties, duration) {
     var context = this;
 
+    // Unlock reset
     context._reset = true;
     context._to = properties;
 
@@ -102,11 +104,15 @@ Utils.inherits(Tween, Events, {
   start: function(time) {
     var context = this;
 
-    // Must not playing and run after to method
-    if (context.playing || !context._to) return context;
+    // Must not started and run after to method
+    if (context._started || !context._to) return context;
+
+    // Started
+    context._started = true;
 
     // Reset from and to values
     if (context._reset) {
+      // Lock reset
       context._reset = false;
 
       var start;
@@ -213,10 +219,9 @@ Utils.inherits(Tween, Events, {
 
     context._repeated = 0;
     context._startEventFired = false;
+    context._offsetTime = context._time;
     context._startTime = Utils.isNonNegative(time) ? time : now();
     context._startTime += context._delayTime;
-    context._offsetTime = context._time;
-    context._startCalled = true;
 
     // Add to Tween queue
     QUEUE.add(context);
@@ -226,11 +231,15 @@ Utils.inherits(Tween, Events, {
   stop: function() {
     var context = this;
 
-    if (context.playing) {
+    // Stop chain tween
+    context.stopChainedTweens();
+
+    if (context._started) {
       // Remove from Tween queue
       QUEUE.remove(context);
 
       // Set values
+      context._started = false;
       context.playing = false;
 
       var object = context._object;
@@ -238,9 +247,6 @@ Utils.inherits(Tween, Events, {
       // Emit stop event
       context.emitWith('stop', object, object);
     }
-
-    // Stop chain tween
-    context.stopChainedTweens();
 
     return context;
   },
@@ -253,7 +259,7 @@ Utils.inherits(Tween, Events, {
   },
   stopChainedTweens: function() {
     Utils.forEach(this._chainedTweens, function(tween) {
-      if (tween.playing) {
+      if (tween._started) {
         tween.stop();
       }
     });
@@ -373,6 +379,7 @@ Utils.inherits(Tween, Events, {
 
     if (elapsed === 1) {
       context._time = 0;
+      context._started = false;
       context.playing = false;
 
       if (context._repeated < context._repeat) {
