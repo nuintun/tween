@@ -231,9 +231,6 @@ Utils.inherits(Tween, Events, {
   stop: function() {
     var context = this;
 
-    // Stop chain tween
-    context.stopChainedTweens();
-
     if (context._started) {
       // Remove from Tween queue
       QUEUE.remove(context);
@@ -247,6 +244,9 @@ Utils.inherits(Tween, Events, {
       // Stop event
       context.emitWith('stop', object, object);
     }
+
+    // Stop chain tween
+    context.stopChainedTweens();
 
     return context;
   },
