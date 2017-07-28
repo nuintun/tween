@@ -155,3 +155,26 @@ export var forEach = APForEach ? function(array, iterator, context) {
     iterator.call(array, array[i], i, array);
   }
 }
+
+/**
+ * remove
+ * Faster remove array item
+ *
+ * @param {Array} array
+ * @param {Int} index
+ */
+export function remove(array, index) {
+  if (index >= array.length || index < 0) return;
+
+  var last = array.pop();
+
+  if (index < array.length) {
+    var removed = array[index];
+
+    array[index] = last;
+
+    return removed;
+  }
+
+  return last;
+}

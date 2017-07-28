@@ -36,9 +36,7 @@ Queue.prototype = {
       var tweens = context._tweens;
       var index = Utils.indexOf(tweens, tween);
 
-      if (index !== -1) {
-        tweens.splice(index, 1);
-      }
+      Utils.remove(tweens, index);
     }
   },
   update: function(time, preserve) {
@@ -56,7 +54,7 @@ Queue.prototype = {
       if (tweens[i].update(time) || preserve) {
         i++;
       } else {
-        tweens.splice(i, 1);
+        Utils.remove(tweens, i);
       }
     }
 

@@ -161,6 +161,29 @@
     }
   };
 
+  /**
+   * remove
+   * Faster remove array item
+   *
+   * @param {Array} array
+   * @param {Int} index
+   */
+  function remove(array, index) {
+    if (index >= array.length || index < 0) return;
+
+    var last = array.pop();
+
+    if (index < array.length) {
+      var removed = array[index];
+
+      array[index] = last;
+
+      return removed;
+    }
+
+    return last;
+  }
+
   /*!
    * now
    * Version: 0.0.1
@@ -227,9 +250,7 @@
         var tweens = context._tweens;
         var index = indexOf(tweens, tween);
 
-        if (index !== -1) {
-          tweens.splice(index, 1);
-        }
+        remove(tweens, index);
       }
     },
     update: function(time, preserve) {
@@ -247,7 +268,7 @@
         if (tweens[i].update(time) || preserve) {
           i++;
         } else {
-          tweens.splice(i, 1);
+          remove(tweens, i);
         }
       }
 
