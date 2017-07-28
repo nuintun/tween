@@ -1011,7 +1011,7 @@
 
         var object = context._object;
 
-        // Emit stop event
+        // Stop event
         context.emitWith('stop', object, object);
       }
 
@@ -1098,6 +1098,7 @@
       if (!context._startEventFired) {
         context._startEventFired = true;
 
+        // Start event
         context.emitWith('start', object, object);
       }
 
@@ -1142,32 +1143,40 @@
         object[property] = start + (end - start) * value;
       }
 
+      // Update event
       context.emitWith('update', [object, value, context.reversed], object);
 
       if (elapsed === 1) {
         context._time = 0;
-        context._started = false;
         context.playing = false;
 
         if (context._repeated < context._repeat) {
-          // Cycle events
-          context.emitWith('cycle', object, object);
-
           // Repeated times
           context._repeated++;
 
           // Reverse values
           reverseValues(context);
 
+          // Recompute repeat start time
           if (context._repeatDelayTime > 0) {
-            context._startTime = time + context._repeatDelayTime;
+            time += context._repeatDelayTime;
           } else {
-            context._startTime = time + context._delayTime;
+            time += context._delayTime;
           }
+
+          // Restart
+          context._startTime = time;
+
+          // Repeat event
+          context.emitWith('repeat', object, object);
 
           return true;
         }
 
+        // Set started false
+        context._started = false;
+
+        // Complete event
         context.emitWith('complete', object, object);
 
         // Reverse values
