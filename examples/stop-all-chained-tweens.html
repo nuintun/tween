@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <title>Tween / Stop Chained</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -94,7 +94,11 @@
       t1.chain(t0);
 
       start.onclick = function() {
-        t0.start();
+        if (t1.status().paused) {
+          t1.start();
+        } else {
+          t0.start();
+        }
       };
 
       stop.onclick = function() {
