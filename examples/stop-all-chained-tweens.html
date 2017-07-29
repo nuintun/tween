@@ -94,7 +94,14 @@
       t1.chain(t0);
 
       start.onclick = function() {
-        if (t1.status().paused) {
+        var t0Status = t0.status();
+        var t1Status = t1.status();
+
+        if (t0Status.active || t1Status.active) {
+          return;
+        }
+
+        if (t1Status.paused) {
           t1.start();
         } else {
           t0.start();
