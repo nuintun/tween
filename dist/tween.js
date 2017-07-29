@@ -784,6 +784,27 @@
   var QUEUE = new Queue();
 
   /**
+   * reverseValues
+   *
+   * @param {Tween} tween
+   */
+  function reverseValues(tween) {
+    if (tween._yoyo) {
+      var fromReversed = tween._fromReversed;
+
+      tween._fromReversed = tween._from;
+      tween._from = fromReversed;
+
+      var toReversed = tween._toReversed;
+
+      tween._toReversed = tween._to;
+      tween._to = toReversed;
+
+      tween._reversed = !tween._reversed;
+    }
+  }
+
+  /**
    * Tween
    *
    * @constructor
@@ -814,12 +835,9 @@
     context._chainedTweens = [];
     context._startEventFired = false;
     context._reset = false;
-    context._started = false;
-
-    // Is playing
-    context.playing = false;
-    // Is reverse
-    context.reversed = false;
+    context._active = false;
+    context._playing = false;
+    context._reversed = false;
   }
 
   Tween.now = now;
@@ -831,27 +849,6 @@
       return apply(QUEUE[method], QUEUE, arguments);
     };
   });
-
-  /**
-   * reverseValues
-   *
-   * @param {Tween} tween
-   */
-  function reverseValues(tween) {
-    if (tween._yoyo) {
-      var fromReversed = tween._fromReversed;
-
-      tween._fromReversed = tween._from;
-      tween._from = fromReversed;
-
-      var toReversed = tween._toReversed;
-
-      tween._toReversed = tween._to;
-      tween._to = toReversed;
-
-      tween.reversed = !tween.reversed;
-    }
-  }
 
   inherits(Tween, Events, {
     to: function(properties, duration) {
@@ -870,11 +867,11 @@
     start: function(time) {
       var context = this;
 
-      // Must not started and run after to method
-      if (context._started || !context._to) return context;
+      // Must not active and run after to method
+      if (context._active || !context._to) return context;
 
-      // Started
-      context._started = true;
+      // Active
+      context._active = true;
 
       // Reset from and to values
       if (context._reset) {
@@ -987,8 +984,9 @@
       time = isNonNegative(time) ? time : now();
       time += context._delayTime;
 
-      // Set values
+      // Set start time
       context._startTime = time;
+      // Compute offset time
       context._offsetTime = context._duration * context._elapsed;
 
       // Add to Tween queue
@@ -999,13 +997,13 @@
     stop: function() {
       var context = this;
 
-      if (context._started) {
+      if (context._active) {
         // Remove from Tween queue
         QUEUE.remove(context);
 
         // Set values
-        context._started = false;
-        context.playing = false;
+        context._active = false;
+        context._playing = false;
 
         var object = context._object;
 
@@ -1027,7 +1025,7 @@
     },
     stopChainedTweens: function() {
       forEach(this._chainedTweens, function(tween) {
-        if (tween._started) {
+        if (tween._active) {
           tween.stop();
         }
       });
@@ -1081,15 +1079,16 @@
     },
     update: function(time) {
       var context = this;
+      var isAlive = true;
 
       time = isNonNegative(time) ? time : now();
 
       if (time < context._startTime) {
-        return true;
+        return isAlive;
       }
 
       // Playing
-      context.playing = true;
+      context._playing = true;
 
       var object = context._object;
       var offsetTime = context._offsetTime;
@@ -1148,13 +1147,12 @@
       }
 
       // Update event
-      context.emitWith('update', [object, value, context.reversed], object);
+      context.emitWith('update', [object, value, context._reversed], object);
 
       if (elapsed === 1) {
         // Set values
-        context._elapsed = 0;
+        context._playing = false;
         context._offsetTime = 0;
-        context.playing = false;
 
         // Repeat
         if (context._repeated < context._repeat) {
@@ -1171,35 +1169,51 @@
             time += context._delayTime;
           }
 
+          // Set start time
           context._startTime = time;
 
           // Repeat event
           context.emitWith('repeat', object, object);
+        } else {
+          // Complete event
+          context.emitWith('complete', object, object);
 
-          return true;
+          // Set values
+          context._repeated = 0;
+          context._active = false;
+          context._startEventFired = false;
+
+          // Reverse values
+          reverseValues(context);
+
+          forEach(context._chainedTweens, function(tween) {
+            // Make the chained tweens start exactly at the time they should,
+            // even if the `update()` method was called way past the duration of the tween
+            tween.start(context._startTime - offsetTime + context._duration);
+          });
+
+          // Not alive
+          isAlive = false;
         }
 
-        // Complete event
-        context.emitWith('complete', object, object);
+        // Set values
+        context._elapsed = 0;
 
-        // Set started false
-        context._repeated = 0;
-        context._started = false;
-        context._startEventFired = false;
-
-        // Reverse values
-        reverseValues(context);
-
-        forEach(context._chainedTweens, function(tween) {
-          // Make the chained tweens start exactly at the time they should,
-          // even if the `update()` method was called way past the duration of the tween
-          tween.start(context._startTime - offsetTime + context._duration);
-        });
-
-        return false;
+        return isAlive;
       }
 
-      return true;
+      return isAlive;
+    },
+    status: function() {
+      var context = this;
+      var playing = context._playing;
+
+      return {
+        playing: playing,
+        active: context._active,
+        reversed: context._reversed,
+        paused: !playing && context._elapsed > 0
+      };
     }
   });
 
