@@ -8,14 +8,14 @@
  * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
  */
 
-import Queue from './queue';
+import Group from './group';
 import Events from './events';
 import { now } from './now';
 import * as Utils from './utils';
 import { Easing } from './easing';
 import { Interpolation } from './interpolation';
 
-var QUEUE = new Queue();
+var GROUP = new Group();
 
 /**
  * reverseValues
@@ -45,12 +45,13 @@ function reverseValues(tween) {
  * @param {Object} object
  * @returns {Tween}
  */
-export default function Tween(object) {
+export default function Tween(object, group) {
   var context = this;
 
   Events.call(context);
 
   context._object = object;
+  context._group = group instanceof Group ? group : GROUP;
   context._from = {};
   context._to = {};
   context._fromReversed = {};
@@ -75,12 +76,13 @@ export default function Tween(object) {
 }
 
 Tween.now = now;
+Tween.Group = Group;
 Tween.Easing = Easing;
 Tween.Interpolation = Interpolation;
 
 Utils.forEach(['add', 'remove', 'update', 'items'], function(method) {
   Tween[method] = function() {
-    return Utils.apply(QUEUE[method], QUEUE, arguments);
+    return Utils.apply(GROUP[method], GROUP, arguments);
   };
 });
 
@@ -224,7 +226,7 @@ Utils.inherits(Tween, Events, {
     context._offsetTime = context._duration * context._elapsed;
 
     // Add to Tween queue
-    QUEUE.add(context);
+    context._group.add(context);
 
     return context;
   },
@@ -233,7 +235,7 @@ Utils.inherits(Tween, Events, {
 
     if (context._active) {
       // Remove from Tween queue
-      QUEUE.remove(context);
+      context._group.remove(context);
 
       // Set values
       context._active = false;

@@ -1,5 +1,5 @@
 /*!
- * Queue
+ * Group
  * Version: 0.0.1
  * Date: 2016/11/18
  * https://github.com/nuintun/tween
@@ -12,11 +12,11 @@ import { now } from './now';
 import Tween from './tween';
 import * as Utils from './utils';
 
-export default function Queue() {
+export default function Group() {
   this._tweens = [];
 }
 
-Queue.prototype = {
+Group.prototype = {
   items: function() {
     return this._tweens;
   },

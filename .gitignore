@@ -219,3 +219,6 @@ pip-log.txt
 
 # node
 node_modules
+
+# npm lock
+package-lock.json

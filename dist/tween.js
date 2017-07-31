@@ -217,7 +217,7 @@
   }
 
   /*!
-   * Queue
+   * Group
    * Version: 0.0.1
    * Date: 2016/11/18
    * https://github.com/nuintun/tween
@@ -226,11 +226,11 @@
    * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
-  function Queue() {
+  function Group() {
     this._tweens = [];
   }
 
-  Queue.prototype = {
+  Group.prototype = {
     items: function() {
       return this._tweens;
     },
@@ -781,7 +781,7 @@
    * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
    */
 
-  var QUEUE = new Queue();
+  var GROUP = new Group();
 
   /**
    * reverseValues
@@ -811,12 +811,13 @@
    * @param {Object} object
    * @returns {Tween}
    */
-  function Tween(object) {
+  function Tween(object, group) {
     var context = this;
 
     Events.call(context);
 
     context._object = object;
+    context._group = group instanceof Group ? group : GROUP;
     context._from = {};
     context._to = {};
     context._fromReversed = {};
@@ -841,12 +842,13 @@
   }
 
   Tween.now = now;
+  Tween.Group = Group;
   Tween.Easing = Easing;
   Tween.Interpolation = Interpolation;
 
   forEach(['add', 'remove', 'update', 'items'], function(method) {
     Tween[method] = function() {
-      return apply(QUEUE[method], QUEUE, arguments);
+      return apply(GROUP[method], GROUP, arguments);
     };
   });
 
@@ -990,7 +992,7 @@
       context._offsetTime = context._duration * context._elapsed;
 
       // Add to Tween queue
-      QUEUE.add(context);
+      context._group.add(context);
 
       return context;
     },
@@ -999,7 +1001,7 @@
 
       if (context._active) {
         // Remove from Tween queue
-        QUEUE.remove(context);
+        context._group.remove(context);
 
         // Set values
         context._active = false;
