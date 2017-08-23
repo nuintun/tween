@@ -6,7 +6,7 @@ const uglify = require('uglify-es');
 
 rollup.rollup({
   legacy: true,
-  entry: 'src/tween.js'
+  input: 'src/tween.js'
 }).then(function(bundle) {
   fs.stat('dist', function(error) {
     if (error) {
@@ -20,9 +20,9 @@ rollup.rollup({
     bundle.generate({
       format: 'umd',
       indent: true,
-      useStrict: true,
+      strict: true,
       amd: { id: 'tween' },
-      moduleName: 'Tween'
+      name: 'Tween'
     }).then(function(result) {
       fs.writeFileSync(src, result.code);
       console.log(`  Build ${ src } success!`);
