@@ -14,35 +14,32 @@ var APFilter = AP.filter;
 var APIndexOf = AP.indexOf;
 var APForEach = AP.forEach;
 var OPToString = OP.toString;
+var winIsFinite = window.isFinite;
 
 /**
- * type
- *
+ * @function type
  * @param {any} value
- * @returns {String}
+ * @returns {string}
  */
 export function type(value) {
   return OPToString.call(value);
 }
 
 /**
- * typeIs
- *
+ * @function typeIs
  * @param {any} value
- * @param {String} dataType
- * @returns {Boolean}
+ * @param {string} dataType
+ * @returns {boolean}
  */
 export function typeIs(value, dataType) {
   return type(value) === '[object ' + dataType + ']';
 }
 
 /**
- * inherits
- *
+ * @function inherits
  * @param {Class} ctor
  * @param {Class} superCtor
  * @param {Object} proto
- * @returns {void}
  */
 export function inherits(ctor, superCtor, proto) {
   function F() {
@@ -64,33 +61,34 @@ export function inherits(ctor, superCtor, proto) {
   }
 }
 
-// isFinite
+/**
+ * @function isFinite
+ * @param {any} value
+ * @returns {boolean}
+ */
 export var isFinite =
   Number.isFinite ||
   function(value) {
-    return typeIs(number, 'Number') && isFinite(value);
+    return typeIs(value, 'Number') && winIsFinite(value);
   };
 
 /**
- * isNonNegative
- *
- * @param {any} number
- * @returns {Boolean}
+ * @function isNonNegative
+ * @param {any} value
+ * @returns {boolean}
  */
-export function isNonNegative(number) {
-  return typeIs(number, 'Number') && isFinite(number) && number >= 0;
+export function isNonNegative(value) {
+  return typeIs(value, 'Number') && isFinite(value) && value >= 0;
 }
 
 /**
- * apply
- *
+ * @function apply
  * @param  {Function} fn
  * @param  {any} context
  * @param  {Array} args
- * @returns {void}
- * call is faster than apply, optimize less than 6 args
- * https://github.com/micro-js/apply
- * http://blog.csdn.net/zhengyinhui100/article/details/7837127
+ * @description Call is faster than apply, optimize less than 6 args
+ * @see https://github.com/micro-js/apply
+ * @see http://blog.csdn.net/zhengyinhui100/article/details/7837127
  */
 export function apply(fn, context, args) {
   switch (args.length) {
@@ -104,18 +102,17 @@ export function apply(fn, context, args) {
     case 3:
       return fn.call(context, args[0], args[1], args[2]);
     default:
-      // slower
+      // Slower
       return fn.apply(context, args);
   }
 }
 
 /**
- * indexOf
- *
+ * @function indexOf
  * @param {Array} array
  * @param {any} value
- * @param {Number} from
- * @returns {Number}
+ * @param {number} from
+ * @returns {number}
  */
 export var indexOf = APIndexOf
   ? function(array, value, from) {
@@ -141,12 +138,10 @@ export var indexOf = APIndexOf
     };
 
 /**
- * forEach
- *
+ * @function forEach
  * @param {Array} array
  * @param {Function} iterator
  * @param {any} context
- * @returns {void}
  */
 export var forEach = APForEach
   ? function(array, iterator, context) {
@@ -163,11 +158,10 @@ export var forEach = APForEach
     };
 
 /**
- * remove
- * Faster remove array item
- *
+ * @function remove
+ * @description Faster remove array item
  * @param {Array} array
- * @param {Int} index
+ * @param {number} index
  */
 export function remove(array, index) {
   if (index >= array.length || index < 0) return;

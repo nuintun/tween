@@ -19,35 +19,32 @@
   var APIndexOf = AP.indexOf;
   var APForEach = AP.forEach;
   var OPToString = OP.toString;
+  var winIsFinite = window.isFinite;
 
   /**
-   * type
-   *
+   * @function type
    * @param {any} value
-   * @returns {String}
+   * @returns {string}
    */
   function type(value) {
     return OPToString.call(value);
   }
 
   /**
-   * typeIs
-   *
+   * @function typeIs
    * @param {any} value
-   * @param {String} dataType
-   * @returns {Boolean}
+   * @param {string} dataType
+   * @returns {boolean}
    */
   function typeIs(value, dataType) {
     return type(value) === '[object ' + dataType + ']';
   }
 
   /**
-   * inherits
-   *
+   * @function inherits
    * @param {Class} ctor
    * @param {Class} superCtor
    * @param {Object} proto
-   * @returns {void}
    */
   function inherits(ctor, superCtor, proto) {
     function F() {
@@ -69,33 +66,34 @@
     }
   }
 
-  // isFinite
+  /**
+   * @function isFinite
+   * @param {any} value
+   * @returns {boolean}
+   */
   var isFinite =
     Number.isFinite ||
     function(value) {
-      return typeIs(number, 'Number') && isFinite(value);
+      return typeIs(value, 'Number') && winIsFinite(value);
     };
 
   /**
-   * isNonNegative
-   *
-   * @param {any} number
-   * @returns {Boolean}
+   * @function isNonNegative
+   * @param {any} value
+   * @returns {boolean}
    */
-  function isNonNegative(number) {
-    return typeIs(number, 'Number') && isFinite(number) && number >= 0;
+  function isNonNegative(value) {
+    return typeIs(value, 'Number') && isFinite(value) && value >= 0;
   }
 
   /**
-   * apply
-   *
+   * @function apply
    * @param  {Function} fn
    * @param  {any} context
    * @param  {Array} args
-   * @returns {void}
-   * call is faster than apply, optimize less than 6 args
-   * https://github.com/micro-js/apply
-   * http://blog.csdn.net/zhengyinhui100/article/details/7837127
+   * @description Call is faster than apply, optimize less than 6 args
+   * @see https://github.com/micro-js/apply
+   * @see http://blog.csdn.net/zhengyinhui100/article/details/7837127
    */
   function apply(fn, context, args) {
     switch (args.length) {
@@ -109,18 +107,17 @@
       case 3:
         return fn.call(context, args[0], args[1], args[2]);
       default:
-        // slower
+        // Slower
         return fn.apply(context, args);
     }
   }
 
   /**
-   * indexOf
-   *
+   * @function indexOf
    * @param {Array} array
    * @param {any} value
-   * @param {Number} from
-   * @returns {Number}
+   * @param {number} from
+   * @returns {number}
    */
   var indexOf = APIndexOf
     ? function(array, value, from) {
@@ -146,12 +143,10 @@
       };
 
   /**
-   * forEach
-   *
+   * @function forEach
    * @param {Array} array
    * @param {Function} iterator
    * @param {any} context
-   * @returns {void}
    */
   var forEach = APForEach
     ? function(array, iterator, context) {
@@ -168,11 +163,10 @@
       };
 
   /**
-   * remove
-   * Faster remove array item
-   *
+   * @function remove
+   * @description Faster remove array item
    * @param {Array} array
-   * @param {Int} index
+   * @param {number} index
    */
   function remove(array, index) {
     if (index >= array.length || index < 0) return;
@@ -190,14 +184,10 @@
     return last;
   }
 
-  /*!
-   * now
-   * Version: 0.0.1
-   * Date: 2016/11/18
-   * https://github.com/nuintun/tween
-   *
-   * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+  /**
+   * @module now
+   * @license MIT
+   * @version 2017/11/20
    */
 
   // Include a performance.now polyfill
@@ -220,14 +210,10 @@
     };
   }
 
-  /*!
-   * Group
-   * Version: 0.0.1
-   * Date: 2016/11/18
-   * https://github.com/nuintun/tween
-   *
-   * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+  /**
+   * @module group
+   * @license MIT
+   * @version 2017/11/20
    */
 
   function Group() {
@@ -280,19 +266,14 @@
     }
   };
 
-  /*!
-   * Events
-   * Version: 0.0.2
-   * Date: 2016/11/18
-   * https://github.com/nuintun/tween
-   *
-   * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+  /**
+   * @module events
+   * @license MIT
+   * @version 2017/11/20
    */
 
   /**
-   * Events
-   *
+   * @class Events
    * @constructor
    */
   function Events() {
@@ -302,9 +283,9 @@
   // Set prototype
   Events.prototype = {
     /**
-     * Bind callback tos event
-     *
-     * @param {String} events
+     * @method on
+     * @description Bind callback tos event
+     * @param {string} events
      * @param {Function} callback
      * @param {any} context
      * @returns {Events}
@@ -321,11 +302,11 @@
       return context;
     },
     /**
-     * Remove callback of event
-     *
-     * If `callback` is null, removes all callbacks for the event.
-     * If `event` is null, removes all bound callbacks for the event.
-     * @param {String} event
+     * @method off
+     * @description Remove callback of event
+     *   If `callback` is null, removes all callbacks for the event.
+     *   If `event` is null, removes all bound callbacks for the event.
+     * @param {string} event
      * @param {Function} callback
      * @returns {Events}
      */
@@ -355,9 +336,9 @@
       return context;
     },
     /**
-     * Bind a event only emit once
-     *
-     * @param {String} events
+     * @method once
+     * @description Bind a event only emit once
+     * @param {string} events
      * @param {Function} callback
      * @returns {Events}
      */
@@ -372,9 +353,9 @@
       return that.on(events, feedback);
     },
     /**
-     * Emit event with context
-     *
-     * @param {String} event
+     * @method emitWith
+     * @description Emit event with context
+     * @param {string} event
      * @param {Array} args
      * @param {any} context
      * @returns {Events}
@@ -410,9 +391,9 @@
       return true;
     },
     /**
-     * Emit event
-     *
-     * @param {String} event
+     * @method emit
+     * @description Emit event
+     * @param {string} event
      * @param {any} [...args]
      * @returns {Events}
      */
@@ -437,14 +418,10 @@
     }
   };
 
-  /*!
-   * Easing
-   * Version: 0.0.1
-   * Date: 2016/11/18
-   * https://github.com/nuintun/tween
-   *
-   * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+  /**
+   * @module easing
+   * @license MIT
+   * @version 2017/11/20
    */
 
   var Easing = {
@@ -649,17 +626,17 @@
     }
   };
 
-  /*!
-   * Interpolation
-   * Version: 0.0.1
-   * Date: 2016/11/18
-   * https://github.com/nuintun/tween
-   *
-   * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+  /**
+   * @module interpolation
+   * @license MIT
+   * @version 2017/11/20
    */
 
-  // factorial
+  /**
+   * @function factorial
+   * @param {number} n
+   * @return {number}
+   */
   var factorial = (function() {
     var a = [1];
 
@@ -681,37 +658,34 @@
   })();
 
   /**
-   * linear
-   *
-   * @param {any} p0
-   * @param {any} p1
-   * @param {any} t
-   * @returns
+   * @function linear
+   * @param {number} p0
+   * @param {number} p1
+   * @param {number} t
+   * @returns {number}
    */
   function linear(p0, p1, t) {
     return (p1 - p0) * t + p0;
   }
 
   /**
-   * bernstein
-   *
-   * @param {any} n
-   * @param {any} i
-   * @returns
+   * @function bernstein
+   * @param {number} n
+   * @param {number} i
+   * @returns {number}
    */
   function bernstein(n, i) {
     return factorial(n) / factorial(i) / factorial(n - i);
   }
 
   /**
-   * catmullRom
-   *
-   * @param {any} p0
-   * @param {any} p1
-   * @param {any} p2
-   * @param {any} p3
-   * @param {any} t
-   * @returns
+   * @function catmullRom
+   * @param {number} p0
+   * @param {number} p1
+   * @param {number} p2
+   * @param {number} p3
+   * @param {number} t
+   * @returns {number}
    */
   function catmullRom(p0, p1, p2, p3, t) {
     var v0 = (p2 - p0) * 0.5;
@@ -775,14 +749,10 @@
     }
   };
 
-  /*!
-   * Tween
-   * Version: 0.0.1
-   * Date: 2016/11/18
-   * https://github.com/nuintun/tween
-   *
-   * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+  /**
+   * @module tween
+   * @license MIT
+   * @version 2017/11/20
    */
 
   var GROUP = new Group();

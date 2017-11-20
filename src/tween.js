@@ -1,11 +1,7 @@
-/*!
- * Tween
- * Version: 0.0.1
- * Date: 2016/11/18
- * https://github.com/nuintun/tween
- *
- * This is licensed under the MIT License (MIT).
- * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+/**
+ * @module tween
+ * @license MIT
+ * @version 2017/11/20
  */
 
 import Group from './group';

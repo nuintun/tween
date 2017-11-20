@@ -1,14 +1,14 @@
-/*!
- * Interpolation
- * Version: 0.0.1
- * Date: 2016/11/18
- * https://github.com/nuintun/tween
- *
- * This is licensed under the MIT License (MIT).
- * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+/**
+ * @module interpolation
+ * @license MIT
+ * @version 2017/11/20
  */
 
-// factorial
+/**
+ * @function factorial
+ * @param {number} n
+ * @return {number}
+ */
 var factorial = (function() {
   var a = [1];
 
@@ -30,37 +30,34 @@ var factorial = (function() {
 })();
 
 /**
- * linear
- *
- * @param {any} p0
- * @param {any} p1
- * @param {any} t
- * @returns
+ * @function linear
+ * @param {number} p0
+ * @param {number} p1
+ * @param {number} t
+ * @returns {number}
  */
 function linear(p0, p1, t) {
   return (p1 - p0) * t + p0;
 }
 
 /**
- * bernstein
- *
- * @param {any} n
- * @param {any} i
- * @returns
+ * @function bernstein
+ * @param {number} n
+ * @param {number} i
+ * @returns {number}
  */
 function bernstein(n, i) {
   return factorial(n) / factorial(i) / factorial(n - i);
 }
 
 /**
- * catmullRom
- *
- * @param {any} p0
- * @param {any} p1
- * @param {any} p2
- * @param {any} p3
- * @param {any} t
- * @returns
+ * @function catmullRom
+ * @param {number} p0
+ * @param {number} p1
+ * @param {number} p2
+ * @param {number} p3
+ * @param {number} t
+ * @returns {number}
  */
 function catmullRom(p0, p1, p2, p3, t) {
   var v0 = (p2 - p0) * 0.5;
