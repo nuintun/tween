@@ -12,11 +12,11 @@ function createGraph(t, f, c) {
 
   var context = canvas.getContext('2d');
 
-  context.fillStyle = "rgb(250,250,250)";
+  context.fillStyle = 'rgb(250,250,250)';
   context.fillRect(0, 0, 180, 100);
 
   context.lineWidth = 0.5;
-  context.strokeStyle = "rgb(230,230,230)";
+  context.strokeStyle = 'rgb(230,230,230)';
 
   context.beginPath();
   context.moveTo(0, 20);
@@ -27,7 +27,7 @@ function createGraph(t, f, c) {
   context.stroke();
 
   context.lineWidth = 2;
-  context.strokeStyle = "rgb(255,127,127)";
+  context.strokeStyle = 'rgb(255,127,127)';
 
   var position = { x: 5, y: 80 };
   var position_old = { x: 5, y: 80 };

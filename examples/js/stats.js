@@ -1,8 +1,8 @@
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory()
-    : typeof define === 'function' && define.amd ? define(factory)
-    : (global.Stats = factory());
-}(this, (function() {
+  typeof exports === 'object' && typeof module !== 'undefined'
+    ? (module.exports = factory())
+    : typeof define === 'function' && define.amd ? define(factory) : (global.Stats = factory());
+})(this, function() {
   'use strict';
 
   /**
@@ -14,10 +14,14 @@
     var container = document.createElement('div');
 
     container.style.cssText = 'position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000';
-    container.addEventListener('click', function(event) {
-      event.preventDefault();
-      showPanel(++mode % container.children.length);
-    }, false);
+    container.addEventListener(
+      'click',
+      function(event) {
+        event.preventDefault();
+        showPanel(++mode % container.children.length);
+      },
+      false
+    );
 
     //
     function addPanel(panel) {
@@ -64,7 +68,7 @@
         msPanel.update(time - beginTime, 200);
 
         if (time > prevTime + 1000) {
-          fpsPanel.update((frames * 1000) / (time - prevTime), 100);
+          fpsPanel.update(frames * 1000 / (time - prevTime), 100);
 
           prevTime = time;
           frames = 0;
@@ -105,11 +109,11 @@
 
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
-    canvas.style.cssText = 'width:' + (WIDTH / PR) + 'px;height:' + (HEIGHT / PR) + 'px';
+    canvas.style.cssText = 'width:' + WIDTH / PR + 'px;height:' + HEIGHT / PR + 'px';
 
     var context = canvas.getContext('2d');
 
-    context.font = 'bold ' + (9 * PR) + 'px Helvetica,Arial,sans-serif';
+    context.font = 'bold ' + 9 * PR + 'px Helvetica,Arial,sans-serif';
     context.textBaseline = 'top';
 
     context.fillStyle = bg;
@@ -135,16 +139,26 @@
         context.fillStyle = fg;
         context.fillText(round(value) + ' ' + name + ' (' + round(min) + '-' + round(max) + ')', TEXT_X, TEXT_Y);
 
-        context.drawImage(canvas, GRAPH_X + PR, GRAPH_Y, GRAPH_WIDTH - PR, GRAPH_HEIGHT, GRAPH_X, GRAPH_Y, GRAPH_WIDTH - PR, GRAPH_HEIGHT);
+        context.drawImage(
+          canvas,
+          GRAPH_X + PR,
+          GRAPH_Y,
+          GRAPH_WIDTH - PR,
+          GRAPH_HEIGHT,
+          GRAPH_X,
+          GRAPH_Y,
+          GRAPH_WIDTH - PR,
+          GRAPH_HEIGHT
+        );
 
         context.fillRect(GRAPH_X + GRAPH_WIDTH - PR, GRAPH_Y, PR, GRAPH_HEIGHT);
 
         context.fillStyle = bg;
         context.globalAlpha = 0.9;
-        context.fillRect(GRAPH_X + GRAPH_WIDTH - PR, GRAPH_Y, PR, round((1 - (value / maxValue)) * GRAPH_HEIGHT));
+        context.fillRect(GRAPH_X + GRAPH_WIDTH - PR, GRAPH_Y, PR, round((1 - value / maxValue) * GRAPH_HEIGHT));
       }
     };
   };
 
   return Stats;
-})));
+});

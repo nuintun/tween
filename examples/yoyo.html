@@ -31,7 +31,9 @@
   </head>
   <body>
     <div id="info">
-      <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
+      <h1>
+        <a href="http://github.com/nuintun/tween">Tween</a>
+      </h1>
       <h2>YoYo</h2>
       <p>Demonstrating the yoyo() feature.</p>
     </div>
@@ -57,7 +59,7 @@
           .delay(1000)
           .yoyo(true)
           .easing(Tween.Easing.Bounce.Out)
-          .on('update', function() {
+          .on('update', function () {
             updateBox(target1, this);
           })
           .start();
@@ -68,7 +70,7 @@
           .delay(1000)
           .yoyo(true)
           .easing(Tween.Easing.Bounce.Out)
-          .on('update', function() {
+          .on('update', function () {
             updateBox(target2, this);
           })
           .start();

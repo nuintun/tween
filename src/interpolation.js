@@ -106,7 +106,7 @@ export var Interpolation = {
 
     if (v[0] === v[m]) {
       if (k < 0) {
-        i = Math.floor(f = m * (1 + k));
+        i = Math.floor((f = m * (1 + k)));
       }
 
       return catmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);

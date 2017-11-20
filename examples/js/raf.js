@@ -6,7 +6,8 @@
   for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
     window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
     // Webkit中此取消方法的名字变了
-    window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+    window.cancelAnimationFrame =
+      window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
   }
 
   if (!window.requestAnimationFrame) {
@@ -28,4 +29,4 @@
       clearTimeout(id);
     };
   }
-}());
+})();

@@ -49,7 +49,7 @@ export var Easing = {
       return k * k * k * k;
     },
     Out: function(k) {
-      return 1 - (--k * k * k * k);
+      return 1 - --k * k * k * k;
     },
     InOut: function(k) {
       if ((k *= 2) < 1) {
@@ -113,7 +113,7 @@ export var Easing = {
       return 1 - Math.sqrt(1 - k * k);
     },
     Out: function(k) {
-      return Math.sqrt(1 - (--k * k));
+      return Math.sqrt(1 - --k * k);
     },
     InOut: function(k) {
       if ((k *= 2) < 1) {
@@ -190,14 +190,14 @@ export var Easing = {
       return 1 - Easing.Bounce.Out(1 - k);
     },
     Out: function(k) {
-      if (k < (1 / 2.75)) {
+      if (k < 1 / 2.75) {
         return 7.5625 * k * k;
-      } else if (k < (2 / 2.75)) {
-        return 7.5625 * (k -= (1.5 / 2.75)) * k + 0.75;
-      } else if (k < (2.5 / 2.75)) {
-        return 7.5625 * (k -= (2.25 / 2.75)) * k + 0.9375;
+      } else if (k < 2 / 2.75) {
+        return 7.5625 * (k -= 1.5 / 2.75) * k + 0.75;
+      } else if (k < 2.5 / 2.75) {
+        return 7.5625 * (k -= 2.25 / 2.75) * k + 0.9375;
       } else {
-        return 7.5625 * (k -= (2.625 / 2.75)) * k + 0.984375;
+        return 7.5625 * (k -= 2.625 / 2.75) * k + 0.984375;
       }
     },
     InOut: function(k) {

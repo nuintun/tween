@@ -32,7 +32,9 @@
   </head>
   <body>
     <div id="info">
-      <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
+      <h1>
+        <a href="http://github.com/nuintun/tween">Tween</a>
+      </h1>
       <h2>Stop All Chained Tweens.</h2>
       <p>Tween#stopChainedTweens</p>
     </div>
@@ -78,7 +80,7 @@
         .delay(1000)
         .yoyo(true)
         .easing(Tween.Easing.Bounce.Out)
-        .on('update', function(p0) {
+        .on('update', function (p0) {
           updateBox(a, p0);
         });
 
@@ -87,14 +89,14 @@
         .delay(1000)
         .yoyo(true)
         .easing(Tween.Easing.Bounce.Out)
-        .on('update', function(p1) {
+        .on('update', function (p1) {
           updateBox(b, p1);
         });
 
       t0.chain(t1);
       t1.chain(t0);
 
-      start.onclick = function() {
+      start.onclick = function () {
         var t0Status = t0.status();
         var t1Status = t1.status();
 
@@ -109,7 +111,7 @@
         }
       };
 
-      stop.onclick = function() {
+      stop.onclick = function () {
         t0.stop();
       };
     </script>

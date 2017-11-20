@@ -70,9 +70,11 @@
   }
 
   // isFinite
-  var isFinite = Number.isFinite || function(value) {
-    return typeIs(number, 'Number') && isFinite(value);
-  };
+  var isFinite =
+    Number.isFinite ||
+    function(value) {
+      return typeIs(number, 'Number') && isFinite(value);
+    };
 
   /**
    * isNonNegative
@@ -120,26 +122,28 @@
    * @param {Number} from
    * @returns {Number}
    */
-  var indexOf = APIndexOf ? function(array, value, from) {
-    return APIndexOf.call(array, value, from);
-  } : function(array, value, from) {
-    var length = array.length >>> 0;
-
-    from = Number(from) || 0;
-    from = Math[from < 0 ? 'ceil' : 'floor'](from);
-
-    if (from < 0) {
-      from = Math.max(from + length, 0);
-    }
-
-    for (; from < length; from++) {
-      if (from in array && array[from] === value) {
-        return from;
+  var indexOf = APIndexOf
+    ? function(array, value, from) {
+        return APIndexOf.call(array, value, from);
       }
-    }
+    : function(array, value, from) {
+        var length = array.length >>> 0;
 
-    return -1;
-  };
+        from = Number(from) || 0;
+        from = Math[from < 0 ? 'ceil' : 'floor'](from);
+
+        if (from < 0) {
+          from = Math.max(from + length, 0);
+        }
+
+        for (; from < length; from++) {
+          if (from in array && array[from] === value) {
+            return from;
+          }
+        }
+
+        return -1;
+      };
 
   /**
    * forEach
@@ -149,17 +153,19 @@
    * @param {any} context
    * @returns {void}
    */
-  var forEach = APForEach ? function(array, iterator, context) {
-    APForEach.call(array, iterator, context);
-  } : function(array, iterator, context) {
-    if (arguments.length < 3) {
-      context = array;
-    }
+  var forEach = APForEach
+    ? function(array, iterator, context) {
+        APForEach.call(array, iterator, context);
+      }
+    : function(array, iterator, context) {
+        if (arguments.length < 3) {
+          context = array;
+        }
 
-    for (var i = 0, length = array.length; i < length; i++) {
-      iterator.call(array, array[i], i, array);
-    }
-  };
+        for (var i = 0, length = array.length; i < length; i++) {
+          iterator.call(array, array[i], i, array);
+        }
+      };
 
   /**
    * remove
@@ -197,9 +203,7 @@
   // Include a performance.now polyfill
   var now;
 
-  if (window
-    && window.performance
-    && typeIs(window.performance.now, 'Function')) {
+  if (window && window.performance && typeIs(window.performance.now, 'Function')) {
     // In a browser, use window.performance.now if it is available.
     // This must be bound, because directly assigning this function
     // leads to an invocation exception in Chrome.
@@ -484,7 +488,7 @@
         return k * k * k * k;
       },
       Out: function(k) {
-        return 1 - (--k * k * k * k);
+        return 1 - --k * k * k * k;
       },
       InOut: function(k) {
         if ((k *= 2) < 1) {
@@ -548,7 +552,7 @@
         return 1 - Math.sqrt(1 - k * k);
       },
       Out: function(k) {
-        return Math.sqrt(1 - (--k * k));
+        return Math.sqrt(1 - --k * k);
       },
       InOut: function(k) {
         if ((k *= 2) < 1) {
@@ -625,14 +629,14 @@
         return 1 - Easing.Bounce.Out(1 - k);
       },
       Out: function(k) {
-        if (k < (1 / 2.75)) {
+        if (k < 1 / 2.75) {
           return 7.5625 * k * k;
-        } else if (k < (2 / 2.75)) {
-          return 7.5625 * (k -= (1.5 / 2.75)) * k + 0.75;
-        } else if (k < (2.5 / 2.75)) {
-          return 7.5625 * (k -= (2.25 / 2.75)) * k + 0.9375;
+        } else if (k < 2 / 2.75) {
+          return 7.5625 * (k -= 1.5 / 2.75) * k + 0.75;
+        } else if (k < 2.5 / 2.75) {
+          return 7.5625 * (k -= 2.25 / 2.75) * k + 0.9375;
         } else {
-          return 7.5625 * (k -= (2.625 / 2.75)) * k + 0.984375;
+          return 7.5625 * (k -= 2.625 / 2.75) * k + 0.984375;
         }
       },
       InOut: function(k) {
@@ -753,7 +757,7 @@
 
       if (v[0] === v[m]) {
         if (k < 0) {
-          i = Math.floor(f = m * (1 + k));
+          i = Math.floor((f = m * (1 + k)));
         }
 
         return catmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);

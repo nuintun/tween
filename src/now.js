@@ -13,9 +13,7 @@ import * as Utils from './utils';
 
 var now;
 
-if (window
-  && window.performance
-  && Utils.typeIs(window.performance.now, 'Function')) {
+if (window && window.performance && Utils.typeIs(window.performance.now, 'Function')) {
   // In a browser, use window.performance.now if it is available.
   // This must be bound, because directly assigning this function
   // leads to an invocation exception in Chrome.

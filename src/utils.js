@@ -65,9 +65,11 @@ export function inherits(ctor, superCtor, proto) {
 }
 
 // isFinite
-export var isFinite = Number.isFinite || function(value) {
-  return typeIs(number, 'Number') && isFinite(value);
-};
+export var isFinite =
+  Number.isFinite ||
+  function(value) {
+    return typeIs(number, 'Number') && isFinite(value);
+  };
 
 /**
  * isNonNegative
@@ -115,26 +117,28 @@ export function apply(fn, context, args) {
  * @param {Number} from
  * @returns {Number}
  */
-export var indexOf = APIndexOf ? function(array, value, from) {
-  return APIndexOf.call(array, value, from);
-} : function(array, value, from) {
-  var length = array.length >>> 0;
-
-  from = Number(from) || 0;
-  from = Math[from < 0 ? 'ceil' : 'floor'](from);
-
-  if (from < 0) {
-    from = Math.max(from + length, 0);
-  }
-
-  for (; from < length; from++) {
-    if (from in array && array[from] === value) {
-      return from;
+export var indexOf = APIndexOf
+  ? function(array, value, from) {
+      return APIndexOf.call(array, value, from);
     }
-  }
+  : function(array, value, from) {
+      var length = array.length >>> 0;
 
-  return -1;
-};
+      from = Number(from) || 0;
+      from = Math[from < 0 ? 'ceil' : 'floor'](from);
+
+      if (from < 0) {
+        from = Math.max(from + length, 0);
+      }
+
+      for (; from < length; from++) {
+        if (from in array && array[from] === value) {
+          return from;
+        }
+      }
+
+      return -1;
+    };
 
 /**
  * forEach
@@ -144,17 +148,19 @@ export var indexOf = APIndexOf ? function(array, value, from) {
  * @param {any} context
  * @returns {void}
  */
-export var forEach = APForEach ? function(array, iterator, context) {
-  APForEach.call(array, iterator, context);
-} : function(array, iterator, context) {
-  if (arguments.length < 3) {
-    context = array;
-  }
+export var forEach = APForEach
+  ? function(array, iterator, context) {
+      APForEach.call(array, iterator, context);
+    }
+  : function(array, iterator, context) {
+      if (arguments.length < 3) {
+        context = array;
+      }
 
-  for (var i = 0, length = array.length; i < length; i++) {
-    iterator.call(array, array[i], i, array);
-  }
-}
+      for (var i = 0, length = array.length; i < length; i++) {
+        iterator.call(array, array[i], i, array);
+      }
+    };
 
 /**
  * remove

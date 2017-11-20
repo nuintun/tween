@@ -27,7 +27,9 @@
   </head>
   <body>
     <div id="info">
-      <h1><a href="http://github.com/nuintun/tween">Tween</a></h1>
+      <h1>
+        <a href="http://github.com/nuintun/tween">Tween</a>
+      </h1>
       <h2>Black And Red</h2>
       <p>1024 continuously changing color cells (in a 32x32 table)</p>
       <p></p>
@@ -75,7 +77,7 @@
               .to({ value: 1 }, 8000)
               .delay((0.001 * index + Math.random()) * 500)
               .easing(Tween.Easing.Elastic.InOut)
-              .on('update', function() {
+              .on('update', function () {
                 var c = Math.floor(this.value * 0xff);
 
                 this.td.style.background = 'rgb(' + c + ', 0, 0)';
@@ -84,7 +86,7 @@
               .to({ value: 0 }, 4000)
               .delay((0.001 * index + Math.random()) * 500)
               .easing(Tween.Easing.Elastic.InOut)
-              .on('update', function() {
+              .on('update', function () {
                 var c = Math.floor(this.value * 0xff);
 
                 this.td.style.background = 'rgb(' + c + ', 0, 0)';
