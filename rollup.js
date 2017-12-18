@@ -62,7 +62,7 @@ rollup
             }
           );
 
-          fs.writeFileSync(min, result.code);
+          fs.writeFileSync(min, banner + result.code);
           console.log(`  Build ${min} success!`);
           fs.writeFileSync(src + '.map', result.map);
           console.log(`  Build ${src + '.map'} success!`);
