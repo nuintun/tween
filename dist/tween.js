@@ -1,11 +1,11 @@
 /**
-* @module tween
-* @author nuintun
-* @license MIT
-* @version 0.0.1
-* @description Javascript tweening engine.
-* @see https://nuintun.github.io/tween
-*/
+ * @module tween
+ * @author nuintun
+ * @license MIT
+ * @version 0.0.1
+ * @description Javascript tweening engine.
+ * @see https://nuintun.github.io/tween
+ */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
