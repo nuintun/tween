@@ -14,8 +14,7 @@ import { Interpolation } from './interpolation';
 var GROUP = new Group();
 
 /**
- * reverseValues
- *
+ * @function reverseValues
  * @param {Tween} tween
  */
 function reverseValues(tween) {
@@ -35,8 +34,7 @@ function reverseValues(tween) {
 }
 
 /**
- * Tween
- *
+ * @class Tween
  * @constructor
  * @param {Object} object
  * @returns {Tween}

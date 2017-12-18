@@ -1,8 +1,26 @@
+/**
+ * @module rollup
+ * @license MIT
+ * @version 2017/12/18
+ */
+
 'use strict';
 
 const fs = require('fs');
 const rollup = require('rollup');
 const uglify = require('uglify-es');
+
+const pkg = require('./package.json');
+
+const banner = `/**
+* @module ${pkg.name}
+* @author ${pkg.author.name}
+* @license ${pkg.license}
+* @version ${pkg.version}
+* @description ${pkg.description}
+* @see ${pkg.homepage}
+*/
+`;
 
 rollup
   .rollup({
@@ -24,6 +42,7 @@ rollup
           format: 'umd',
           indent: true,
           strict: true,
+          banner: banner,
           amd: { id: 'tween' },
           name: 'Tween'
         })
