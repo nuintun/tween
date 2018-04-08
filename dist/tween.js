@@ -4,7 +4,7 @@
  * @license MIT
  * @version 0.0.1
  * @description Javascript tweening engine.
- * @see https://nuintun.github.io/tween
+ * @see https://github.com/nuintun/tween#readme
  */
 
 (function (global, factory) {
@@ -199,7 +199,6 @@
    * @version 2017/11/20
    */
 
-  // Include a performance.now polyfill
   var now;
 
   if (window && window.performance && typeIs(window.performance.now, 'Function')) {
