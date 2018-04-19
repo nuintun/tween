@@ -2,7 +2,7 @@
  * @module tween
  * @author nuintun
  * @license MIT
- * @version 0.0.1
+ * @version 1.0.0
  * @description Javascript tweening engine.
  * @see https://github.com/nuintun/tween#readme
  */
@@ -13,14 +13,11 @@
   (global.Tween = factory());
 }(this, (function () { 'use strict';
 
-  /*!
-   * Utils
-   * Version: 0.0.1
-   * Date: 2016/11/18
-   * https://github.com/nuintun/tween
-   *
-   * This is licensed under the MIT License (MIT).
-   * For details, see: https://github.com/nuintun/tween/blob/master/LICENSE
+  /**
+   * @module utils
+   * @author nuintun
+   * @license MIT
+   * @version 2017/11/20
    */
 
   var AP = Array.prototype;
@@ -195,6 +192,7 @@
 
   /**
    * @module now
+   * @author nuintun
    * @license MIT
    * @version 2017/11/20
    */
@@ -220,18 +218,32 @@
 
   /**
    * @module group
+   * @author nuintun
    * @license MIT
    * @version 2017/11/20
    */
 
+  /**
+   * @class Group
+   * @constructor
+   */
   function Group() {
     this._tweens = [];
   }
 
+  // Set prototype
   Group.prototype = {
+    /**
+     * @method items
+     * @returns {Tween[]}
+     */
     items: function() {
       return this._tweens;
     },
+    /**
+     * @method add
+     * @param {Tween} tween
+     */
     add: function(tween) {
       var tweens = this._tweens;
 
@@ -239,6 +251,10 @@
         tweens.push(tween);
       }
     },
+    /**
+     * @method remove
+     * @param {Tween} tween
+     */
     remove: function(tween) {
       var context = this;
 
@@ -251,6 +267,12 @@
         remove(tweens, index);
       }
     },
+    /**
+     * @method update
+     * @param {number} time
+     * @param {boolean} preserve
+     * @returns {boolean}
+     */
     update: function(time, preserve) {
       var tweens = this._tweens;
 
@@ -276,6 +298,7 @@
 
   /**
    * @module events
+   * @author nuintun
    * @license MIT
    * @version 2017/11/20
    */
@@ -428,6 +451,7 @@
 
   /**
    * @module easing
+   * @author nuintun
    * @license MIT
    * @version 2017/11/20
    */
@@ -636,6 +660,7 @@
 
   /**
    * @module interpolation
+   * @author nuintun
    * @license MIT
    * @version 2017/11/20
    */
@@ -759,6 +784,7 @@
 
   /**
    * @module tween
+   * @author nuintun
    * @license MIT
    * @version 2017/11/20
    */

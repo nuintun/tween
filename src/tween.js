@@ -1,12 +1,13 @@
 /**
  * @module tween
+ * @author nuintun
  * @license MIT
  * @version 2017/11/20
  */
 
 import Group from './group';
-import Events from './events';
 import { now } from './now';
+import Events from './events';
 import * as Utils from './utils';
 import { Easing } from './easing';
 import { Interpolation } from './interpolation';

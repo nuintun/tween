@@ -1,21 +1,35 @@
 /**
  * @module group
+ * @author nuintun
  * @license MIT
  * @version 2017/11/20
  */
 
-import { now } from './now';
 import Tween from './tween';
+import { now } from './now';
 import * as Utils from './utils';
 
+/**
+ * @class Group
+ * @constructor
+ */
 export default function Group() {
   this._tweens = [];
 }
 
+// Set prototype
 Group.prototype = {
+  /**
+   * @method items
+   * @returns {Tween[]}
+   */
   items: function() {
     return this._tweens;
   },
+  /**
+   * @method add
+   * @param {Tween} tween
+   */
   add: function(tween) {
     var tweens = this._tweens;
 
@@ -23,6 +37,10 @@ Group.prototype = {
       tweens.push(tween);
     }
   },
+  /**
+   * @method remove
+   * @param {Tween} tween
+   */
   remove: function(tween) {
     var context = this;
 
@@ -35,6 +53,12 @@ Group.prototype = {
       Utils.remove(tweens, index);
     }
   },
+  /**
+   * @method update
+   * @param {number} time
+   * @param {boolean} preserve
+   * @returns {boolean}
+   */
   update: function(time, preserve) {
     var tweens = this._tweens;
 

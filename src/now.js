@@ -1,5 +1,6 @@
 /**
  * @module now
+ * @author nuintun
  * @license MIT
  * @version 2017/11/20
  */
@@ -7,7 +8,7 @@
 // Include a performance.now polyfill
 import * as Utils from './utils';
 
-var now;
+export var now;
 
 if (window && window.performance && Utils.typeIs(window.performance.now, 'Function')) {
   // In a browser, use window.performance.now if it is available.
@@ -25,5 +26,3 @@ if (window && window.performance && Utils.typeIs(window.performance.now, 'Functi
     return new Date().getTime();
   };
 }
-
-export { now };

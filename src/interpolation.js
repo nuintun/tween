@@ -1,5 +1,6 @@
 /**
  * @module interpolation
+ * @author nuintun
  * @license MIT
  * @version 2017/11/20
  */
