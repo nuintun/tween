@@ -1155,7 +1155,7 @@
       }
 
       // Update event
-      context.emitWith('update', [object, value, context._reversed], object);
+      context.emitWith('update', [object, elapsed, context._reversed], object);
 
       if (elapsed === 1) {
         // Set values
