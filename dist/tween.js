@@ -47,26 +47,30 @@
   }
 
   /**
+   * @class Blank
+   * @constructor
+   */
+  function Blank() {}
+
+  /**
    * @function inherits
    * @param {Class} ctor
    * @param {Class} superCtor
-   * @param {Object} proto
+   * @param {Object} props
    */
-  function inherits(ctor, superCtor, proto) {
-    function F() {
-      // constructor
-    }
+  function inherits(ctor, superCtor, props) {
+    // Set prototype
+    Blank.prototype = superCtor.prototype;
 
-    // prototype
-    F.prototype = superCtor.prototype;
-
-    ctor.prototype = new F();
+    // Extends
+    ctor.prototype = new Blank();
     ctor.prototype.constructor = ctor;
 
-    if (proto) {
-      for (var key in proto) {
-        if (proto.hasOwnProperty(key)) {
-          ctor.prototype[key] = proto[key];
+    // Copy props
+    if (props) {
+      for (var key in props) {
+        if (props.hasOwnProperty(key)) {
+          ctor.prototype[key] = props[key];
         }
       }
     }
