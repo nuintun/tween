@@ -1,4 +1,4 @@
-function createGraph(t, f, c) {
+function createGraph(t, f) {
   var div = document.createElement('div');
 
   div.style.display = 'inline-block';

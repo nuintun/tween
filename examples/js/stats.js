@@ -1,7 +1,9 @@
 (function(global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined'
     ? (module.exports = factory())
-    : typeof define === 'function' && define.amd ? define(factory) : (global.Stats = factory());
+    : typeof define === 'function' && define.amd
+      ? define(factory)
+      : (global.Stats = factory());
 })(this, function() {
   'use strict';
 
@@ -68,7 +70,7 @@
         msPanel.update(time - beginTime, 200);
 
         if (time > prevTime + 1000) {
-          fpsPanel.update(frames * 1000 / (time - prevTime), 100);
+          fpsPanel.update((frames * 1000) / (time - prevTime), 100);
 
           prevTime = time;
           frames = 0;

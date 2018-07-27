@@ -73,10 +73,10 @@ export var Easing = {
   },
   Sinusoidal: {
     In: function(k) {
-      return 1 - Math.cos(k * Math.PI / 2);
+      return 1 - Math.cos((k * Math.PI) / 2);
     },
     Out: function(k) {
-      return Math.sin(k * Math.PI / 2);
+      return Math.sin((k * Math.PI) / 2);
     },
     InOut: function(k) {
       return 0.5 * (1 - Math.cos(Math.PI * k));

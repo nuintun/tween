@@ -7,7 +7,6 @@
 
 var AP = Array.prototype;
 var OP = Object.prototype;
-var APFilter = AP.filter;
 var APIndexOf = AP.indexOf;
 var APForEach = AP.forEach;
 var OPToString = OP.toString;
