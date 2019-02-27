@@ -6,9 +6,10 @@
 
 'use strict';
 
+const path = require('path');
 const fs = require('fs-extra');
+const terser = require('terser');
 const rollup = require('rollup');
-const uglify = require('uglify-es');
 const pkg = require('./package.json');
 
 /**
@@ -20,20 +21,22 @@ async function build(inputOptions, outputOptions) {
   await fs.remove('dist');
 
   const bundle = await rollup.rollup(inputOptions);
-  const result = await bundle.generate(outputOptions);
+
+  await bundle.write(outputOptions);
 
   const file = outputOptions.file;
-  const min = file.replace(/\.js$/i, '.min.js');
-  const map = `${file}.map`;
-  const minify = uglify.minify(
-    { 'fetch.js': result.code },
-    { ecma: 5, ie8: true, mangle: { eval: true }, sourceMap: { url: map } }
-  );
 
-  await fs.outputFile(file, result.code);
   console.log(`Build ${file} success!`);
 
-  await fs.outputFile(min, banner + minify.code);
+  const min = file.replace(/\.js$/i, '.min.js');
+  const map = `${file}.map`;
+
+  const minify = terser.minify(
+    { 'fetch.js': (await fs.readFile(path.resolve(file))).toString() },
+    { ie8: true, mangle: { eval: true }, sourceMap: { url: path.basename(map) } }
+  );
+
+  await fs.outputFile(min, outputOptions.banner + minify.code);
   console.log(`Build ${min} success!`);
 
   await fs.outputFile(map, minify.map);
@@ -55,14 +58,14 @@ const inputOptions = {
 };
 
 const outputOptions = {
-  format: 'umd',
+  banner,
   indent: true,
   strict: true,
   legacy: true,
-  banner: banner,
-  file: 'dist/tween.js',
+  name: 'Tween',
+  format: 'umd',
   amd: { id: 'tween' },
-  name: 'Tween'
+  file: 'dist/tween.js'
 };
 
 build(inputOptions, outputOptions);

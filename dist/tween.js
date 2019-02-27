@@ -10,8 +10,8 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define('tween', factory) :
-  (global.Tween = factory());
-}(this, (function () { 'use strict';
+  (global = global || self, global.Tween = factory());
+}(this, function () { 'use strict';
 
   /**
    * @module utils
@@ -1231,4 +1231,4 @@
 
   return Tween;
 
-})));
+}));
