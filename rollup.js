@@ -54,7 +54,12 @@ const banner = `/**
 `;
 
 const inputOptions = {
-  input: 'src/tween.js'
+  input: 'src/tween.js',
+  onwarn(error, warn) {
+    if (error.code !== 'CIRCULAR_DEPENDENCY') {
+      warn(error);
+    }
+  }
 };
 
 const outputOptions = {
