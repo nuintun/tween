@@ -1,8 +1,7 @@
 /**
  * @module events
- * @author nuintun
  * @license MIT
- * @version 2017/11/20
+ * @author nuintun
  */
 
 import * as Utils from './utils';

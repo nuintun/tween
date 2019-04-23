@@ -1,6 +1,6 @@
 # tween
 
-> Javascript tweening engine
+> A pure JavaScript tweening engine.
 >
 > [![Dependencies][david-image]][david-url]
 
