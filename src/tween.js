@@ -1,7 +1,7 @@
 /**
  * @module tween
- * @license MIT
  * @author nuintun
+ * @license MIT
  */
 
 import Group from './group';

@@ -1,7 +1,7 @@
 /**
  * @module interpolation
- * @license MIT
  * @author nuintun
+ * @license MIT
  */
 
 /**

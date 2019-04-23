@@ -15,8 +15,8 @@
 
   /**
    * @module utils
-   * @license MIT
    * @author nuintun
+   * @license MIT
    */
 
   var AP = Array.prototype;
@@ -195,8 +195,8 @@
 
   /**
    * @module now
-   * @license MIT
    * @author nuintun
+   * @license MIT
    */
 
   var now;
@@ -220,8 +220,8 @@
 
   /**
    * @module group
-   * @license MIT
    * @author nuintun
+   * @license MIT
    */
 
   /**
@@ -299,8 +299,8 @@
 
   /**
    * @module events
-   * @license MIT
    * @author nuintun
+   * @license MIT
    */
 
   /**
@@ -451,8 +451,8 @@
 
   /**
    * @module easing
-   * @license MIT
    * @author nuintun
+   * @license MIT
    */
 
   var Easing = {
@@ -659,8 +659,8 @@
 
   /**
    * @module interpolation
-   * @license MIT
    * @author nuintun
+   * @license MIT
    */
 
   /**
@@ -782,8 +782,8 @@
 
   /**
    * @module tween
-   * @license MIT
    * @author nuintun
+   * @license MIT
    */
 
   var GROUP = new Group();

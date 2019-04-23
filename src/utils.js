@@ -1,7 +1,7 @@
 /**
  * @module utils
- * @license MIT
  * @author nuintun
+ * @license MIT
  */
 
 var AP = Array.prototype;
