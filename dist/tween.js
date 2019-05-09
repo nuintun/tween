@@ -178,19 +178,21 @@
    * @param {number} index
    */
   function remove(array, index) {
-    if (index >= array.length || index < 0) return;
+    var length = array.length;
 
-    var last = array.pop();
+    if (index >= 0 && index < length) {
+      var last = array.pop();
 
-    if (index < array.length) {
-      var removed = array[index];
+      if (index < length) {
+        var removed = array[index];
 
-      array[index] = last;
+        array[index] = last;
 
-      return removed;
+        return removed;
+      }
+
+      return last;
     }
-
-    return last;
   }
 
   /**
@@ -201,12 +203,12 @@
 
   var now;
 
-  if (window && window.performance && typeIs(window.performance.now, 'Function')) {
-    // In a browser, use window.performance.now if it is available.
+  if (self && self.performance && typeIs(self.performance.now, 'Function')) {
+    // In a browser, use self.performance.now if it is available.
     // This must be bound, because directly assigning this function
     // leads to an invocation exception in Chrome.
     now = function() {
-      return window.performance.now.call(window.performance);
+      return self.performance.now.call(self.performance);
     };
   } else if (typeIs(Date.now, 'Function')) {
     // Use Date.now if it is available.

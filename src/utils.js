@@ -163,17 +163,19 @@ export var forEach = APForEach
  * @param {number} index
  */
 export function remove(array, index) {
-  if (index >= array.length || index < 0) return;
+  var length = array.length;
 
-  var last = array.pop();
+  if (index >= 0 && index < length) {
+    var last = array.pop();
 
-  if (index < array.length) {
-    var removed = array[index];
+    if (index < length) {
+      var removed = array[index];
 
-    array[index] = last;
+      array[index] = last;
 
-    return removed;
+      return removed;
+    }
+
+    return last;
   }
-
-  return last;
 }

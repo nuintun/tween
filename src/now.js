@@ -9,12 +9,12 @@ import * as Utils from './utils';
 
 export var now;
 
-if (window && window.performance && Utils.typeIs(window.performance.now, 'Function')) {
-  // In a browser, use window.performance.now if it is available.
+if (self && self.performance && Utils.typeIs(self.performance.now, 'Function')) {
+  // In a browser, use self.performance.now if it is available.
   // This must be bound, because directly assigning this function
   // leads to an invocation exception in Chrome.
   now = function() {
-    return window.performance.now.call(window.performance);
+    return self.performance.now.call(self.performance);
   };
 } else if (Utils.typeIs(Date.now, 'Function')) {
   // Use Date.now if it is available.
