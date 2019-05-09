@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Tween / Stop Chained</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
     <style type="text/css">
       .box {
@@ -20,11 +20,9 @@
         padding: 20px;
         will-change: transform;
       }
-
       #target1 {
         background: #fcc;
       }
-
       #target2 {
         background: #cfc;
       }
@@ -80,7 +78,7 @@
         .delay(1000)
         .yoyo(true)
         .easing(Tween.Easing.Bounce.Out)
-        .on('update', function (p0) {
+        .on('update', function(p0) {
           updateBox(a, p0);
         });
 
@@ -89,14 +87,14 @@
         .delay(1000)
         .yoyo(true)
         .easing(Tween.Easing.Bounce.Out)
-        .on('update', function (p1) {
+        .on('update', function(p1) {
           updateBox(b, p1);
         });
 
       t0.chain(t1);
       t1.chain(t0);
 
-      start.onclick = function () {
+      start.onclick = function() {
         var t0Status = t0.status();
         var t1Status = t1.status();
 
@@ -111,7 +109,7 @@
         }
       };
 
-      stop.onclick = function () {
+      stop.onclick = function() {
         t0.stop();
       };
     </script>

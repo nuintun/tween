@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Tween / Bars</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
     <style>
       body {
@@ -52,7 +52,7 @@
           var bg = (Math.random() * 0xffffff) >> 0;
 
           domElement.style.position = 'absolute';
-          domElement.style.top = (Math.random() * window.innerHeight) + 'px';
+          domElement.style.top = Math.random() * window.innerHeight + 'px';
           domElement.style.left = startValue + 'px';
           domElement.style.background = '#' + bg.toString(16);
           domElement.style.width = '100px';
@@ -60,16 +60,15 @@
 
           var elem = { x: startValue, domElement: domElement };
 
-          var updateCallback = function () {
+          var updateCallback = function() {
             this.domElement.style.left = this.x + 'px';
-          }
+          };
 
           var tween = new Tween(elem)
             .to({ x: endValue }, 4000)
             .delay(Math.random() * 1000)
             .on('update', updateCallback)
             .easing(Tween.Easing.Back.Out);
-
 
           var tweenBack = new Tween(elem, false)
             .to({ x: startValue }, 4000)
@@ -85,7 +84,6 @@
 
           elems.push(elem);
         }
-
       }
 
       function animate(time) {

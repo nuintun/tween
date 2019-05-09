@@ -2,22 +2,19 @@
 <html>
   <head>
     <title>Tween / Black And Red</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
     <style>
       body {
         font-family: Arial, Helvetica, sans;
       }
-
       table {
         border-collapse: collapse;
       }
-
       td {
         width: 5px;
         height: 5px;
       }
-
       #target {
         position: absolute;
         top: 16em;
@@ -72,12 +69,12 @@
             td.style.background = '#000';
 
             var x = (i + j) * 0.1;
-            var cell = { 'td': td, value: 0 };
+            var cell = { td: td, value: 0 };
             var tween = new Tween(cell)
               .to({ value: 1 }, 8000)
               .delay((0.001 * index + Math.random()) * 500)
               .easing(Tween.Easing.Elastic.InOut)
-              .on('update', function () {
+              .on('update', function() {
                 var c = Math.floor(this.value * 0xff);
 
                 this.td.style.background = 'rgb(' + c + ', 0, 0)';
@@ -86,7 +83,7 @@
               .to({ value: 0 }, 4000)
               .delay((0.001 * index + Math.random()) * 500)
               .easing(Tween.Easing.Elastic.InOut)
-              .on('update', function () {
+              .on('update', function() {
                 var c = Math.floor(this.value * 0xff);
 
                 this.td.style.background = 'rgb(' + c + ', 0, 0)';

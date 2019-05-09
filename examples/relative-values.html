@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Tween / Relative Values</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="css/info.css" media="screen" rel="stylesheet" type="text/css" />
     <style type="text/css">
       .box {
@@ -12,7 +12,6 @@
         padding: 10px;
         display: inline-block;
       }
-
       #target {
         background: #fcc;
       }
@@ -38,11 +37,11 @@
       function init() {
         var target = document.getElementById('target');
         var tween = new Tween(target.dataset)
-          .to({ top: "+20", left: "-20" }, 500)
+          .to({ top: '+20', left: '-20' }, 500)
           .repeat(5)
           .delay(500)
           .easing(Tween.Easing.Exponential.In)
-          .on('update', function () {
+          .on('update', function() {
             this.top = Math.round(this.top);
             this.left = Math.round(this.left);
 
