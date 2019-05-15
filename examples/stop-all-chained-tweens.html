@@ -75,7 +75,6 @@
 
       t0 = new Tween(p0)
         .to({ x: 700, rotation: 360 }, 2000)
-        .delay(1000)
         .yoyo(true)
         .easing(Tween.Easing.Bounce.Out)
         .on('update', function(p0) {
@@ -84,7 +83,6 @@
 
       t1 = new Tween(p1)
         .to({ x: 1000, rotation: 360 }, 3000)
-        .delay(1000)
         .yoyo(true)
         .easing(Tween.Easing.Bounce.Out)
         .on('update', function(p1) {
