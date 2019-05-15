@@ -183,7 +183,7 @@
     if (index >= 0 && index < length) {
       var last = array.pop();
 
-      if (index < length) {
+      if (index + 1 < length) {
         var removed = array[index];
 
         array[index] = last;
