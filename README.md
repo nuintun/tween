@@ -16,8 +16,8 @@
 - [black-and-red.html](https://nuintun.github.io/tween/examples/black-and-red.html)
 - [relative-values.html](https://nuintun.github.io/tween/examples/relative-values.html)
 - [array-interpolation.html](https://nuintun.github.io/tween/examples/array-interpolation.html)
-- [graphs-custom-functions.html](https://nuintun.github.io/tween/examples/graphs-custom-functions.html)
 - [stop-all-chained-tweens.html](https://nuintun.github.io/tween/examples/stop-all-chained-tweens.html)
+- [graphs-custom-functions.html](https://nuintun.github.io/tween/examples/graphs-custom-functions.html)
 
 [snyk-image]: https://img.shields.io/snyk/vulnerabilities/github/nuintun/tween.svg?style=flat-square
 [snyk-url]: https://snyk.io/test/github/nuintun/tween
