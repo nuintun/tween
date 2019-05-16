@@ -386,14 +386,14 @@
       return that.on(events, feedback);
     },
     /**
-     * @method emitWith
+     * @method emit
      * @description Emit event with context
      * @param {string} event
      * @param {Array} args
      * @param {any} context
      * @returns {Events}
      */
-    emitWith: function(event, args, context) {
+    emit: function(event, args, context) {
       var that = this;
       var events = that._events;
       var callbacks = events[event];
@@ -422,32 +422,6 @@
       });
 
       return true;
-    },
-    /**
-     * @method emit
-     * @description Emit event
-     * @param {string} event
-     * @param {any} [...args]
-     * @returns {Events}
-     */
-    emit: function(event) {
-      var context = this;
-      var events = context._events;
-      var callbacks = events[event];
-
-      if (!callbacks || callbacks.length === 0) {
-        return false;
-      }
-
-      var rest = [];
-
-      // Fill up `rest` with the callback arguments. Since we're only copying
-      // the tail of `arguments`, a loop is much faster than Array#slice.
-      for (var i = 1, length = arguments.length; i < length; i++) {
-        rest[i - 1] = arguments[i];
-      }
-
-      return context.emitWith(event, rest);
     }
   };
 
@@ -1015,7 +989,7 @@
         var object = context._object;
 
         // Stop event
-        context.emitWith('stop', object, object);
+        context.emit('stop', object, object);
       }
 
       // Stop chain tween
@@ -1104,7 +1078,7 @@
         context._startEventFired = true;
 
         // Start event
-        context.emitWith('start', object, object);
+        context.emit('start', object, object);
       }
 
       // Elapsed percent
@@ -1154,7 +1128,7 @@
       }
 
       // Update event
-      context.emitWith('update', [object, elapsed, context._reversed], object);
+      context.emit('update', [object, elapsed, context._reversed], object);
 
       if (elapsed === 1) {
         // Set values
@@ -1180,10 +1154,10 @@
           context._startTime = time;
 
           // Repeat event
-          context.emitWith('repeat', object, object);
+          context.emit('repeat', object, object);
         } else {
           // Complete event
-          context.emitWith('complete', object, object);
+          context.emit('complete', object, object);
 
           // Set values
           context._repeated = 0;

@@ -238,7 +238,7 @@ Utils.inherits(Tween, Events, {
       var object = context._object;
 
       // Stop event
-      context.emitWith('stop', object, object);
+      context.emit('stop', object, object);
     }
 
     // Stop chain tween
@@ -327,7 +327,7 @@ Utils.inherits(Tween, Events, {
       context._startEventFired = true;
 
       // Start event
-      context.emitWith('start', object, object);
+      context.emit('start', object, object);
     }
 
     // Elapsed percent
@@ -377,7 +377,7 @@ Utils.inherits(Tween, Events, {
     }
 
     // Update event
-    context.emitWith('update', [object, elapsed, context._reversed], object);
+    context.emit('update', [object, elapsed, context._reversed], object);
 
     if (elapsed === 1) {
       // Set values
@@ -403,10 +403,10 @@ Utils.inherits(Tween, Events, {
         context._startTime = time;
 
         // Repeat event
-        context.emitWith('repeat', object, object);
+        context.emit('repeat', object, object);
       } else {
         // Complete event
-        context.emitWith('complete', object, object);
+        context.emit('complete', object, object);
 
         // Set values
         context._repeated = 0;

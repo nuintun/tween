@@ -87,14 +87,14 @@ Events.prototype = {
     return that.on(events, feedback);
   },
   /**
-   * @method emitWith
+   * @method emit
    * @description Emit event with context
    * @param {string} event
    * @param {Array} args
    * @param {any} context
    * @returns {Events}
    */
-  emitWith: function(event, args, context) {
+  emit: function(event, args, context) {
     var that = this;
     var events = that._events;
     var callbacks = events[event];
@@ -123,31 +123,5 @@ Events.prototype = {
     });
 
     return true;
-  },
-  /**
-   * @method emit
-   * @description Emit event
-   * @param {string} event
-   * @param {any} [...args]
-   * @returns {Events}
-   */
-  emit: function(event) {
-    var context = this;
-    var events = context._events;
-    var callbacks = events[event];
-
-    if (!callbacks || callbacks.length === 0) {
-      return false;
-    }
-
-    var rest = [];
-
-    // Fill up `rest` with the callback arguments. Since we're only copying
-    // the tail of `arguments`, a loop is much faster than Array#slice.
-    for (var i = 1, length = arguments.length; i < length; i++) {
-      rest[i - 1] = arguments[i];
-    }
-
-    return context.emitWith(event, rest);
   }
 };
