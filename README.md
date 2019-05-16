@@ -4,7 +4,6 @@
 >
 > [![Snyk Vulnerabilities][snyk-image]][snyk-url]
 > [![Dependencies][david-image]][david-url]
-
 > Modify from [tweenjs/tween.js](https://github.com/tweenjs/tween.js)
 
 ### Examples
