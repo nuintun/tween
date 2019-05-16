@@ -1,8 +1,8 @@
 /**
  * @module tween
- * @author nuintun
  * @license MIT
  * @version 1.0.0
+ * @author nuintun
  * @description A pure JavaScript tweening engine.
  * @see https://github.com/nuintun/tween#readme
  */
@@ -15,8 +15,8 @@
 
   /**
    * @module utils
-   * @author nuintun
    * @license MIT
+   * @author nuintun
    */
 
   var AP = Array.prototype;
@@ -197,8 +197,8 @@
 
   /**
    * @module now
-   * @author nuintun
    * @license MIT
+   * @author nuintun
    */
 
   var now;
@@ -222,8 +222,8 @@
 
   /**
    * @module group
-   * @author nuintun
    * @license MIT
+   * @author nuintun
    */
 
   /**
@@ -301,8 +301,8 @@
 
   /**
    * @module events
-   * @author nuintun
    * @license MIT
+   * @author nuintun
    */
 
   /**
@@ -453,8 +453,8 @@
 
   /**
    * @module easing
-   * @author nuintun
    * @license MIT
+   * @author nuintun
    */
 
   var Easing = {
@@ -661,8 +661,8 @@
 
   /**
    * @module interpolation
-   * @author nuintun
    * @license MIT
+   * @author nuintun
    */
 
   /**
@@ -784,8 +784,8 @@
 
   /**
    * @module tween
-   * @author nuintun
    * @license MIT
+   * @author nuintun
    */
 
   var GROUP = new Group();

@@ -1,7 +1,7 @@
 /**
  * @module group
- * @author nuintun
  * @license MIT
+ * @author nuintun
  */
 
 import Tween from './tween';

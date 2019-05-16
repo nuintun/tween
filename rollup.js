@@ -45,9 +45,9 @@ async function build(inputOptions, outputOptions) {
 
 const banner = `/**
  * @module ${pkg.name}
- * @author ${pkg.author.name}
  * @license ${pkg.license}
  * @version ${pkg.version}
+ * @author ${pkg.author.name}
  * @description ${pkg.description}
  * @see ${pkg.homepage}
  */

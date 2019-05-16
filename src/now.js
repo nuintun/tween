@@ -1,7 +1,7 @@
 /**
  * @module now
- * @author nuintun
  * @license MIT
+ * @author nuintun
  */
 
 // Include a performance.now polyfill

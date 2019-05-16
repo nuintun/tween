@@ -1,7 +1,7 @@
 /**
  * @module easing
- * @author nuintun
  * @license MIT
+ * @author nuintun
  */
 
 export var Easing = {
