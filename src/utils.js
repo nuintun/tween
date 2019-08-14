@@ -152,7 +152,7 @@ export var forEach = APForEach
       }
 
       for (var i = 0, length = array.length; i < length; i++) {
-        iterator.call(array, array[i], i, array);
+        iterator.call(array, array[i], i, context);
       }
     };
 
